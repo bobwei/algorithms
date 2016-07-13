@@ -1,2 +1,1 @@
-require('babel-core/register');
-require('./run.js');
+console.log('Hello World');
