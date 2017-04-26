@@ -1,10 +1,9 @@
 {
-  "name": "javascript-project-template",
+  "name": "js-app-boilerplate",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "babel-node index.js"
+    "start": "babel-node src/index.js"
   },
   "author": "bob61016@gmail.com",
   "license": "MIT",
