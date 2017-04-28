@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "babel-node src/index.js",
+    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.js' --write",
     "dev": "nodemon src/index.js --exec babel-node"
   },
   "author": "bob61016@gmail.com",
@@ -20,7 +21,8 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
-    "nodemon": "^1.11.0"
+    "nodemon": "^1.11.0",
+    "prettier": "^1.2.2"
   },
   "dependencies": {}
 }
