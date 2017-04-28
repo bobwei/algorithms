@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "start": "babel-node src/index.js",
+    "precommit": "lint-staged --verbose",
     "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.js' --write",
     "lint-staged": "lint-staged --verbose",
     "dev": "nodemon src/index.js --exec babel-node"
@@ -22,13 +23,12 @@
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-react": "^6.10.3",
+    "husky": "^0.13.3",
     "lint-staged": "^3.4.0",
     "nodemon": "^1.11.0",
-    "pre-commit": "^1.2.2",
     "prettier": "^1.2.2"
   },
   "dependencies": {},
-  "pre-commit": "lint-staged",
   "lint-staged": {
     "*.{js,jsx}": [
       "yarn run format",
