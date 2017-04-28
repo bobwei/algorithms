@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "babel-node src/index.js"
+    "start": "babel-node src/index.js",
+    "dev": "nodemon src/index.js --exec babel-node"
   },
   "author": "bob61016@gmail.com",
   "license": "MIT",
@@ -18,7 +19,8 @@
     "eslint-import-resolver-babel-module": "^3.0.0",
     "eslint-plugin-import": "^2.2.0",
     "eslint-plugin-jsx-a11y": "^4.0.0",
-    "eslint-plugin-react": "^6.10.3"
+    "eslint-plugin-react": "^6.10.3",
+    "nodemon": "^1.11.0"
   },
   "dependencies": {}
 }
