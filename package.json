@@ -31,7 +31,9 @@
     "nodemon": "^1.11.0",
     "prettier": "^1.2.2"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dotenv": "^4.0.0"
+  },
   "lint-staged": {
     "*.{js,jsx}": [
       "yarn run format",
