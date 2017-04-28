@@ -1,3 +1,3 @@
-# Javascript Project Template
+# Js App Boilerplate
 
-This is a javascript project template with batteries included to speed up project initiation.
+This is a js app boilerplate with batteries included to speed up project initiation.
