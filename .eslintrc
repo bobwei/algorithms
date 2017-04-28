@@ -9,5 +9,12 @@
   },
   "rules": {
     "no-console": 0
+  },
+  "settings": {
+    "import/resolver": {
+      "babel-module": {
+        "extensions": ["*", ".js", ".jsx"]
+      }
+    }
   }
 }
