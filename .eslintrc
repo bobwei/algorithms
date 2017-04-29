@@ -3,7 +3,8 @@
   "plugins": [
   ],
   "extends": [
-    "airbnb"
+    "airbnb",
+    "prettier"
   ],
   "env": {
     "es6": true,
