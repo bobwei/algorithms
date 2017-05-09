@@ -5,7 +5,7 @@
   "scripts": {
     "start": "babel-node src/index.js",
     "precommit": "lint-staged --verbose",
-    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.js' --write",
+    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
     "lint-staged": "lint-staged --verbose",
     "flow": "flow",
     "dev": "nodemon src/index.js --exec babel-node"
