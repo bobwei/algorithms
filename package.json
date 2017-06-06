@@ -6,6 +6,8 @@
     "start": "babel-node src/index.js",
     "precommit": "lint-staged --verbose",
     "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
+    "test": "jest --onlyChanged --watch",
+    "test:all": "jest",
     "lint-staged": "lint-staged --verbose",
     "flow": "flow",
     "dev": "nodemon src/index.js --exec babel-node"
@@ -28,12 +30,21 @@
     "eslint-plugin-react": "^7.0.1",
     "flow-bin": "^0.47.0",
     "husky": "^0.13.4",
+    "jest": "^20.0.4",
     "lint-staged": "^3.6.0",
     "nodemon": "^1.11.0",
     "prettier": "^1.4.2"
   },
   "dependencies": {
     "dotenv": "^4.0.0"
+  },
+  "jest": {
+    "verbose": true,
+    "testPathIgnorePatterns": [
+      "<rootDir>/__tests__/env-setup.js",
+      "<rootDir>/node_modules/"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/env-setup.js"
   },
   "lint-staged": {
     "*.{js,jsx}": [
