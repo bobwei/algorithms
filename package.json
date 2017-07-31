@@ -36,7 +36,8 @@
     "prettier": "^1.5.3"
   },
   "dependencies": {
-    "dotenv": "^4.0.0"
+    "dotenv": "^4.0.0",
+    "flow-typed": "^2.1.5"
   },
   "jest": {
     "verbose": true,
