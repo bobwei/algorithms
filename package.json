@@ -4,6 +4,8 @@
   "description": "",
   "scripts": {
     "start": "babel-node src/index.js",
+    "build": "babel src --out-dir lib",
+    "build:watch": "babel src --out-dir lib --watch",
     "precommit": "lint-staged --verbose",
     "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
     "test": "jest --onlyChanged --watch",
