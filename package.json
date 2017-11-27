@@ -3,18 +3,15 @@
   "version": "1.2.5",
   "description": "",
   "scripts": {
+    "dev": "nodemon src/index.js --exec babel-node",
     "start": "babel-node src/index.js",
-    "build": "babel src --out-dir lib",
-    "build:watch": "babel src --out-dir lib --watch",
     "precommit": "lint-staged --verbose",
     "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
     "test": "jest --onlyChanged --watch",
     "test:all": "jest",
     "lint-staged": "lint-staged --verbose",
     "flow": "flow",
-    "prepublish": "yarn run clean && yarn run test:all && yarn run build",
-    "clean": "rimraf lib",
-    "dev": "nodemon src/index.js --exec babel-node"
+    "clean": "rimraf lib"
   },
   "author": "bob61016@gmail.com",
   "license": "MIT",
