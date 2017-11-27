@@ -5,12 +5,11 @@
   "scripts": {
     "dev": "nodemon src/index.js --exec babel-node",
     "start": "babel-node src/index.js",
-    "precommit": "lint-staged --verbose",
-    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
     "test": "jest --onlyChanged --watch",
     "test:all": "jest",
-    "lint-staged": "lint-staged --verbose",
     "flow": "flow",
+    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
+    "precommit": "lint-staged",
     "clean": "rimraf lib"
   },
   "author": "bob61016@gmail.com",
@@ -33,7 +32,7 @@
     "flow-typed": "^2.2.3",
     "husky": "^0.14.3",
     "jest": "^21.2.1",
-    "lint-staged": "^4.0.2",
+    "lint-staged": "^5.0.0",
     "nodemon": "^1.11.0",
     "prettier": "^1.8.2",
     "rimraf": "^2.6.1"
@@ -51,7 +50,7 @@
   },
   "lint-staged": {
     "*.{js,jsx}": [
-      "yarn run format",
+      "yarn format",
       "git add"
     ]
   }
