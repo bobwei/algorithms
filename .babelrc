@@ -1,7 +1,7 @@
 {
   "presets": [
     "flow",
-    "latest"
+    "env"
   ],
   "plugins": [
     ["module-resolver", {
