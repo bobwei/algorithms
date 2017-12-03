@@ -6,7 +6,7 @@
   "plugins": [
     ["module-resolver", {
       "alias": {
-        "modules": "./src"
+        "modules": "./src/modules"
       }
     }],
     "transform-object-rest-spread"
