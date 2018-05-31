@@ -12,6 +12,8 @@
     "node": true
   },
   "rules": {
+    "arrow-body-style": 0,
+    "global-require": 0,
     "no-underscore-dangle": 0,
     "no-console": 0
   },
