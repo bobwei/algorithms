@@ -1,14 +1,21 @@
 {
-  "presets": [
-    "flow",
-    "env"
-  ],
+  "presets": ["flow", "env"],
   "plugins": [
-    ["module-resolver", {
-      "alias": {
-        "modules": "./src/modules"
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "modules": "./src/modules"
+        }
       }
-    }],
+    ],
+    [
+      "transform-runtime",
+      {
+        "polyfill": false,
+        "regenerator": true
+      }
+    ],
     "transform-object-rest-spread"
   ]
 }
