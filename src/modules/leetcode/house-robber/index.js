@@ -9,16 +9,21 @@ f(1) = max(arr[0], arr[1])
 f(2) = max(arr[2] + f(0), f(1))
 */
 const rob = nums => {
-  if (!nums.length) {
+  if (nums.length <= 0) {
     return 0;
   }
-  const output = new Array(nums);
-  output[0] = nums[0];
-  output[1] = Math.max(nums[0], nums[1]);
-  for (let i = 2; i < nums.length; i++) {
-    output[i] = Math.max(nums[i] + output[i - 2], output[i - 1]);
+  if (nums.length <= 1) {
+    return nums[0];
   }
-  return output[nums.length - 1];
+  let nMinus2 = nums[0];
+  let nMinus1 = Math.max(nums[0], nums[1]);
+  let n = Math.max(nMinus1, nMinus2);
+  for (let i = 2; i < nums.length; i++) {
+    n = Math.max(nums[i] + nMinus2, nMinus1);
+    nMinus2 = nMinus1;
+    nMinus1 = n;
+  }
+  return n;
 };
 
 export default rob;
