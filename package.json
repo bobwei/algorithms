@@ -40,9 +40,7 @@
     "prettier": "^1.13.7",
     "rimraf": "^2.6.1"
   },
-  "dependencies": {
-    "dotenv": "^6.0.0"
-  },
+  "dependencies": {},
   "jest": {
     "verbose": true,
     "testPathIgnorePatterns": [
