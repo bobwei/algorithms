@@ -33,14 +33,6 @@
     "rimraf": "^2.6.1"
   },
   "dependencies": {},
-  "jest": {
-    "verbose": true,
-    "testPathIgnorePatterns": [
-      "<rootDir>/__tests__/env-setup.js",
-      "<rootDir>/node_modules/"
-    ],
-    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/env-setup.js"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged"
