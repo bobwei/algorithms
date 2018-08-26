@@ -1,6 +1,6 @@
 {
-  "name": "js-app-boilerplate",
-  "version": "1.5.1",
+  "name": "",
+  "version": "",
   "description": "",
   "scripts": {
     "dev": "nodemon src/index.js --exec babel-node",
@@ -9,7 +9,7 @@
     "test": "jest",
     "clean": "rimraf lib"
   },
-  "author": "bob61016@gmail.com",
+  "author": "",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.24.1",
