@@ -6,8 +6,7 @@
     "dev": "nodemon src/index.js --exec babel-node",
     "start": "node lib/index.js",
     "build": "babel src --out-dir lib --copy-files",
-    "test": "jest --onlyChanged --watch",
-    "test:all": "jest",
+    "test": "jest",
     "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
     "precommit": "lint-staged",
     "clean": "rimraf lib"
