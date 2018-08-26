@@ -1,19 +1,15 @@
 {
-  "name": "js-app-boilerplate",
-  "version": "1.5.1",
+  "name": "",
+  "version": "",
   "description": "",
   "scripts": {
     "dev": "nodemon src/index.js --exec babel-node",
     "start": "node lib/index.js",
-    "build": "babel src --out-dir lib --copy-files",
-    "test": "jest --onlyChanged --watch",
-    "test:all": "jest",
-    "flow": "flow",
-    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
-    "precommit": "lint-staged",
+    "build": "npm run clean && babel src --out-dir lib --copy-files",
+    "test": "jest",
     "clean": "rimraf lib"
   },
-  "author": "bob61016@gmail.com",
+  "author": "",
   "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -21,9 +17,7 @@
     "babel-eslint": "^8.2.6",
     "babel-plugin-module-resolver": "^3.1.1",
     "babel-plugin-transform-object-rest-spread": "^6.23.0",
-    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.7.0",
-    "babel-preset-flow": "^6.23.0",
     "eslint": "^5.4.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-prettier": "^3.0.1",
@@ -31,30 +25,17 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-react": "^7.11.1",
-    "flow-bin": "^0.79.1",
-    "flow-typed": "^2.5.1",
-    "husky": "^0.14.3",
+    "husky": "^1.0.0-rc.13",
     "jest": "^23.5.0",
-    "lint-staged": "^7.2.2",
     "nodemon": "^1.18.3",
     "prettier": "^1.14.2",
+    "pretty-quick": "^1.6.0",
     "rimraf": "^2.6.1"
   },
-  "dependencies": {
-    "babel-runtime": "^6.26.0"
-  },
-  "jest": {
-    "verbose": true,
-    "testPathIgnorePatterns": [
-      "<rootDir>/__tests__/env-setup.js",
-      "<rootDir>/node_modules/"
-    ],
-    "setupTestFrameworkScriptFile": "<rootDir>/__tests__/env-setup.js"
-  },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "yarn format",
-      "git add"
-    ]
+  "dependencies": {},
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }

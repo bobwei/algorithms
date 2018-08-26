@@ -1,19 +1,10 @@
 {
-  "presets": ["flow", "env"],
+  "presets": ["env"],
   "plugins": [
     [
       "module-resolver",
       {
-        "alias": {
-          "modules": "./src/modules"
-        }
-      }
-    ],
-    [
-      "transform-runtime",
-      {
-        "polyfill": false,
-        "regenerator": true
+        "alias": {}
       }
     ],
     "transform-object-rest-spread"
