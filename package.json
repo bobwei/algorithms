@@ -7,8 +7,6 @@
     "start": "node lib/index.js",
     "build": "babel src --out-dir lib --copy-files",
     "test": "jest",
-    "format": "prettier --single-quote --trailing-comma all '{src,__{tests,mocks}__}/**/*.{js,jsx}' --write",
-    "precommit": "lint-staged",
     "clean": "rimraf lib"
   },
   "author": "bob61016@gmail.com",
@@ -27,11 +25,11 @@
     "eslint-plugin-import": "^2.14.0",
     "eslint-plugin-jsx-a11y": "6.1.1",
     "eslint-plugin-react": "^7.11.1",
-    "husky": "^0.14.3",
+    "husky": "^1.0.0-rc.13",
     "jest": "^23.5.0",
-    "lint-staged": "^7.2.2",
     "nodemon": "^1.18.3",
     "prettier": "^1.14.2",
+    "pretty-quick": "^1.6.0",
     "rimraf": "^2.6.1"
   },
   "dependencies": {},
@@ -43,10 +41,9 @@
     ],
     "setupTestFrameworkScriptFile": "<rootDir>/__tests__/env-setup.js"
   },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "yarn format",
-      "git add"
-    ]
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
