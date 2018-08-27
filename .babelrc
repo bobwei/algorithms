@@ -4,6 +4,7 @@
     [
       "module-resolver",
       {
+        "root": [],
         "alias": {}
       }
     ],
