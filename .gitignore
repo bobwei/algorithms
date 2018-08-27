@@ -7,3 +7,4 @@ ignored-scripts/
 tmp/
 dist/
 .next/
+out/
