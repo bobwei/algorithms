@@ -6,3 +6,4 @@ logs/
 ignored-scripts/
 tmp/
 dist/
+.next/
