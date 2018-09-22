@@ -24,6 +24,7 @@
     "operator-assignment": 0,
     "no-continue": 0,
     "import/prefer-default-export": 0,
+    "no-restricted-syntax": 0,
     "no-console": 0
   },
   "settings": {
