@@ -2,28 +2,24 @@
  * @param {string} s
  * @return {number}
  */
+
 /*
-  226
-  f(i) = f(i - 2) { if s.slice(i - 1, i + 1) <= 26 && s.slice(i - 1, i + 1) > 0 } +
-         f(i - 1) { if s.slice(i, i + 1) > 0 }
-  f(0) = 1
-  f(1) = 1
-  f(2) = 1 + 1 = 2
+  f(n) = f(n - 1), if 1 <= d1 <= 9
+       + f(n - 2), if 10 <= d2 <= 26
+  f(n - 2) => x
+  f(n - 1) => y
 */
-const numDecodings = function(s) {
-  let output = parseInt(s[0], 10) > 0 ? 1 : 0;
-  let x = output;
+
+var numDecodings = function(s) {
+  let output = parseInt(s[0]) > 0 ? 1 : 0;
+  let x = 1;
   let y = output;
-  for (let i = 1; i < s.length; i++) {
-    const twoDigit = parseInt(s.slice(i - 1, i + 1), 10);
-    const oneDigit = parseInt(s.slice(i, i + 1), 10);
-    const isTwoDigitValid =
-      twoDigit <= 26 && twoDigit > 0 && s.slice(i - 1, i) !== '0';
-    output = (isTwoDigitValid ? x : 0) + (oneDigit > 0 ? y : 0);
+  for (let i = 0; i < s.length; i++) {
+    const d1 = parseInt(s.slice(i, i + 1));
+    const d2 = parseInt(s.slice(i - 1, i + 1));
+    output = (d1 > 0 ? y : 0) + (10 <= d2 && d2 <= 26 ? x : 0);
     x = y;
     y = output;
   }
   return output;
 };
-
-export default numDecodings;
