@@ -26,6 +26,7 @@
     "import/prefer-default-export": 0,
     "no-restricted-syntax": 0,
     "no-use-before-define": 0,
+    "no-lonely-if": 0,
     "no-console": 0
   },
   "settings": {
