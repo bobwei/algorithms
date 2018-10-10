@@ -9,16 +9,12 @@
  * @param {ListNode} head
  * @return {ListNode}
  */
-
 var reverseList = function(head) {
-  if (!head) {
-    return null;
-  }
-  if (!head.next) {
+  if (!head || !head.next) {
     return head;
   }
-  const head2 = reverseList(head.next);
+  const root = reverseList(head.next);
   head.next.next = head;
   head.next = null;
-  return head2;
+  return root;
 };
