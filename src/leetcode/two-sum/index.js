@@ -3,14 +3,12 @@
  * @param {number} target
  * @return {number[]}
  */
-const twoSum = function(nums, target) {
+var twoSum = function(nums, target) {
+  const cache = new Map();
   for (let i = 0; i < nums.length; i++) {
-    for (let j = i + 1; j < nums.length; j++) {
-      if (nums[i] + nums[j] === target) {
-        return [i, j];
-      }
+    if (cache.has(target - nums[i])) {
+      return [cache.get(target - nums[i]), i];
     }
+    cache.set(nums[i], i);
   }
 };
-
-export default twoSum;
