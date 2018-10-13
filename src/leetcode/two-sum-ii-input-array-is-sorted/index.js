@@ -1,19 +1,19 @@
 /**
- * @param {number[]} nums
+ * @param {number[]} numbers
  * @param {number} target
  * @return {number[]}
  */
-const twoSum = function(nums, target) {
-  for (let i = 0; i < nums.length; i++) {
-    for (let j = i + 1; j < nums.length; j++) {
-      const sum = nums[i] + nums[j];
-      if (sum === target) {
-        return [i + 1, j + 1];
-      } else if (sum > target) {
-        break;
-      }
+var twoSum = function(nums, target) {
+  let left = 0;
+  let right = nums.length - 1;
+  while (left < right) {
+    const sum = nums[left] + nums[right];
+    if (sum === target) {
+      return [left + 1, right + 1];
+    } else if (sum < target) {
+      left += 1;
+    } else if (sum > target) {
+      right -= 1;
     }
   }
 };
-
-export default twoSum;
