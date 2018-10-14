@@ -1,25 +1,8 @@
-# Js App Boilerplate
+# leetcode
 
-This is a js app boilerplate with batteries included to speed up project initiation.
+This is a repository recording my leetcode solutions and references.
 
+## References
 
-## Getting Started
-
-
-### Install
-
-```
-yarn
-```
-
-### Development
-
-```
-yarn dev
-```
-
-### Test
-
-```
-yarn test
-```
+- [LeetCode 刷题指南（一）](https://blog.csdn.net/qq_34525938/article/details/82633679)
+- [leetcode 刷题指南](https://blog.csdn.net/onegoldensun/article/details/78421809)
