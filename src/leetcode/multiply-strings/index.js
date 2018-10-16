@@ -4,48 +4,40 @@
  * @return {string}
  */
 
-/*
-  999
-   99
-*/
-
-const toArray = (s) => {
-  return s
+const toIntArr = (str) => {
+  return str
     .split('')
-    .map((c) => parseInt(c, 10))
-    .reverse();
+    .reverse()
+    .map((c) => parseInt(c));
 };
 
-const toString = (arr) => {
-  arr.reverse();
-  /* remove leading zero */
+const removeZeroPadding = (arr) => {
   let i = 0;
-  let isZero = true;
-  for (; i < arr.length; i++) {
-    if (arr[i] !== 0) {
-      isZero = false;
-      break;
-    }
+  while (arr[i] <= 0) {
+    i += 1;
   }
-  return isZero ? '0' : arr.slice(i).join('');
+  if (i >= arr.length) {
+    return [0];
+  }
+  return arr.slice(i);
 };
 
 const multiply = function(num1, num2) {
-  const arr1 = toArray(num1);
-  const arr2 = toArray(num2);
-  const output = new Array(arr1.length + arr2.length).fill(0);
+  const arr1 = toIntArr(num1);
+  const arr2 = toIntArr(num2);
+  const arr = new Array(num1.length + num2.length).fill(0);
   for (let i = 0; i < arr1.length; i++) {
     for (let j = 0; j < arr2.length; j++) {
-      output[i + j] = output[i + j] + arr1[i] * arr2[j];
+      arr[i + j] += arr1[i] * arr2[j];
     }
   }
   let carry = 0;
-  for (let i = 0; i < output.length; i++) {
-    const sum = output[i] + carry;
-    output[i] = sum % 10;
+  for (let i = 0; i < arr.length; i++) {
+    const sum = arr[i] + carry;
+    arr[i] = sum % 10;
     carry = Math.floor(sum / 10);
   }
-  return toString(output);
+  return removeZeroPadding(arr.reverse()).join('');
 };
 
 export default multiply;
