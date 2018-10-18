@@ -4,14 +4,14 @@
  */
 
 /*
-  Return index of the smallest element greater than target
+  Return index of the smallest element that is greater than target
 */
-const binarySearch = (nums, target) => {
+const binarySearch = (arr, target) => {
   let left = 0;
-  let right = nums.length - 1;
+  let right = arr.length - 1;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target > nums[mid]) {
+    if (target > arr[mid]) {
       left = mid + 1;
     } else {
       right = mid;
@@ -21,19 +21,19 @@ const binarySearch = (nums, target) => {
 };
 
 var lengthOfLIS = function(nums) {
-  if (!nums.length) {
-    return 0;
+  if (nums.length <= 1) {
+    return nums.length;
   }
-  const dp = [nums[0]];
+  const arr = [nums[0]];
   for (let i = 1; i < nums.length; i++) {
-    if (nums[i] < dp[0]) {
-      dp[0] = nums[i];
-    } else if (nums[i] > dp[dp.length - 1]) {
-      dp.push(nums[i]);
+    if (nums[i] < arr[0]) {
+      arr[0] = nums[i];
+    } else if (nums[i] > arr[arr.length - 1]) {
+      arr.push(nums[i]);
     } else {
-      const j = binarySearch(dp, nums[i]);
-      dp[j] = nums[i];
+      const index = binarySearch(arr, nums[i]);
+      arr[index] = nums[i];
     }
   }
-  return dp.length;
+  return arr.length;
 };
