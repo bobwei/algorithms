@@ -22,8 +22,8 @@ var lowestCommonAncestor = function(root, p, q) {
   const rightLCA = lowestCommonAncestor(root.right, p, q);
   if (leftLCA && rightLCA) {
     return root;
-  } else if (leftLCA || rightLCA) {
+  }
+  if (leftLCA || rightLCA) {
     return leftLCA || rightLCA;
   }
-  return null;
 };
