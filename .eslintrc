@@ -31,6 +31,8 @@
     "operator-assignment": 0,
     "no-continue": 0,
     "import/prefer-default-export": 0,
+    "radix": 0,
+    "yoda": 0,
     "no-restricted-syntax": 0,
     "no-use-before-define": 0,
     "no-lonely-if": 0,
