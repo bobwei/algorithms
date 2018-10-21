@@ -3,79 +3,6 @@
  * @return {string}
  */
 
-/* 1 234 567 891 */
-
-/* n = d2 * 100 + d1 * 10 + d0 */
-const transformHundred = (n) => {
-  const output = [];
-
-  /* handle hundred */
-  const d2 = Math.floor(n / 100);
-  if (d2 > 0) {
-    output.push(constants[d2]);
-    output.push('Hundred');
-  }
-
-  /* handle 1 ~ 99 */
-  const d1d2 = n % 100;
-  if (d1d2 <= 19 && d1d2 > 0) {
-    /* handle 1 ~ 19 */
-    output.push(constants[d1d2]);
-  } else {
-    /* handle 1 ~ 19 */
-    const d1 = Math.floor((n % 100) / 10) * 10;
-    if (d1 > 0) {
-      output.push(constants[d1]);
-    }
-    const d0 = n % 10;
-    if (d0 > 0) {
-      output.push(constants[d0]);
-    }
-  }
-
-  return output;
-};
-
-const numberToWords = function(num) {
-  if (num <= 0) {
-    return constants[num];
-  }
-
-  const output = [];
-
-  // billion
-  const d9 = Math.floor(num / 1000000000);
-  if (d9 > 0) {
-    output.push(...transformHundred(d9));
-    output.push('Billion');
-  }
-  num %= 1000000000;
-
-  // million
-  const d876 = Math.floor(num / 1000000);
-  if (d876 > 0) {
-    output.push(...transformHundred(d876));
-    output.push('Million');
-  }
-  num %= 1000000;
-
-  // thousand
-  const d543 = Math.floor(num / 1000);
-  if (d543 > 0) {
-    output.push(...transformHundred(d543));
-    output.push('Thousand');
-  }
-  num %= 1000;
-
-  // 1 ~ 999
-  const d210 = Math.floor(num / 1);
-  if (d210 > 0) {
-    output.push(...transformHundred(d210));
-  }
-
-  return output.join(' ');
-};
-
 const constants = {
   0: 'Zero',
   1: 'One',
@@ -105,6 +32,58 @@ const constants = {
   70: 'Seventy',
   80: 'Eighty',
   90: 'Ninety',
+};
+
+const transformHundred = (n) => {
+  const arr = [];
+  const d2 = Math.floor(n / 100);
+  if (d2 > 0) {
+    arr.push(constants[d2]);
+    arr.push('Hundred');
+  }
+  const d10 = Math.floor(n % 100);
+  if (d10 > 0) {
+    if (constants[d10]) {
+      arr.push(constants[d10]);
+    } else {
+      const d1 = Math.floor(d10 / 10) * 10;
+      if (d1 > 0) {
+        arr.push(constants[d1]);
+      }
+      const d0 = Math.floor(d10 % 10);
+      if (d0 > 0) {
+        arr.push(constants[d0]);
+      }
+    }
+  }
+  return arr;
+};
+
+const numberToWords = function(num) {
+  if (num === 0) {
+    return constants[num];
+  }
+  const arr = [];
+  const d9 = Math.floor(num / 10 ** 9);
+  if (d9 > 0) {
+    arr.push(...transformHundred(d9));
+    arr.push('Billion');
+  }
+  const d6 = Math.floor((num % 10 ** 9) / 10 ** 6);
+  if (d6 > 0) {
+    arr.push(...transformHundred(d6));
+    arr.push('Million');
+  }
+  const d3 = Math.floor((num % 10 ** 6) / 10 ** 3);
+  if (d3 > 0) {
+    arr.push(...transformHundred(d3));
+    arr.push('Thousand');
+  }
+  const d0 = Math.floor(num % 10 ** 3);
+  if (d0 > 0) {
+    arr.push(...transformHundred(d0));
+  }
+  return arr.join(' ');
 };
 
 export default numberToWords;
