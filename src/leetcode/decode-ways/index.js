@@ -2,22 +2,20 @@
  * @param {string} s
  * @return {number}
  */
-
-/*
-  f(n) = f(n - 1), if 1 <= d1 <= 9
-       + f(n - 2), if 10 <= d2 <= 26
-  f(n - 2) => x
-  f(n - 1) => y
-*/
-
 var numDecodings = function(s) {
   let output = parseInt(s[0]) > 0 ? 1 : 0;
-  let x = 1;
+  let x = output;
   let y = output;
-  for (let i = 0; i < s.length; i++) {
-    const d1 = parseInt(s.slice(i, i + 1));
+  for (let i = 1; i < s.length; i++) {
+    output = 0;
     const d2 = parseInt(s.slice(i - 1, i + 1));
-    output = (d1 > 0 ? y : 0) + (10 <= d2 && d2 <= 26 ? x : 0);
+    const d1 = parseInt(s.slice(i, i + 1));
+    if (10 <= d2 && d2 <= 26) {
+      output += x;
+    }
+    if (0 < d1) {
+      output += y;
+    }
     x = y;
     y = output;
   }
