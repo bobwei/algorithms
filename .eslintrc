@@ -8,6 +8,7 @@
     "node": true
   },
   "globals": {
+    "RandomListNode": true,
     "UndirectedGraphNode": true,
     "ListNode": true,
     "TreeNode": true
