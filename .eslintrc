@@ -8,6 +8,7 @@
     "node": true
   },
   "globals": {
+    "ListNode": true,
     "TreeNode": true
   },
   "rules": {
