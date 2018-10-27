@@ -17,14 +17,14 @@
  * @return {TreeNode}
  */
 
-const getHalfPtr = (head) => {
+const getRight = (head) => {
   let pre = head;
   let slow = head;
   let fast = head;
   while (fast && fast.next) {
     pre = slow;
     slow = slow.next;
-    fast = (fast.next && fast.next.next) || null;
+    fast = fast.next.next;
   }
   pre.next = null;
   return slow;
@@ -37,7 +37,7 @@ var sortedListToBST = function(head) {
   if (!head.next) {
     return new TreeNode(head.val);
   }
-  let right = getHalfPtr(head);
+  const right = getRight(head);
   const root = new TreeNode(right.val);
   root.left = sortedListToBST(head);
   root.right = sortedListToBST(right.next);
