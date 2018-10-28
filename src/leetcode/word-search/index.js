@@ -4,7 +4,7 @@
  * @return {boolean}
  */
 
-const dfs = (board, word, index, i, j, selected) => {
+const dfs = (board, i, j, word, index, selected) => {
   if (index >= word.length) {
     return true;
   }
@@ -14,19 +14,19 @@ const dfs = (board, word, index, i, j, selected) => {
   if (selected[i][j]) {
     return false;
   }
-  if (word[index] === board[i][j]) {
-    selected[i][j] = true;
-    if (
-      dfs(board, word, index + 1, i - 1, j, selected) ||
-      dfs(board, word, index + 1, i, j + 1, selected) ||
-      dfs(board, word, index + 1, i + 1, j, selected) ||
-      dfs(board, word, index + 1, i, j - 1, selected)
-    ) {
-      return true;
-    }
+  if (board[i][j] !== word[index]) {
+    return false;
+  }
+  selected[i][j] = true;
+  if (
+    dfs(board, i - 1, j, word, index + 1, selected) ||
+    dfs(board, i, j + 1, word, index + 1, selected) ||
+    dfs(board, i + 1, j, word, index + 1, selected) ||
+    dfs(board, i, j - 1, word, index + 1, selected)
+  ) {
+    return true;
   }
   selected[i][j] = false;
-  return false;
 };
 
 var exist = function(board, word) {
@@ -34,7 +34,7 @@ var exist = function(board, word) {
   for (let i = 0; i < board.length; i++) {
     for (let j = 0; j < board[0].length; j++) {
       if (board[i][j] === word[0]) {
-        if (dfs(board, word, 0, i, j, selected)) {
+        if (dfs(board, i, j, word, 0, selected)) {
           return true;
         }
       }
