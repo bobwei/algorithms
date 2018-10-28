@@ -2,7 +2,7 @@
  * @param {string} s
  * @return {number}
  */
-var numDecodings = function(s) {
+const numDecodings = function(s) {
   let output = parseInt(s[0]) > 0 ? 1 : 0;
   let x = output;
   let y = output;
@@ -21,3 +21,5 @@ var numDecodings = function(s) {
   }
   return output;
 };
+
+export default numDecodings;
