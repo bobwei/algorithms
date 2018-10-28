@@ -3,24 +3,21 @@
  * @return {boolean}
  */
 
-const isAlphanumeric = (s) => {
-  return /[A-Za-z0-9]/.test(s);
+const shouldContinue = (c) => {
+  return !/[0-9a-zA-Z]/.test(c);
 };
 
 var isPalindrome = function(s) {
   let i = 0;
   let j = s.length - 1;
   while (i < j) {
-    while (!isAlphanumeric(s[i])) {
+    while (shouldContinue(s[i])) {
       i += 1;
     }
-    while (!isAlphanumeric(s[j])) {
+    while (shouldContinue(s[j])) {
       j -= 1;
     }
-    if (i >= j) {
-      break;
-    }
-    if (s[i].toLowerCase() !== s[j].toLowerCase()) {
+    if (s[i] && s[j] && s[i].toLowerCase() !== s[j].toLowerCase()) {
       return false;
     }
     i += 1;
