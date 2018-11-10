@@ -2,31 +2,28 @@
  * @param {number[]} nums
  * @return {number}
  */
-/*
-  https://blog.csdn.net/feifeiiong/article/details/77925635
-*/
 var findNumberOfLIS = function(nums) {
-  const lengths = new Array(nums.length).fill(1);
-  const counts = new Array(nums.length).fill(1);
-  let max = 0;
+  const dpLength = new Array(nums.length).fill(1);
+  const dpCount = new Array(nums.length).fill(1);
+  let maxLength = 0;
   for (let i = 0; i < nums.length; i++) {
     for (let j = 0; j < i; j++) {
       if (nums[i] > nums[j]) {
-        if (lengths[j] + 1 > lengths[i]) {
-          lengths[i] = lengths[j] + 1;
-          counts[i] = counts[j];
-        } else if (lengths[j] + 1 === lengths[i]) {
-          counts[i] += counts[j];
+        if (dpLength[j] + 1 > dpLength[i]) {
+          dpLength[i] = dpLength[j] + 1;
+          dpCount[i] = dpCount[j];
+        } else if (dpLength[j] + 1 === dpLength[i]) {
+          dpCount[i] += dpCount[j];
         }
       }
     }
-    max = Math.max(max, lengths[i]);
+    maxLength = Math.max(maxLength, dpLength[i]);
   }
-  let n = 0;
+  let count = 0;
   for (let i = 0; i < nums.length; i++) {
-    if (lengths[i] === max) {
-      n += counts[i];
+    if (dpLength[i] === maxLength) {
+      count += dpCount[i];
     }
   }
-  return n;
+  return count;
 };
