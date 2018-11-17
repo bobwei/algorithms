@@ -5,20 +5,11 @@
  * @return {number[]}
  */
 
-const EMPTY = -1;
-const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-const getId = (m, n, i, j) => {
-  if (i < 0 || j < 0 || i >= m || j >= n) {
-    return EMPTY;
-  }
-  return n * i + j;
-};
+const toIndex = (i, j, m, n) => n * i + j;
 
 const find = (roots, v) => {
-  if (roots[v] === EMPTY || v === EMPTY) {
-    return EMPTY;
-  }
   let ptr = v;
   while (roots[ptr] !== ptr) {
     roots[ptr] = roots[roots[ptr]];
@@ -27,22 +18,29 @@ const find = (roots, v) => {
   return ptr;
 };
 
+const union = (roots, r1, r2) => {
+  roots[r2] = r1;
+};
+
 var numIslands2 = function(m, n, positions) {
+  const roots = new Array(m * n);
   const output = [];
   let count = 0;
-  const roots = new Array(m * n).fill(EMPTY);
   for (let i = 0; i < positions.length; i++) {
-    const [x, y] = positions[i];
-    const id = getId(m, n, x, y);
-    if (roots[id] === EMPTY) {
-      roots[id] = id;
-      count += 1;
-    }
-    for (let j = 0; j < dirs.length; j++) {
-      const ri = find(roots, id);
-      const rj = find(roots, getId(m, n, x + dirs[j][0], y + dirs[j][1]));
-      if (rj !== EMPTY && ri !== rj) {
-        roots[ri] = rj;
+    const index = toIndex(positions[i][0], positions[i][1], m, n);
+    roots[index] = index;
+    count += 1;
+    for (let j = 0; j < directions.length; j++) {
+      const x = positions[i][0] + directions[j][0];
+      const y = positions[i][1] + directions[j][1];
+      if (x < 0 || x >= m || y < 0 || y >= n) {
+        continue;
+      }
+      const nextIndex = toIndex(x, y, m, n);
+      const ri = find(roots, index);
+      const rj = find(roots, nextIndex);
+      if (rj !== undefined && rj !== ri) {
+        union(roots, ri, rj);
         count -= 1;
       }
     }
