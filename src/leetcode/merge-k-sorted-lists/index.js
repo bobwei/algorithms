@@ -32,16 +32,18 @@ const merge = (h1, h2) => {
   return dummy.next;
 };
 
-var mergeKLists = function(lists, start = 0, end = lists.length - 1) {
+var mergeKLists = function(lists) {
   if (!lists.length) {
     return null;
   }
-  if (end - start + 1 <= 1) {
-    return lists[start];
+  let length = lists.length;
+  while (length > 1) {
+    let j = 0;
+    for (let i = 0; i <= length; i += 2) {
+      lists[j] = i + 1 < length ? merge(lists[i], lists[i + 1]) : lists[i];
+      j += 1;
+    }
+    length = Math.ceil(length / 2);
   }
-  if (end - start + 1 <= 2) {
-    return merge(lists[start], lists[end]);
-  }
-  const mid = Math.floor((start + end) / 2);
-  return merge(mergeKLists(lists, start, mid), mergeKLists(lists, mid + 1, end));
+  return lists[0];
 };
