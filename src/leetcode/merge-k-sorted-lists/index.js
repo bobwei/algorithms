@@ -36,14 +36,10 @@ var mergeKLists = function(lists) {
   if (!lists.length) {
     return null;
   }
-  let length = lists.length;
-  while (length > 1) {
-    let j = 0;
-    for (let i = 0; i <= length; i += 2) {
-      lists[j] = i + 1 < length ? merge(lists[i], lists[i + 1]) : lists[i];
-      j += 1;
-    }
-    length = Math.ceil(length / 2);
+  while (lists.length > 1) {
+    const h1 = lists.shift();
+    const h2 = lists.shift();
+    lists.push(merge(h1, h2));
   }
-  return lists[0];
+  return lists.pop();
 };
