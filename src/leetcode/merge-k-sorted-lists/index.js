@@ -37,9 +37,8 @@ var mergeKLists = function(lists) {
     return null;
   }
   while (lists.length > 1) {
-    const h1 = lists.shift();
-    const h2 = lists.shift();
-    lists.push(merge(h1, h2));
+    const h = merge(lists.shift(), lists.shift());
+    lists.push(h);
   }
   return lists.pop();
 };
