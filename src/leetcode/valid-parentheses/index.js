@@ -3,35 +3,30 @@
  * @return {boolean}
  */
 
-const isValid = function(s) {
-  if (!s) {
-    return true;
-  }
+const symbols = {
+  left: ['(', '[', '{'],
+  right: [')', ']', '}'],
+};
+
+var isValid = function(s) {
   const stack = [];
   for (let i = 0; i < s.length; i++) {
-    const char = s[i];
-    /* isLeftBracket */
-    if (['(', '[', '{'].indexOf(char) > -1) {
-      stack.push(s[i]);
-      /* isRightBracket */
-    } else if ([')', ']', '}'].indexOf(char) > -1) {
-      const leftBracket = stack.pop();
-      if (
-        (leftBracket === '(' && char !== ')') ||
-        (leftBracket === '[' && char !== ']') ||
-        (leftBracket === '{' && char !== '}')
-      ) {
+    const c = s[i];
+    if (symbols.left.indexOf(c) > -1) {
+      stack.push(c);
+    } else {
+      const pre = stack.pop();
+      if (c === symbols.right[0] && pre !== symbols.left[0]) {
         return false;
-      }
-      if (!leftBracket) {
+      } else if (c === symbols.right[1] && pre !== symbols.left[1]) {
+        return false;
+      } else if (c === symbols.right[2] && pre !== symbols.left[2]) {
         return false;
       }
     }
   }
-  if (stack.length) {
+  if (stack.length > 0) {
     return false;
   }
   return true;
 };
-
-export default isValid;
