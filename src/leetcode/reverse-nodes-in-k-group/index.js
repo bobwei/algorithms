@@ -11,62 +11,43 @@
  * @return {ListNode}
  */
 
-const getLastHead = (head, k) => {
-  let lHead;
-  let ptr = head;
-  let i = 0;
-  while (ptr) {
-    if (i % k === 0) {
-      lHead = ptr;
-    } else if (i % k === k - 1) {
-      lHead = null;
-    }
-    ptr = ptr.next;
-    i += 1;
+const getLength = (head) => {
+  if (!head) {
+    return 0;
   }
-  return lHead;
+  let n = 0;
+  let ptr = head;
+  while (ptr) {
+    n += 1;
+    ptr = ptr.next;
+  }
+  return n;
 };
 
 var reverseKGroup = function(head, k) {
-  if (k <= 1) {
+  const length = getLength(head);
+  if (length < k) {
     return head;
   }
-  const lHead = getLastHead(head, k);
   const dummy = new ListNode();
-  dummy.next = head;
-  let kEnd = dummy;
-  let kStart;
+  let thePtr = dummy;
   let pre;
   let ptr = head;
   let next;
-  let i = 0;
-  while (ptr) {
-    if (ptr === lHead) {
-      break;
-    }
-    if (i % k === 0) {
-      kStart = ptr;
-      next = ptr.next;
-      ptr.next = null;
-      pre = ptr;
-      ptr = next;
-    } else if (i % k === k - 1) {
-      kEnd.next = ptr;
-      kEnd = kStart;
-      next = ptr.next;
-      ptr.next = pre;
-      pre = ptr;
-      ptr = next;
-    } else {
+  for (let i = 0; i < Math.floor(length / k); i++) {
+    let kHead;
+    let kTail = ptr;
+    pre = null;
+    for (let j = 0; j < k; j++) {
       next = ptr.next;
       ptr.next = pre;
       pre = ptr;
       ptr = next;
     }
-    i += 1;
+    kHead = pre;
+    thePtr.next = kHead;
+    thePtr = kTail;
   }
-  if (kStart) {
-    kStart.next = lHead;
-  }
+  thePtr.next = next;
   return dummy.next;
 };
