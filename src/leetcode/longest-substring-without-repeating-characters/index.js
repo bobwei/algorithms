@@ -2,27 +2,27 @@
  * @param {string} s
  * @return {number}
  */
-const lengthOfLongestSubstring = function(s) {
-  let cache = {};
+/*
+  pwxyzwkew
+*/
+var lengthOfLongestSubstring = function(s) {
+  const cache = {};
   let length = 0;
-  let j = 0;
   let max = 0;
+  let left = 0;
   for (let i = 0; i < s.length; i++) {
-    const c = s[i];
-    if (!cache[c]) {
-      cache[c] = true;
+    if (!cache[s[i]]) {
+      cache[s[i]] = true;
       length += 1;
       max = Math.max(max, length);
-    } else {
-      while (s[j] !== s[i]) {
-        delete cache[s[j]];
-        length -= 1;
-        j += 1;
-      }
-      j += 1;
+      continue;
     }
+    while (s[left] !== s[i]) {
+      delete cache[s[left]];
+      left += 1;
+      length -= 1;
+    }
+    left += 1;
   }
   return max;
 };
-
-export default lengthOfLongestSubstring;
