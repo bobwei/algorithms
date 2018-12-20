@@ -2,18 +2,18 @@
  * @param {string} s
  * @return {number}
  */
-const numDecodings = function(s) {
+var numDecodings = function(s) {
   let output = parseInt(s[0]) > 0 ? 1 : 0;
-  let x = output;
+  let x = 1;
   let y = output;
   for (let i = 1; i < s.length; i++) {
-    output = 0;
-    const d2 = parseInt(s.slice(i - 1, i + 1));
     const d1 = parseInt(s.slice(i, i + 1));
-    if (10 <= d2 && d2 <= 26) {
+    const d2 = parseInt(s.slice(i - 1, i + 1));
+    output = 0;
+    if (d2 >= 10 && d2 <= 26) {
       output += x;
     }
-    if (0 < d1) {
+    if (d1 > 0) {
       output += y;
     }
     x = y;
@@ -21,5 +21,3 @@ const numDecodings = function(s) {
   }
   return output;
 };
-
-export default numDecodings;
