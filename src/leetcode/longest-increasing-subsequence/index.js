@@ -3,26 +3,25 @@
  * @return {number}
  */
 
-/*
-  Return index of the smallest element that is greater than target
-*/
 const binarySearch = (arr, target) => {
   let left = 0;
   let right = arr.length - 1;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target > arr[mid]) {
+    if (target === arr[mid]) {
+      return mid;
+    } else if (target > arr[mid]) {
       left = mid + 1;
-    } else {
+    } else if (target < arr[mid]) {
       right = mid;
     }
   }
-  return right;
+  return left;
 };
 
 var lengthOfLIS = function(nums) {
-  if (nums.length <= 1) {
-    return nums.length;
+  if (!nums.length) {
+    return 0;
   }
   const arr = [nums[0]];
   for (let i = 1; i < nums.length; i++) {
