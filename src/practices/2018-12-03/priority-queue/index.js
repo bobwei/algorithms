@@ -27,9 +27,10 @@ const moveDown = (arr, i, comparator) => {
 };
 
 class PriorityQueue {
-  constructor({ comparator = (a, b) => a < b } = {}) {
+  constructor({ comparator = (a, b) => a < b, isEqual } = {}) {
     this.arr = [];
     this.comparator = comparator;
+    this.isEqual = isEqual;
   }
 
   enqueue(element) {
@@ -48,6 +49,16 @@ class PriorityQueue {
       moveDown(this.arr, 0, this.comparator);
     }
     return element;
+  }
+
+  remove(element) {
+    for (let i = 0; i < this.arr.length; i++) {
+      if (this.isEqual(element, this.arr[i])) {
+        swap(this.arr, i, this.arr.length - 1);
+        this.arr.pop();
+        moveDown(this.arr, i, this.comparator);
+      }
+    }
   }
 }
 

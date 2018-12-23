@@ -49,3 +49,25 @@ test('PriorityQueue', () => {
   ];
   expect(result).toEqual(expectedResult);
 });
+
+test('PriorityQueue', () => {
+  const pq = new PriorityQueue({
+    comparator: (a, b) => a.id < b.id,
+    isEqual: (a, b) => a.id === b.id,
+  });
+  pq.enqueue({ id: 2 });
+  pq.enqueue({ id: 1 });
+  pq.enqueue({ id: 3 });
+  pq.enqueue({ id: 6 });
+  pq.enqueue({ id: 4 });
+  pq.remove({ id: 1 });
+  pq.remove({ id: 6 });
+  pq.remove({ id: 3 });
+  const result = [];
+  const length = pq.arr.length;
+  for (let i = 0; i < length; i++) {
+    result.push(pq.dequeue());
+  }
+  const expectedResult = [{ id: 2 }, { id: 4 }];
+  expect(result).toEqual(expectedResult);
+});
