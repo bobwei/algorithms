@@ -15,11 +15,10 @@ var treeToDoublyList = function(root) {
   if (!root) {
     return null;
   }
+  const dummy = new Node();
   const queue = [];
   let ptr = root;
-  let pre = null;
-  const dummy = new Node();
-  let lptr = dummy;
+  let pre = dummy;
   while (ptr || queue.length) {
     if (ptr) {
       queue.push(ptr);
@@ -29,13 +28,12 @@ var treeToDoublyList = function(root) {
       if (node.right) {
         ptr = node.right;
       }
+      node.left = pre;
+      pre.right = node;
       pre = node;
-      lptr.right = node;
-      node.left = lptr;
-      lptr = lptr.right;
     }
   }
-  pre.right = dummy.right;
   dummy.right.left = pre;
+  pre.right = dummy.right;
   return dummy.right;
 };
