@@ -10,22 +10,26 @@
  * @return {number}
  */
 
-const maxTreeSum = (r) => {
-  let globalMax = -Infinity;
+/*
+  Calculate local maximum at each node and also keep updating global maximum
+*/
+var maxPathSum = function(r) {
+  let max = -Infinity;
+
+  /*
+    Return maximum path sum containing root.
+  */
   const helper = (root) => {
     if (!root) {
       return 0;
     }
     const left = helper(root.left);
     const right = helper(root.right);
-    const localMax = Math.max(root.val, root.val + left, root.val + right);
-    globalMax = Math.max(globalMax, localMax, root.val + left + right);
+    const localMax = root.val + Math.max(left, right, 0);
+    max = Math.max(max, localMax, root.val + left + right);
     return localMax;
   };
   helper(r);
-  return globalMax > -Infinity ? globalMax : 0;
-};
 
-var maxPathSum = function(root) {
-  return maxTreeSum(root);
+  return max > -Infinity ? max : 0;
 };
