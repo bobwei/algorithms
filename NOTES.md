@@ -8,7 +8,15 @@
 - [https://my.oschina.net/cofama](https://my.oschina.net/cofama)
 - [https://github.com/jeantimex/javascript-problems-and-solutions](https://github.com/jeantimex/javascript-problems-and-solutions)
 
-## Notes
+## Note
+
+### Cycle detection
+
+- https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/
+- https://segmentfault.com/a/1190000003817671
+- https://blog.csdn.net/monkeyduck/article/details/50439840
+- https://hk.saowen.com/a/cba7ebff25749dd32c100b62e45637ef087ce8102227d59b86fc3fb8c9562203
+- https://www.jianshu.com/p/9b6a9bf31144
 
 ### Sliding window
 
