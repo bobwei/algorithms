@@ -3,34 +3,19 @@
  * @param {number} k
  * @return {number[]}
  */
-
-const getMaxIndex = (arr, start, k) => {
-  let maxIndex = start;
-  for (let i = start; i < start + k; i++) {
-    if (arr[i] > arr[maxIndex]) {
-      maxIndex = i;
-    }
-  }
-  return maxIndex;
-};
-
 var maxSlidingWindow = function(nums, k) {
-  if (!nums.length) {
-    return [];
-  }
-  let maxIndex = getMaxIndex(nums, 0, k);
-  const output = [nums[maxIndex]];
-  for (let i = k; i < nums.length; i++) {
-    if (maxIndex >= i - k + 1) {
-      if (nums[i] > nums[maxIndex]) {
-        output.push(nums[i]);
-        maxIndex = i;
-      } else {
-        output.push(nums[maxIndex]);
-      }
-    } else {
-      maxIndex = getMaxIndex(nums, i - k + 1, k);
-      output.push(nums[maxIndex]);
+  const output = [];
+  const deque = [];
+  for (let i = 0; i < nums.length; i++) {
+    if (deque.length && deque[0] < i - k + 1) {
+      deque.shift();
+    }
+    while (deque.length && nums[deque[deque.length - 1]] < nums[i]) {
+      deque.pop();
+    }
+    deque.push(i);
+    if (i - k + 1 >= 0) {
+      output.push(nums[deque[0]]);
     }
   }
   return output;
