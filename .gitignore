@@ -8,3 +8,4 @@ tmp/
 dist/
 .next/
 out/
+.vscode
