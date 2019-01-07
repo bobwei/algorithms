@@ -1,33 +1,32 @@
 const Node = function(key, value) {
   this.key = key;
   this.value = value;
-  this.prev = null;
-  this.next = null;
+  this.next = this.prev = null;
+};
+
+const insertAfter = (r1, r2) => {
+  r1.next.prev = r2;
+  r2.next = r1.next;
+  r1.next = r2;
+  r2.prev = r1;
+};
+
+const removeLinks = (r) => {
+  r.prev.next = r.next;
+  r.next.prev = r.prev;
 };
 
 /**
  * @param {number} capacity
  */
 var LRUCache = function(capacity) {
-  this.capacity = capacity;
   this.data = {};
   this.size = 0;
+  this.capacity = capacity;
   this.head = new Node();
   this.tail = new Node();
   this.head.next = this.tail;
   this.tail.prev = this.head;
-};
-
-LRUCache.prototype.moveToHead = function(node) {
-  node.next = this.head.next;
-  this.head.next.prev = node;
-  this.head.next = node;
-  node.prev = this.head;
-};
-
-LRUCache.prototype.disconnect = function(node) {
-  node.prev.next = node.next;
-  node.next.prev = node.prev;
 };
 
 /**
@@ -38,8 +37,8 @@ LRUCache.prototype.get = function(key) {
   if (!this.data[key]) {
     return -1;
   }
-  this.disconnect(this.data[key]);
-  this.moveToHead(this.data[key]);
+  removeLinks(this.data[key]);
+  insertAfter(this.head, this.data[key]);
   return this.data[key].value;
 };
 
@@ -54,13 +53,13 @@ LRUCache.prototype.put = function(key, value) {
     this.size += 1;
   } else {
     this.data[key].value = value;
-    this.disconnect(this.data[key]);
+    removeLinks(this.data[key]);
   }
-  this.moveToHead(this.data[key]);
+  insertAfter(this.head, this.data[key]);
   if (this.size > this.capacity) {
     delete this.data[this.tail.prev.key];
     this.size -= 1;
-    this.disconnect(this.tail.prev);
+    removeLinks(this.tail.prev);
   }
 };
 
