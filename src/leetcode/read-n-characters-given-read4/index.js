@@ -26,7 +26,7 @@ var solution = function(read4) {
     while (total < n && !isEnded) {
       const tmp = [];
       const nRead = read4(tmp);
-      const nFlush = Math.min(MAX_N_READ, n - total);
+      const nFlush = Math.min(nRead, n - total);
       buf.push(...tmp.slice(0, nFlush));
       total += nFlush;
       isEnded = nRead < MAX_N_READ;
