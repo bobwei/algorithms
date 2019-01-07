@@ -2,18 +2,20 @@
  * @param {character[][]} grid
  * @return {number}
  */
-const directions = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-const dfs = (grid, visited, m, n, i, j) => {
+const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+
+const dfs = (grid, visited, i, j, m, n) => {
   if (i < 0 || i >= m || j < 0 || j >= n) {
     return;
   }
-  if (grid[i][j] === '0' || visited[i][j]) {
+  if (visited[i][j] || grid[i][j] === '0') {
     return;
   }
   visited[i][j] = true;
-  for (let k = 0; k < directions.length; k++) {
-    dfs(grid, visited, m, n, i + directions[k][0], j + directions[k][1]);
+  for (let d = 0; d < dirs.length; d++) {
+    const [di, dj] = dirs[d];
+    dfs(grid, visited, i + di, j + dj, m, n);
   }
 };
 
@@ -28,8 +30,8 @@ var numIslands = function(grid) {
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
       if (grid[i][j] === '1' && !visited[i][j]) {
+        dfs(grid, visited, i, j, m, n);
         count += 1;
-        dfs(grid, visited, m, n, i, j);
       }
     }
   }
