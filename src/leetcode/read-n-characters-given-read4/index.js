@@ -8,7 +8,7 @@
  * };
  */
 
-const MAX_N_READ = 4;
+const MAX_N_SIZE = 4;
 
 /**
  * @param {function} read4()
@@ -22,14 +22,14 @@ var solution = function(read4) {
    */
   return function(buf, n) {
     let total = 0;
-    let isEnded = false;
-    while (total < n && !isEnded) {
+    let isEof = false;
+    while (total < n && !isEof) {
       const tmp = [];
       const nRead = read4(tmp);
       const nFlush = Math.min(nRead, n - total);
       buf.push(...tmp.slice(0, nFlush));
       total += nFlush;
-      isEnded = nRead < MAX_N_READ;
+      isEof = nRead < MAX_N_SIZE;
     }
     return total;
   };
