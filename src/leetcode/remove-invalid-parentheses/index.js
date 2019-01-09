@@ -4,45 +4,41 @@
  */
 
 const isValid = (str) => {
-  let counter = 0;
+  let n = 0;
   for (let i = 0; i < str.length; i++) {
     if (str[i] === '(') {
-      counter += 1;
+      n += 1;
     } else if (str[i] === ')') {
-      counter -= 1;
+      n -= 1;
     }
-    if (counter < 0) {
+    if (n < 0) {
       return false;
     }
   }
-  return counter === 0;
+  return n === 0;
 };
 
 var removeInvalidParentheses = function(s) {
   const output = [];
-  const visited = {};
   const queue = [s];
-  let isFound = false;
+  const cache = new Set();
   while (queue.length) {
     const str = queue.shift();
-    if (visited[str]) {
+    if (cache.has(str)) {
       continue;
     }
-    visited[str] = true;
+    cache.add(str);
     if (isValid(str)) {
-      isFound = true;
       output.push(str);
-      continue;
     }
-    if (isFound) {
-      continue;
-    }
-    for (let i = 0; i < str.length; i++) {
-      if (!(str[i] === '(' || str[i] === ')')) {
-        continue;
+    if (!output.length) {
+      for (let i = 0; i < str.length; i++) {
+        if (str[i] !== '(' && str[i] !== ')') {
+          continue;
+        }
+        const tmpStr = str.slice(0, i) + str.slice(i + 1);
+        queue.push(tmpStr);
       }
-      const testStr = str.slice(0, i) + str.slice(i + 1);
-      queue.push(testStr);
     }
   }
   return output;
