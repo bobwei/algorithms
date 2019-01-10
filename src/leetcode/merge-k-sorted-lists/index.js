@@ -10,11 +10,11 @@
  * @return {ListNode}
  */
 
-const merge = (h1, h2) => {
+const merge = (r1, r2) => {
   const dummy = new ListNode();
   let ptr = dummy;
-  let p1 = h1;
-  let p2 = h2;
+  let p1 = r1;
+  let p2 = r2;
   while (p1 || p2) {
     if (!p1 || !p2) {
       ptr.next = p1 || p2;
@@ -37,8 +37,7 @@ var mergeKLists = function(lists) {
     return null;
   }
   while (lists.length > 1) {
-    const h = merge(lists.shift(), lists.shift());
-    lists.push(h);
+    lists.push(merge(lists.shift(), lists.shift()));
   }
   return lists.pop();
 };
