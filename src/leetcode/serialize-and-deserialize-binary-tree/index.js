@@ -12,22 +12,14 @@
  * @param {TreeNode} root
  * @return {string}
  */
-var serialize = function(root) {
+var serialize = function(root, output = []) {
   if (!root) {
-    return [];
+    output.push(root);
+    return output;
   }
-  const output = [];
-  const stack = [root];
-  while (stack.length) {
-    const node = stack.pop();
-    if (node) {
-      output.push(node.val);
-      stack.push(node.right);
-      stack.push(node.left);
-    } else {
-      output.push(node);
-    }
-  }
+  output.push(root.val);
+  serialize(root.left, output);
+  serialize(root.right, output);
   return output;
 };
 
@@ -38,14 +30,10 @@ var serialize = function(root) {
  * @return {TreeNode}
  */
 var deserialize = function(data) {
-  if (!data.length) {
-    return null;
+  if (data[0] === null) {
+    return data.shift();
   }
-  const val = data.shift();
-  if (val === null) {
-    return val;
-  }
-  const root = new TreeNode(val);
+  const root = new TreeNode(data.shift());
   root.left = deserialize(data);
   root.right = deserialize(data);
   return root;
