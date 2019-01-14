@@ -20,3 +20,13 @@
 // edge cases
 [2,1]
 ```
+
+Since there is no duplicactes, `=` only happens with the case that there are only two elements.
+
+ex:
+
+<!-- prettier-ignore -->
+```js
+// nums[mid] === nums[left]
+[2, 1]
+```
