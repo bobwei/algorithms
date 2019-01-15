@@ -3,6 +3,7 @@
  * @param {string} t
  * @return {string}
  */
+
 var minWindow = function(s, t) {
   if (!s.length || !t.length) {
     return '';
@@ -25,7 +26,7 @@ var minWindow = function(s, t) {
     while (n <= 0) {
       if (i - left + 1 < min) {
         min = i - left + 1;
-        output = s.slice(left, left + min);
+        output = s.slice(left, i + 1);
       }
       if (counts[s[left]] !== undefined) {
         counts[s[left]] += 1;
