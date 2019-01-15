@@ -3,7 +3,7 @@
  * @return {string[]}
  */
 
-const mapping = {
+const map = {
   2: 'abc',
   3: 'def',
   4: 'ghi',
@@ -14,21 +14,15 @@ const mapping = {
   9: 'wxyz',
 };
 
-const letterCombinations = function(digits, start = 0, selected = [], output = []) {
-  if (!digits) {
-    return [];
-  }
-  if (start >= digits.length) {
-    output.push(selected.join(''));
+var letterCombinations = function(digits, i = 0, selected = '', output = []) {
+  if (i >= digits.length) {
+    if (selected.length) {
+      output.push(selected);
+    }
     return output;
   }
-  const d = digits[start];
-  for (let i = 0; i < mapping[d].length; i++) {
-    selected.push(mapping[d][i]);
-    letterCombinations(digits, start + 1, selected, output);
-    selected.pop();
+  for (let j = 0; j < map[digits[i]].length; j++) {
+    letterCombinations(digits, i + 1, selected + map[digits[i]][j], output);
   }
   return output;
 };
-
-export default letterCombinations;
