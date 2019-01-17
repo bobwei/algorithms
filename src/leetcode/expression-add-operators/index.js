@@ -4,24 +4,22 @@
  * @return {string[]}
  */
 
-var addOperators = function(num, target, i = 0, value = 0, pre = 0, str = '', output = []) {
-  if (i >= num.length) {
-    if (value === target) {
-      output.push(str);
+var addOperators = function(num, target, sum = 0, start = 0, diff = 0, selected = '', output = []) {
+  if (start >= num.length) {
+    if (sum === target) {
+      output.push(selected);
     }
     return output;
   }
-  for (let j = i + 1; j <= num.length; j++) {
-    const n = parseInt(num.substring(i, j));
-    if (j - i > 1 && num[i] === '0') {
-      continue;
-    }
-    if (i === 0) {
-      addOperators(num, target, j, value + n, n, str + n, output);
+  for (let i = start; i < num.length; i++) {
+    if (i > start && num[start] === '0') continue;
+    const n = parseInt(num.slice(start, i + 1));
+    if (start === 0) {
+      addOperators(num, target, sum + n, i + 1, n, selected + n, output);
     } else {
-      addOperators(num, target, j, value + n, n, str + '+' + n, output);
-      addOperators(num, target, j, value - n, -n, str + '-' + n, output);
-      addOperators(num, target, j, value - pre + pre * n, pre * n, str + '*' + n, output);
+      addOperators(num, target, sum + n, i + 1, n, selected + '+' + n, output);
+      addOperators(num, target, sum - n, i + 1, -n, selected + '-' + n, output);
+      addOperators(num, target, sum - diff + diff * n, i + 1, diff * n, selected + '*' + n, output);
     }
   }
   return output;
