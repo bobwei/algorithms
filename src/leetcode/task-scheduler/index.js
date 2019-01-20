@@ -4,17 +4,11 @@
  * @return {number}
  */
 
-const swap = (arr, i, j) => {
-  const tmp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = tmp;
-};
-
 const moveUp = (arr, i, comparator) => {
   const p = Math.floor((i - 1) / 2);
-  const isValid = p < 0 || comparator(arr[p], arr[i]);
+  const isValid = i === 0 || comparator(arr[p], arr[i]);
   if (!isValid) {
-    swap(arr, i, p);
+    [arr[p], arr[i]] = [arr[i], arr[p]];
     moveUp(arr, p, comparator);
   }
 };
@@ -27,13 +21,13 @@ const moveDown = (arr, i, comparator) => {
     (right >= arr.length || comparator(arr[i], arr[right]));
   if (!isValid) {
     const next = right >= arr.length || comparator(arr[left], arr[right]) ? left : right;
-    swap(arr, i, next);
+    [arr[i], arr[next]] = [arr[next], arr[i]];
     moveDown(arr, next, comparator);
   }
 };
 
 class PriorityQueue {
-  constructor({ comparator } = {}) {
+  constructor({ comparator }) {
     this.arr = [];
     this.comparator = comparator;
   }
@@ -41,17 +35,18 @@ class PriorityQueue {
   enqueue(element) {
     this.arr.push(element);
     moveUp(this.arr, this.arr.length - 1, this.comparator);
-    return this;
   }
 
   dequeue() {
-    if (this.arr.length <= 1) {
-      return this.arr.pop();
-    }
-    const element = this.arr.shift();
-    this.arr.unshift(this.arr.pop());
+    const output = this.arr[0];
+    this.arr[0] = this.arr[this.arr.length - 1];
+    this.arr.pop();
     moveDown(this.arr, 0, this.comparator);
-    return element;
+    return output;
+  }
+
+  get length() {
+    return this.arr.length;
   }
 }
 
@@ -61,39 +56,29 @@ var leastInterval = function(tasks, n) {
     counts[tasks[i]] = (counts[tasks[i]] || 0) + 1;
   }
   const pq = new PriorityQueue({
-    comparator: (a, b) => {
-      return a.count !== b.count ? a.count > b.count : a.index < b.index;
-    },
+    comparator: (a, b) => counts[a] >= counts[b],
   });
-  const keys = Object.keys(counts);
-  for (let i = 0; i < keys.length; i++) {
-    pq.enqueue({
-      task: keys[i],
-      index: i,
-      count: counts[keys[i]],
-    });
+  for (const t in counts) {
+    pq.enqueue(t);
   }
-  const output = [];
-  while (pq.arr.length) {
-    const nTimes = n + 1;
-    const tmp = [];
-    for (let i = 0; i < nTimes; i++) {
-      const element = pq.dequeue();
-      if (!element) {
-        if (tmp.length > 0) {
-          output.push('idle');
+  let output = 0;
+  let i = 0;
+  while (i < tasks.length) {
+    const next = [];
+    let j = 0;
+    while (j <= n && i < tasks.length) {
+      if (pq.length) {
+        const t = pq.dequeue();
+        counts[t] -= 1;
+        if (counts[t] > 0) {
+          next.push(t);
         }
-        continue;
+        i += 1;
       }
-      output.push(element.task);
-      element.count -= 1;
-      if (element.count > 0) {
-        tmp.push(element);
-      }
+      j += 1;
+      output += 1;
     }
-    for (let i = 0; i < tmp.length; i++) {
-      pq.enqueue(tmp[i]);
-    }
+    next.forEach((t) => pq.enqueue(t));
   }
-  return output.length;
+  return output;
 };
