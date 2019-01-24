@@ -4,34 +4,28 @@
  */
 
 var splitArray = function(nums) {
-  const sums = new Array(nums.length).fill(0);
+  if (nums.length < 7) {
+    return false;
+  }
+  const n = nums.length;
+  const sums = new Array(n).fill(0);
   sums[0] = nums[0];
-  for (let i = 1; i < nums.length; i++) {
+  for (let i = 1; i < n; i++) {
     sums[i] = sums[i - 1] + nums[i];
   }
-
-  for (let j = 3; j < nums.length - 3; j++) {
-    const eqSums = new Set();
-    let start;
-    let end;
-
-    start = 1;
-    end = j - 2;
-    for (let i = start; i <= end; i++) {
-      const left = sums[i - 1] - (sums[start - 2] || 0);
-      const right = sums[end + 1] - sums[i];
+  for (let j = 3; j < n - 3; j++) {
+    const values = {};
+    for (let i = 1; i < j - 1; i++) {
+      const left = sums[i - 1];
+      const right = sums[j - 1] - sums[i];
       if (left === right) {
-        eqSums.add(left);
+        values[left] = true;
       }
     }
-    if (!eqSums.size) continue;
-
-    start = j + 2;
-    end = nums.length - 2;
-    for (let i = start; i <= end; i++) {
-      const left = sums[i - 1] - (sums[start - 2] || 0);
-      const right = sums[end + 1] - sums[i];
-      if (left === right && eqSums.has(left)) {
+    for (let k = j + 2; k < n - 1; k++) {
+      const left = sums[k - 1] - sums[j];
+      const right = sums[n - 1] - sums[k];
+      if (left === right && values[left]) {
         return true;
       }
     }
