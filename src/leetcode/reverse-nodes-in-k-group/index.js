@@ -12,42 +12,42 @@
  */
 
 const getLength = (head) => {
-  if (!head) {
-    return 0;
-  }
-  let n = 0;
   let ptr = head;
+  let length = 0;
   while (ptr) {
-    n += 1;
+    length += 1;
     ptr = ptr.next;
   }
-  return n;
+  return length;
+};
+
+const reverseK = (head, k) => {
+  let pre = null;
+  let ptr = head;
+  let next;
+  for (let i = 0; i < k; i++) {
+    next = ptr.next;
+    ptr.next = pre;
+    pre = ptr;
+    ptr = next;
+  }
+  const tail = head;
+  tail.next = ptr;
+  return {
+    head: pre,
+    tail,
+  };
 };
 
 var reverseKGroup = function(head, k) {
-  const length = getLength(head);
-  if (length < k) {
-    return head;
-  }
+  const n = Math.floor(getLength(head) / k);
   const dummy = new ListNode();
-  let thePtr = dummy;
-  let pre;
-  let ptr = head;
-  let next;
-  for (let i = 0; i < Math.floor(length / k); i++) {
-    let kHead;
-    let kTail = ptr;
-    pre = null;
-    for (let j = 0; j < k; j++) {
-      next = ptr.next;
-      ptr.next = pre;
-      pre = ptr;
-      ptr = next;
-    }
-    kHead = pre;
-    thePtr.next = kHead;
-    thePtr = kTail;
+  dummy.next = head;
+  let ptr = dummy;
+  for (let i = 0; i < n; i++) {
+    const result = reverseK(ptr.next, k);
+    ptr.next = result.head;
+    ptr = result.tail;
   }
-  thePtr.next = next;
   return dummy.next;
 };
