@@ -1,44 +1,44 @@
 /**
- * Definition for binary tree
+ * Definition for a binary tree node.
  * function TreeNode(val) {
  *     this.val = val;
  *     this.left = this.right = null;
  * }
  */
-
 /**
- * @constructor
- * @param {TreeNode} root - root of the binary search tree
+ * @param {TreeNode} root
  */
 var BSTIterator = function(root) {
-  this.ptr = root;
   this.stack = [];
+  this.ptr = root;
+  this.hasNext();
 };
 
 /**
- * @this BSTIterator
- * @returns {boolean} - whether we have a next smallest number
- */
-BSTIterator.prototype.hasNext = function() {
-  return this.ptr || this.stack.length;
-};
-
-/**
- * @this BSTIterator
- * @returns {number} - the next smallest number
+ * @return the next smallest number
+ * @return {number}
  */
 BSTIterator.prototype.next = function() {
+  const element = this.stack.pop();
+  this.ptr = element.right;
+  return element.val;
+};
+
+/**
+ * @return whether we have a next smallest number
+ * @return {boolean}
+ */
+BSTIterator.prototype.hasNext = function() {
   while (this.ptr) {
     this.stack.push(this.ptr);
     this.ptr = this.ptr.left;
   }
-  const next = this.stack.pop();
-  this.ptr = next.right;
-  return next.val;
+  return this.stack.length > 0;
 };
 
 /**
- * Your BSTIterator will be called like this:
- * var i = new BSTIterator(root), a = [];
- * while (i.hasNext()) a.push(i.next());
+ * Your BSTIterator object will be instantiated and called as such:
+ * var obj = Object.create(BSTIterator).createNew(root)
+ * var param_1 = obj.next()
+ * var param_2 = obj.hasNext()
  */
