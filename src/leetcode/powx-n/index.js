@@ -3,15 +3,16 @@
  * @param {number} n
  * @return {number}
  */
-const fn = (_x, _n) => {
-  if (!_n) {
-    return 1;
-  }
-  const x = _n > 0 ? _x : 1 / _x;
-  const n = Math.abs(_n);
-  const isEven = n % 2 === 0;
-  const half = isEven ? fn(x, n / 2) : fn(x, Math.floor(n / 2));
-  return isEven ? half * half : half * half * x;
-};
 
-export default fn;
+var myPow = function(x, n) {
+  if (x === 0) return 0;
+  if (x === 1) return 1;
+  if (n < 0) return myPow(1 / x, -n);
+  if (n === 0) return 1;
+  if (n === 1) return x;
+  const half = myPow(x, Math.floor(n / 2));
+  if (n % 2 === 1) {
+    return x * half * half;
+  }
+  return half * half;
+};
