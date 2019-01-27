@@ -5,41 +5,38 @@
  * @return {number}
  */
 
-const isTransformedWord = (w1, w2) => {
-  let nDiff = 0;
+const isSibling = (w1, w2) => {
+  if (w1.length !== w2.length) {
+    return false;
+  }
+  let n = 0;
   for (let i = 0; i < w1.length; i++) {
     if (w1[i] !== w2[i]) {
-      nDiff += 1;
+      n += 1;
     }
-    if (nDiff > 1) {
+    if (n > 1) {
       return false;
     }
   }
   return true;
 };
 
-const ladderLength = function(beginWord, endWord, wordList) {
-  const visited = {
-    [beginWord]: 0,
-  };
-  const queue = [beginWord];
+var ladderLength = function(beginWord, endWord, wordList) {
+  const n = wordList.length;
+  const visited = {};
+  const queue = [[beginWord, 1]];
   while (queue.length) {
-    const word = queue.shift();
-    const n = visited[word];
-    for (let i = 0; i < wordList.length; i++) {
-      if (isTransformedWord(word, wordList[i])) {
-        const nextN = n + 1;
-        if (nextN < (visited[wordList[i]] || Infinity)) {
-          visited[wordList[i]] = nextN;
-          queue.push(wordList[i]);
+    const [w1, d] = queue.shift();
+    for (const w2 of wordList) {
+      if (visited[w2]) continue;
+      if (isSibling(w1, w2)) {
+        if (w2 === endWord) {
+          return d + 1;
         }
-        if (wordList[i] === endWord) {
-          return visited[wordList[i]] + 1;
-        }
+        visited[w2] = true;
+        queue.push([w2, d + 1]);
       }
     }
   }
   return 0;
 };
-
-export default ladderLength;
