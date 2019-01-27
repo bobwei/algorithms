@@ -3,15 +3,16 @@
  * @return {number}
  */
 
-const maxInHistogram = (heights) => {
+const getMaxWithHeights = (heights) => {
   const n = heights.length;
   const stack = [];
   let max = 0;
   for (let i = 0; i <= n; i++) {
     while (stack.length && (heights[i] < heights[stack[stack.length - 1]] || i === n)) {
-      const height = heights[stack.pop()];
+      const j = stack.pop();
       const left = stack.length ? stack[stack.length - 1] : -1;
       const width = i - left - 1;
+      const height = heights[j];
       const area = width * height;
       max = Math.max(max, area);
     }
@@ -21,24 +22,18 @@ const maxInHistogram = (heights) => {
 };
 
 var maximalRectangle = function(matrix) {
-  if (!matrix || !matrix.length) {
+  if (!matrix.length || !matrix[0].length) {
     return 0;
   }
   const m = matrix.length;
   const n = matrix[0].length;
-  const dp = [...new Array(m)].map(() => new Array(n).fill(0));
-  for (let j = 0; j < n; j++) {
-    dp[0][j] = parseInt(matrix[0][j]);
-  }
+  const heights = [...matrix[0].map((c) => parseInt(c))];
+  let max = getMaxWithHeights(heights);
   for (let i = 1; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      const val = parseInt(matrix[i][j]);
-      dp[i][j] = val > 0 ? dp[i - 1][j] + val : 0;
+      heights[j] = matrix[i][j] === '0' ? 0 : heights[j] + 1;
     }
-  }
-  let max = 0;
-  for (let i = 0; i < m; i++) {
-    max = Math.max(max, maxInHistogram(dp[i]));
+    max = Math.max(max, getMaxWithHeights(heights));
   }
   return max;
 };
