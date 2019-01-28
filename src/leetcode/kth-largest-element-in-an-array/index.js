@@ -4,34 +4,26 @@
  * @return {number}
  */
 
-const swap = (arr, i, j) => {
-  const tmp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = tmp;
-};
-
 const partition = (arr, start, end) => {
-  if (start >= end) {
-    return end;
-  }
-  const p = arr[end];
+  const p = end;
   let j = start;
   for (let i = start; i <= end - 1; i++) {
-    if (arr[i] >= p) {
-      swap(arr, i, j);
+    if (arr[i] >= arr[p]) {
+      [arr[i], arr[j]] = [arr[j], arr[i]];
       j += 1;
     }
   }
-  swap(arr, end, j);
+  [arr[j], arr[p]] = [arr[p], arr[j]];
   return j;
 };
 
-const findKthLargest = function(nums, k, start = 0, end = nums.length - 1) {
-  const p = partition(nums, start, end);
-  if (k === p + 1) {
-    return nums[p];
+var findKthLargest = function(nums, k, i = 0, j = nums.length - 1) {
+  const pivot = partition(nums, i, j);
+  if (pivot === k - 1) {
+    return nums[pivot];
   }
-  return k < p + 1 ? findKthLargest(nums, k, start, p - 1) : findKthLargest(nums, k, p + 1, end);
+  if (pivot < k - 1) {
+    return findKthLargest(nums, k, pivot + 1, j);
+  }
+  return findKthLargest(nums, k, i, pivot - 1);
 };
-
-export default findKthLargest;
