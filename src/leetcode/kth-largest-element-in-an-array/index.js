@@ -7,23 +7,23 @@
 const partition = (arr, start, end) => {
   const p = end;
   let j = start;
-  for (let i = start; i <= end - 1; i++) {
+  for (let i = start; i < end; i++) {
     if (arr[i] >= arr[p]) {
       [arr[i], arr[j]] = [arr[j], arr[i]];
       j += 1;
     }
   }
-  [arr[j], arr[p]] = [arr[p], arr[j]];
+  [arr[p], arr[j]] = [arr[j], arr[p]];
   return j;
 };
 
 var findKthLargest = function(nums, k, i = 0, j = nums.length - 1) {
-  const pivot = partition(nums, i, j);
-  if (pivot === k - 1) {
-    return nums[pivot];
+  const p = partition(nums, i, j);
+  if (p === k - 1) {
+    return nums[p];
   }
-  if (pivot < k - 1) {
-    return findKthLargest(nums, k, pivot + 1, j);
+  if (p < k - 1) {
+    return findKthLargest(nums, k, p + 1, j);
   }
-  return findKthLargest(nums, k, i, pivot - 1);
+  return findKthLargest(nums, k, i, p - 1);
 };
