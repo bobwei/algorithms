@@ -2,22 +2,45 @@
  * @param {number[]} nums
  * @return {number}
  */
+
+const find = (roots, r) => {
+  let ptr = r;
+  while (roots[ptr] !== ptr) {
+    roots[ptr] = roots[roots[ptr]];
+    ptr = roots[ptr];
+  }
+  return ptr;
+};
+
+const union = (roots, r1, r2) => {
+  roots[r2] = r1;
+};
+
 var longestConsecutive = function(nums) {
-  const cache = {};
-  let max = 0;
-  for (let i = 0; i < nums.length; i++) {
-    if (cache[nums[i]]) {
-      continue;
+  if (!nums.length) {
+    return 0;
+  }
+  const roots = {};
+  const counts = {};
+  let max = 1;
+  for (const num of nums) {
+    if (roots[num] !== undefined) continue;
+    if (roots[num] === undefined) roots[num] = num;
+    if (counts[num] === undefined) counts[num] = 1;
+    if (roots[num - 1] !== undefined) {
+      const r1 = find(roots, num - 1);
+      const r2 = find(roots, num);
+      union(roots, r1, r2);
+      counts[r1] += counts[r2];
+      max = Math.max(max, counts[r1]);
     }
-    const left = cache[nums[i] - 1];
-    const right = cache[nums[i] + 1];
-    const n = (left || 0) + 1 + (right || 0);
-    const start = left ? nums[i] - left : nums[i];
-    const end = right ? nums[i] + right : nums[i];
-    for (let j = start; j <= end; j++) {
-      cache[j] = n;
+    if (roots[num + 1] !== undefined) {
+      const r1 = find(roots, num);
+      const r2 = find(roots, num + 1);
+      union(roots, r1, r2);
+      counts[r1] += counts[r2];
+      max = Math.max(max, counts[r1]);
     }
-    max = Math.max(max, cache[nums[i]]);
   }
   return max;
 };
