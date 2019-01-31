@@ -1,14 +1,19 @@
-const createRamdomCode = (length = 6) => {
-  const output = [];
-  for (let i = 0; i < length; i++) {
-    const r = Math.floor(Math.random() * 26);
-    output.push(String.fromCharCode(97 + r));
-  }
-  return output.join('');
+const BASE_URL = 'http://tinyurl.com/';
+
+const state = {
+  urlToHash: {},
+  hashToUrl: {},
 };
 
-const state = {};
-const urlPrefix = 'http://tinyurl.com/';
+const createRandomHash = (length = 6) => {
+  let hash = '';
+  for (let i = 0; i < length; i++) {
+    // random (0, 25)
+    const r = Math.floor(26 * Math.random());
+    hash += String.fromCharCode(97 + r);
+  }
+  return hash;
+};
 
 /**
  * Encodes a URL to a shortened URL.
@@ -17,9 +22,12 @@ const urlPrefix = 'http://tinyurl.com/';
  * @return {string}
  */
 var encode = function(longUrl) {
-  const key = createRamdomCode();
-  state[key] = longUrl;
-  return `${urlPrefix}${key}`;
+  if (!state.urlToHash[longUrl]) {
+    const hash = createRandomHash();
+    state.urlToHash[longUrl] = hash;
+    state.hashToUrl[hash] = longUrl;
+  }
+  return BASE_URL + state.urlToHash[longUrl];
 };
 
 /**
@@ -29,8 +37,11 @@ var encode = function(longUrl) {
  * @return {string}
  */
 var decode = function(shortUrl) {
-  const results = shortUrl.split(urlPrefix);
-  return state[results[1]];
+  const hash = shortUrl.substring(BASE_URL.length);
+  if (!state.hashToUrl[hash]) {
+    return '';
+  }
+  return state.hashToUrl[hash];
 };
 
 /**
