@@ -3,33 +3,27 @@
  * @return {number[][]}
  */
 
-const createSubset = (arr, index, length, selected = [], selectedIndex = {}, output = []) => {
-  if (selected.length >= length) {
-    output.push([...selected]);
+const dfs = (nums, start, length, selected = [], output = []) => {
+  if (selected.length >= length || start >= nums.length) {
+    if (selected.length === length) {
+      output.push([...selected]);
+    }
     return output;
   }
-  for (let i = index; i < arr.length; i++) {
-    if (selectedIndex[i]) {
-      continue;
-    }
-    if (arr[i] === arr[i - 1] && !selectedIndex[i - 1]) {
-      continue;
-    }
-    selectedIndex[i] = true;
-    selected.push(arr[i]);
-    createSubset(arr, i + 1, length, selected, selectedIndex, output);
-    selectedIndex[i] = false;
+  for (let i = start; i < nums.length; i++) {
+    if (i > start && nums[i] === nums[i - 1]) continue;
+    selected.push(nums[i]);
+    dfs(nums, i + 1, length, selected, output);
     selected.pop();
   }
   return output;
 };
 
 var subsetsWithDup = function(nums) {
-  nums.sort((a, b) => a - b);
-  const output = [[]];
-  for (let length = 1; length <= nums.length; length++) {
-    const result = createSubset(nums, 0, length);
-    output.push(...result);
+  nums.sort();
+  const output = [];
+  for (let length = 0; length <= nums.length; length++) {
+    output.push(...dfs(nums, 0, length));
   }
   return output;
 };
