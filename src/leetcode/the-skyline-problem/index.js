@@ -3,17 +3,11 @@
  * @return {number[][]}
  */
 
-const swap = (arr, i, j) => {
-  const tmp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = tmp;
-};
-
 const moveUp = (arr, i, comparator) => {
   const p = Math.floor((i - 1) / 2);
   const isValid = p < 0 || comparator(arr[p], arr[i]);
   if (!isValid) {
-    swap(arr, i, p);
+    [arr[i], arr[p]] = [arr[p], arr[i]];
     moveUp(arr, p, comparator);
   }
 };
@@ -26,34 +20,29 @@ const moveDown = (arr, i, comparator) => {
     (right >= arr.length || comparator(arr[i], arr[right]));
   if (!isValid) {
     const next = right >= arr.length || comparator(arr[left], arr[right]) ? left : right;
-    swap(arr, next, i);
+    [arr[i], arr[next]] = [arr[next], arr[i]];
     moveDown(arr, next, comparator);
   }
 };
 
 class PriorityQueue {
-  constructor({ comparator, isEqual = (a, b) => a === b }) {
-    this.comparator = comparator;
-    this.isEqual = isEqual;
+  constructor({ comparator }) {
     this.arr = [];
+    this.comparator = comparator;
   }
 
   enqueue(element) {
-    this.arr.push(element);
-    moveUp(this.arr, this.arr.length - 1, this.comparator);
+    const arr = this.arr;
+    arr.push(element);
+    moveUp(arr, arr.length - 1, this.comparator);
   }
 
-  dequeue() {}
-
-  remove(element) {
-    for (let i = 0; i < this.arr.length; i++) {
-      if (this.isEqual(element, this.arr[i])) {
-        swap(this.arr, i, this.arr.length - 1);
-        this.arr.pop();
-        moveDown(this.arr, i, this.comparator);
-        return;
-      }
-    }
+  delete(element) {
+    const arr = this.arr;
+    const index = arr.indexOf(element);
+    [arr[index], arr[arr.length - 1]] = [arr[arr.length - 1], arr[index]];
+    arr.pop();
+    moveDown(arr, index, this.comparator);
   }
 
   peek() {
@@ -62,34 +51,29 @@ class PriorityQueue {
 }
 
 var getSkyline = function(buildings) {
-  const points = [];
+  const arr = [];
   for (let i = 0; i < buildings.length; i++) {
-    const [x1, x2, y] = buildings[i];
-    points.push([x1, y], [x2, -y]);
+    const [left, right, height] = buildings[i];
+    arr.push([left, height], [right, -height]);
   }
-  points.sort((a, b) => {
-    if (a[0] !== b[0]) {
-      return a[0] - b[0];
-    }
-    return b[1] - a[1];
-  });
-  const pq = new PriorityQueue({
-    comparator: (a, b) => a > b,
-  });
+  arr.sort((a, b) => (a[0] !== b[0] ? a[0] - b[0] : b[1] - a[1]));
+
   const output = [];
-  let preHeight = 0;
-  for (let i = 0; i < points.length; i++) {
-    const [x, y] = points[i];
-    if (y > 0) {
-      pq.enqueue(y);
-    } else {
-      pq.remove(Math.abs(y));
+  const pq = new PriorityQueue({
+    comparator: (a, b) => a >= b,
+  });
+  let height = 0;
+  for (let i = 0; i < arr.length; i++) {
+    const [p, h] = arr[i];
+    if (h > 0) {
+      pq.enqueue(h);
+    } else if (h < 0) {
+      pq.delete(-h);
     }
-    const curHeight = pq.peek() || 0;
-    if (curHeight !== preHeight) {
-      output.push([x, curHeight]);
+    if (pq.peek() !== height) {
+      height = pq.peek() || 0;
+      output.push([p, height]);
     }
-    preHeight = curHeight;
   }
   return output;
 };
