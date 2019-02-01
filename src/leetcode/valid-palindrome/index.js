@@ -3,25 +3,25 @@
  * @return {boolean}
  */
 
-const shouldContinue = (c) => {
-  return !/[0-9a-zA-Z]/.test(c);
+const isCharacter = (c) => {
+  return /[a-zA-Z0-9]/.test(c);
 };
 
 var isPalindrome = function(s) {
-  let i = 0;
-  let j = s.length - 1;
-  while (i < j) {
-    while (shouldContinue(s[i])) {
-      i += 1;
+  let left = 0;
+  let right = s.length - 1;
+  while (left < right) {
+    while (!isCharacter(s[left])) {
+      left += 1;
     }
-    while (shouldContinue(s[j])) {
-      j -= 1;
+    while (!isCharacter(s[right])) {
+      right -= 1;
     }
-    if (s[i] && s[j] && s[i].toLowerCase() !== s[j].toLowerCase()) {
+    if (left < s.length && right >= 0 && s[left].toLowerCase() !== s[right].toLowerCase()) {
       return false;
     }
-    i += 1;
-    j -= 1;
+    left += 1;
+    right -= 1;
   }
   return true;
 };
