@@ -2,22 +2,19 @@
  * @param {number} x
  * @return {number}
  */
-const mySqrt = function(x) {
-  let i = 1;
-  let j = x;
-  while (i <= j) {
-    const m = Math.floor((i + j) / 2);
-    const result = m * m;
-    if (result === x) {
-      return m;
-    }
-    if (result > x) {
-      j = m - 1;
-    } else if (result < x) {
-      i = m + 1;
+var mySqrt = function(x) {
+  let left = 1;
+  let right = x;
+  while (left <= right) {
+    const mid = Math.floor((left + right) / 2);
+    const sq = mid ** 2;
+    if (sq === x) {
+      return mid;
+    } else if (sq > x) {
+      right = mid - 1;
+    } else if (sq < x) {
+      left = mid + 1;
     }
   }
-  return j;
+  return right;
 };
-
-export default mySqrt;
