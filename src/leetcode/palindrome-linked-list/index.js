@@ -10,42 +10,43 @@
  * @return {boolean}
  */
 
-const getLength = (head) => {
-  if (!head) {
-    return 0;
+const split = (head) => {
+  let slow = head;
+  let fast = head;
+  let pre = null;
+  let next;
+  while (fast && fast.next) {
+    fast = fast.next.next;
+    next = slow.next;
+    slow.next = pre;
+    pre = slow;
+    slow = next;
   }
-  return 1 + getLength(head.next);
+  if (!fast) {
+    return [pre, slow];
+  }
+  return [pre, slow.next];
 };
 
-const reverse = (head) => {
-  if (!head || !head.next) {
-    return head;
+const isEqual = (h1, h2) => {
+  let p1 = h1;
+  let p2 = h2;
+  while (p1 && p2) {
+    if (p1.val !== p2.val) {
+      return false;
+    }
+    p1 = p1.next;
+    p2 = p2.next;
   }
-  const newHead = reverse(head.next);
-  head.next.next = head;
-  head.next = null;
-  return newHead;
+  if (p1 || p2) {
+    return false;
+  }
+  return true;
 };
 
 var isPalindrome = function(head) {
   if (!head) {
     return true;
   }
-  const length = getLength(head);
-  const mid = Math.floor((0 + length - 1) / 2);
-  let ptr = head;
-  for (let i = 0; i < mid; i++) {
-    ptr = ptr.next;
-  }
-  let rhead = reverse(ptr.next);
-  ptr.next = null;
-  ptr = head;
-  while (ptr && rhead) {
-    if (ptr.val !== rhead.val) {
-      return false;
-    }
-    ptr = ptr.next;
-    rhead = rhead.next;
-  }
-  return true;
+  return isEqual(...split(head));
 };
