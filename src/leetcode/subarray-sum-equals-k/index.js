@@ -3,19 +3,16 @@
  * @param {number} k
  * @return {number}
  */
-const subarraySum = function(nums, k) {
-  const sums = new Map([[0, [0]]]);
+var subarraySum = function(nums, k) {
+  const sums = { 0: 1 };
   let sum = 0;
   let count = 0;
   for (let i = 0; i < nums.length; i++) {
     sum += nums[i];
-    if (sums.get(sum - k)) {
-      count += sums.get(sum - k).length;
+    if (sum - k in sums) {
+      count += sums[sum - k];
     }
-    if (!sums.get(sum)) {
-      sums.set(sum, []);
-    }
-    sums.get(sum).push(i);
+    sums[sum] = (sums[sum] || 0) + 1;
   }
   return count;
 };
