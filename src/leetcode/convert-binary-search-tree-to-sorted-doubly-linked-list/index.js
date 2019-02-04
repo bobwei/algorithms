@@ -11,29 +11,33 @@
  * @param {Node} root
  * @return {Node}
  */
+
+const connect = (r1, r2) => {
+  r1.right = r2;
+  r2.left = r1;
+};
+
 var treeToDoublyList = function(root) {
   if (!root) {
     return null;
   }
   const dummy = new Node();
-  const queue = [];
-  let ptr = root;
   let pre = dummy;
-  while (ptr || queue.length) {
+  let ptr = root;
+  const stack = [];
+  while (stack.length || ptr) {
     if (ptr) {
-      queue.push(ptr);
+      stack.push(ptr);
       ptr = ptr.left;
     } else {
-      const node = queue.pop();
-      if (node.right) {
-        ptr = node.right;
-      }
-      node.left = pre;
-      pre.right = node;
+      const node = stack.pop();
+      ptr = node.right;
+      // prettier-ignore
+      connect(pre, node);
       pre = node;
     }
   }
-  dummy.right.left = pre;
-  pre.right = dummy.right;
+  // prettier-ignore
+  connect(pre, dummy.right);
   return dummy.right;
 };
