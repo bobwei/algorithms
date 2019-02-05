@@ -17,7 +17,7 @@ p = '*a*b';
 ```js
 dp[i][j] = (() => {
   if (p[j - 1] === '*') {
-    for (let k = 0; k <= i - 1; k++) {
+    for (let k = 0; k < i; k++) {
       if (dp[k][j]) {
         return true;
       }
