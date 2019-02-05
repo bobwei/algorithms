@@ -26,3 +26,10 @@ p = 'c*a*b*';
 
 - `dp[0][0] = true` because empty string is matched with empty pattern.
 - `dp[0][j] = p[j - 1] === '*' && dp[i][j - 2]` because empty string is only matched with empty pattern.
+
+```js
+// Start from j = 2 because '*' is always after some character. So it can't be the first character.
+for (let j = 2; j <= n; j++) {
+  dp[0][j] = p[j - 1] === '*' && dp[0][j - 2];
+}
+```
