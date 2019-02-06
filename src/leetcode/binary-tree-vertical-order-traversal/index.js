@@ -13,18 +13,16 @@ var verticalOrder = function(root) {
   if (!root) {
     return [];
   }
-  const map = {};
-  const queue = [[root, 0]];
+  const columns = {};
   let min = 0;
   let max = 0;
+  const queue = [[root, 0]];
   while (queue.length) {
     const [node, col] = queue.shift();
     min = Math.min(min, col);
     max = Math.max(max, col);
-    if (!map[col]) {
-      map[col] = [];
-    }
-    map[col].push(node.val);
+    if (!(col in columns)) columns[col] = [];
+    columns[col].push(node.val);
     if (node.left) {
       queue.push([node.left, col - 1]);
     }
@@ -34,7 +32,7 @@ var verticalOrder = function(root) {
   }
   const output = [];
   for (let i = min; i <= max; i++) {
-    output.push(map[i]);
+    output.push(columns[i]);
   }
   return output;
 };
