@@ -3,31 +3,18 @@
  * @return {boolean}
  */
 
-/* ebbem */
-
-const isValidPalindrome = (s, start, end) => {
-  let i = start;
-  let j = end;
-  while (i < j) {
-    if (s[i] === s[j]) {
-      i += 1;
-      j -= 1;
+var validPalindrome = function(s, start = 0, end = s.length - 1, nDeletes = 1) {
+  let left = start;
+  let right = end;
+  while (left < right) {
+    if (s[left] === s[right]) {
+      left += 1;
+      right -= 1;
     } else {
+      if (nDeletes > 0) {
+        return validPalindrome(s, left + 1, right, 0) || validPalindrome(s, left, right - 1, 0);
+      }
       return false;
-    }
-  }
-  return true;
-};
-
-var validPalindrome = function(s) {
-  let i = 0;
-  let j = s.length - 1;
-  while (i < j) {
-    if (s[i] === s[j]) {
-      i += 1;
-      j -= 1;
-    } else {
-      return isValidPalindrome(s, i, j - 1) || isValidPalindrome(s, i + 1, j);
     }
   }
   return true;
