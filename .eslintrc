@@ -42,6 +42,7 @@
     "class-methods-use-this": 0,
     "prefer-template": 0,
     "no-multi-assign": 0,
+    "no-loop-func": 0,
     "no-console": 0
   },
   "settings": {
