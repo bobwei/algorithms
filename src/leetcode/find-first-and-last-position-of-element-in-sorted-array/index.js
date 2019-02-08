@@ -4,22 +4,25 @@
  * @return {number[]}
  */
 
-const binarySearch = (arr, target, isLowerBound) => {
+const binarySearch = (nums, target, boundary) => {
   let left = 0;
-  let right = arr.length;
-  while (left < right) {
+  let right = nums.length - 1;
+  while (left <= right) {
     const mid = Math.floor((left + right) / 2);
-    if (target < arr[mid] || (target === arr[mid] && isLowerBound)) {
-      right = mid;
-    } else if (target > arr[mid] || (target === arr[mid] && !isLowerBound)) {
+    if (target > nums[mid] || (target === nums[mid] && boundary === 'upper')) {
       left = mid + 1;
+    } else {
+      right = mid - 1;
     }
+  }
+  if (boundary === 'upper') {
+    return left - 1;
   }
   return left;
 };
 
 var searchRange = function(nums, target) {
-  const low = binarySearch(nums, target, true);
-  const high = binarySearch(nums, target, false) - 1;
-  return low <= high ? [low, high] : [-1, -1];
+  const left = binarySearch(nums, target, 'lower');
+  const right = binarySearch(nums, target, 'upper');
+  return left <= right ? [left, right] : [-1, -1];
 };
