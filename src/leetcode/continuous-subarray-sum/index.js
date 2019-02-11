@@ -9,19 +9,22 @@ var checkSubarraySum = function(nums, k) {
       return true;
     }
   }
-  if (!k) {
+  if (k === 0) {
     return false;
   }
   k = Math.abs(k);
-  const mods = new Map([[0, -1]]);
-  let mod = 0;
+  const map = { 0: -1 };
+  let sum = 0;
   for (let i = 0; i < nums.length; i++) {
-    mod = (mod + nums[i]) % k;
-    if (mods.has(mod) && i - mods.get(mod) >= 2) {
-      return true;
-    }
-    if (!mods.has(mod)) {
-      mods.set(mod, i);
+    sum += nums[i];
+    const r = sum % k;
+    if (r in map) {
+      const j = map[r];
+      if (i - j >= 2) {
+        return true;
+      }
+    } else {
+      map[r] = i;
     }
   }
   return false;
