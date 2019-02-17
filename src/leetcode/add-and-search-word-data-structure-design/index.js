@@ -1,6 +1,6 @@
 const Node = function() {
   this.words = {};
-  this.isWord = false;
+  this.isEnd = false;
 };
 
 /**
@@ -17,13 +17,13 @@ var WordDictionary = function() {
  */
 WordDictionary.prototype.addWord = function(word) {
   let ptr = this.root;
-  for (let i = 0; i < word.length; i++) {
-    if (!ptr.words[word[i]]) {
-      ptr.words[word[i]] = new Node();
+  for (const c of word) {
+    if (!(c in ptr.words)) {
+      ptr.words[c] = new Node();
     }
-    ptr = ptr.words[word[i]];
+    ptr = ptr.words[c];
   }
-  ptr.isWord = true;
+  ptr.isEnd = true;
 };
 
 /**
@@ -31,21 +31,21 @@ WordDictionary.prototype.addWord = function(word) {
  * @param {string} word
  * @return {boolean}
  */
-WordDictionary.prototype.search = function(word, root, i) {
-  if (!root && !i) {
-    return this.search(word, this.root, 0);
+WordDictionary.prototype.search = function(word, ptr = this.root, i = 0) {
+  if (i >= word.length) {
+    return ptr.isEnd;
   }
-  if (i >= word.length || !root) {
-    return (root && root.isWord) || false;
+  if (word[i] in ptr.words) {
+    return this.search(word, ptr.words[word[i]], i + 1);
   }
   if (word[i] === '.') {
-    for (const key in root.words) {
-      if (this.search(word, root.words[key], i + 1)) {
+    for (const w in ptr.words) {
+      if (this.search(word, ptr.words[w], i + 1)) {
         return true;
       }
     }
   }
-  return this.search(word, root.words[word[i]], i + 1);
+  return false;
 };
 
 /**
