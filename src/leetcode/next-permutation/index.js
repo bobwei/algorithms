@@ -2,37 +2,38 @@
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */
-
-const swap = (arr, i, j) => {
-  const tmp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = tmp;
+var nextPermutation = function(nums) {
+  const i = firstDecrease(nums);
+  if (i < 0) return nums.reverse();
+  const j = exchangeIndex(nums, i);
+  [nums[i], nums[j]] = [nums[j], nums[i]];
+  reverse(nums, i + 1);
 };
 
-const reverse = (arr, i, j = arr.length - 1) => {
-  let left = i;
-  let right = j;
+function firstDecrease(nums) {
+  for (let i = nums.length - 2; i >= 0; i--) {
+    if (nums[i] < nums[i + 1]) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+function exchangeIndex(nums, index) {
+  for (let i = nums.length - 1; i > index; i--) {
+    if (nums[i] > nums[index]) {
+      return i;
+    }
+  }
+  return nums.length - 1;
+}
+
+function reverse(nums, index) {
+  let left = index;
+  let right = nums.length - 1;
   while (left < right) {
-    swap(arr, left, right);
+    [nums[left], nums[right]] = [nums[right], nums[left]];
     left += 1;
     right -= 1;
   }
-};
-
-var nextPermutation = function(nums) {
-  /* find first decreasing */
-  let i = nums.length - 1;
-  while (nums[i] <= nums[i - 1] && i >= 0) {
-    i -= 1;
-  }
-  i -= 1;
-  /* find to switch index */
-  let j = nums.length - 1;
-  while (nums[j] <= nums[i] && j >= 0) {
-    j -= 1;
-  }
-  if (i >= 0) {
-    swap(nums, i, j);
-  }
-  reverse(nums, i + 1);
-};
+}
