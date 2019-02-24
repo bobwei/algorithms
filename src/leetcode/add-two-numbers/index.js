@@ -1,4 +1,3 @@
-/* global ListNode */
 /**
  * Definition for singly-linked list.
  * function ListNode(val) {
@@ -11,17 +10,19 @@
  * @param {ListNode} l2
  * @return {ListNode}
  */
-var addTwoNumbers = function(l1, l2, carry = 0) {
-  if (!l1 && !l2) {
-    if (carry > 0) {
-      return new ListNode(carry);
-    }
-    return null;
+var addTwoNumbers = function(l1, l2) {
+  let p1 = l1;
+  let p2 = l2;
+  const dummy = new ListNode();
+  let ptr = dummy;
+  let c = 0;
+  while (p1 || p2 || c) {
+    const sum = ((p1 && p1.val) || 0) + ((p2 && p2.val) || 0) + c;
+    ptr.next = new ListNode(sum % 10);
+    c = Math.floor(sum / 10);
+    if (p1) p1 = p1.next;
+    if (p2) p2 = p2.next;
+    ptr = ptr.next;
   }
-  const ptr = l1 || l2;
-  const sum = ((l1 && l1.val) || 0) + ((l2 && l2.val) || 0) + carry;
-  const nextCarry = Math.floor(sum / 10);
-  ptr.val = sum % 10;
-  ptr.next = addTwoNumbers(l1 && l1.next, l2 && l2.next, nextCarry);
-  return ptr;
+  return dummy.next;
 };
