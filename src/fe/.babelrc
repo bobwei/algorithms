@@ -1,0 +1,13 @@
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["src"],
+        "alias": {}
+      }
+    ],
+    "transform-object-rest-spread"
+  ]
+}
