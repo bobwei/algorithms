@@ -3,30 +3,21 @@
  * @param {number} numRows
  * @return {string}
  */
-var convert = function(s, n) {
-  if (n <= 1) {
+var convert = function(s, numRows) {
+  if (numRows <= 1) {
     return s;
   }
-  const rows = {};
-  for (let i = 0; i < n; i++) {
-    rows[i] = [];
-  }
-  rows[0].push(s[0]);
+  const rows = [...new Array(numRows)].map(() => '');
   let i = 0;
-  let r = 0;
   while (i < s.length) {
-    for (let j = 0; j < n - 1; j++) {
+    for (let j = 0; j < numRows && i < s.length; j++) {
+      rows[j] += s[i];
       i += 1;
-      r += 1;
-      rows[r].push(s[i]);
     }
-    for (let j = 0; j < n - 1; j++) {
+    for (let j = numRows - 2; j > 0 && i < s.length; j--) {
+      rows[j] += s[i];
       i += 1;
-      r -= 1;
-      rows[r].push(s[i]);
     }
   }
-  return Object.values(rows)
-    .map((strs) => strs.join(''))
-    .join('');
+  return rows.join('');
 };
