@@ -4,44 +4,36 @@
  */
 
 /*
-  babab
-  dp[i][j] means if s.slice(i, j + 1) is palindromic
-  dp[i][j] = dp[i + 1][j - 1] && (s[i] === s[j]) ? true : false
-  abbba => a + bbb + a isPalindromic if (bbb isPalindromic && a === a)
+  dp[i][j] = s[i] === s[j] && dp[i + 1][j - 1];
 */
 
-const longestPalindrome = function(s) {
-  let max = { index: 0, length: 1 };
-  const dp = [...new Array(s.length)].map(() =>
-    new Array(s.length).fill(false),
-  );
-  for (let i = 0; i < s.length; i++) {
-    dp[i][i] = true;
+var longestPalindrome = function(s) {
+  const m = s.length;
+  const dp = [...new Array(m)].map(() => new Array(m).fill(false));
+  let output = '';
+  for (let i = 0; i < m - 0; i++) {
+    const j = i + 0;
+    dp[i][j] = true;
+    output = max(output, s, dp, i, j);
   }
-  for (let i = 0; i <= s.length - 2; i++) {
-    dp[i][i + 1] = s[i] === s[i + 1];
-    if (dp[i][i + 1]) {
-      max = {
-        length: 2,
-        index: i,
-      };
+  for (let i = 0; i < m - 1; i++) {
+    const j = i + 1;
+    dp[i][j] = s[i] === s[j];
+    output = max(output, s, dp, i, j);
+  }
+  for (let n = 2; n < m; n++) {
+    for (let i = 0; i < m - n; i++) {
+      const j = i + n;
+      dp[i][j] = s[i] === s[j] && dp[i + 1][j - 1];
+      output = max(output, s, dp, i, j);
     }
   }
-  for (let n = 3; n <= s.length; n++) {
-    for (let i = 0; i <= s.length - n; i++) {
-      dp[i][i + n - 1] = dp[i + 1][i + n - 2] && s[i] === s[i + n - 1];
-      if (dp[i][i + n - 1]) {
-        if (n >= max.length) {
-          max = {
-            length: n,
-            index: i,
-          };
-        }
-      }
-    }
-  }
-  const { index, length } = max;
-  return s.slice(index, index + length);
+  return output;
 };
 
-export default longestPalindrome;
+function max(output, s, dp, i, j) {
+  if (dp[i][j] && j - i + 1 > output.length) {
+    return s.substring(i, j + 1);
+  }
+  return output;
+}
