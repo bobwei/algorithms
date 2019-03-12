@@ -2,13 +2,11 @@
  * Definition for read4()
  *
  * @param {character[]} buf Destination buffer
- * @return {number} The number of characters read
+ * @return {number} The number of actual characters read
  * read4 = function(buf) {
  *     ...
  * };
  */
-
-const MAX_N_SIZE = 4;
 
 /**
  * @param {function} read4()
@@ -17,20 +15,18 @@ const MAX_N_SIZE = 4;
 var solution = function(read4) {
   /**
    * @param {character[]} buf Destination buffer
-   * @param {number} n Maximum number of characters to read
-   * @return {number} The number of characters read
+   * @param {number} n Number of characters to read
+   * @return {number} The number of actual characters read
    */
   return function(buf, n) {
-    let total = 0;
+    const arr = [];
     let isEof = false;
-    while (total < n && !isEof) {
+    while (arr.length < n && !isEof) {
       const tmp = [];
-      const nRead = read4(tmp);
-      const nFlush = Math.min(nRead, n - total);
-      buf.push(...tmp.slice(0, nFlush));
-      total += nFlush;
-      isEof = nRead < MAX_N_SIZE;
+      isEof = read4(tmp) < 4;
+      arr.push(...tmp);
     }
-    return total;
+    buf.push(...arr.slice(0, n));
+    return buf.length;
   };
 };
