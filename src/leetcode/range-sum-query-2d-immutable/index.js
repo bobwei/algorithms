@@ -5,17 +5,22 @@ var NumMatrix = function(matrix) {
   if (!matrix.length || !matrix[0].length) {
     return;
   }
-  const m = matrix.length;
-  const n = matrix[0].length;
-  this.sum = [...new Array(m)].map(() => new Array(n).fill(0));
-  for (let i = 0; i < m; i++) {
-    let rowSum = 0;
-    for (let j = 0; j < n; j++) {
-      rowSum += matrix[i][j];
-      this.sum[i][j] = rowSum;
-      if (i - 1 >= 0) {
-        this.sum[i][j] += this.sum[i - 1][j];
-      }
+  this.m = matrix.length;
+  this.n = matrix[0].length;
+  this.sum = [...new Array(this.m)].map(() => new Array(this.n).fill(0));
+  for (let j = 0; j < this.n; j++) {
+    this.sum[0][j] = (j - 1 >= 0 ? this.sum[0][j - 1] : 0) + matrix[0][j];
+  }
+  for (let i = 0; i < this.m; i++) {
+    this.sum[i][0] = (i - 1 >= 0 ? this.sum[i - 1][0] : 0) + matrix[i][0];
+  }
+  for (let i = 1; i < this.m; i++) {
+    for (let j = 1; j < this.n; j++) {
+      // prettier-ignore
+      this.sum[i][j] = this.sum[i - 1][j]
+        + this.sum[i][j - 1]
+        - this.sum[i - 1][j - 1]
+        + matrix[i][j];
     }
   }
 };
@@ -31,17 +36,11 @@ NumMatrix.prototype.sumRegion = function(row1, col1, row2, col2) {
   if (!this.sum) {
     return 0;
   }
-  let output = this.sum[row2][col2];
-  if (row1 - 1 >= 0) {
-    output -= this.sum[row1 - 1][col2];
-  }
-  if (col1 - 1 >= 0) {
-    output -= this.sum[row2][col1 - 1];
-  }
-  if (row1 - 1 >= 0 && col1 - 1 >= 0) {
-    output += this.sum[row1 - 1][col1 - 1];
-  }
-  return output;
+  // prettier-ignore
+  return this.sum[row2][col2]
+    - (row1 - 1 >= 0 ? this.sum[row1 - 1][col2] : 0)
+    - (col1 - 1 >= 0 ? this.sum[row2][col1 - 1] : 0)
+    + (row1 - 1 >= 0 && col1 - 1 >= 0 ? this.sum[row1 - 1][col1 - 1] : 0);
 };
 
 /**
