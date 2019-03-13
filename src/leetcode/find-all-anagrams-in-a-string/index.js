@@ -3,34 +3,42 @@
  * @param {string} p
  * @return {number[]}
  */
-
 var findAnagrams = function(s, p) {
-  const counts = {};
-  for (let i = 0; i < p.length; i++) {
-    counts[p[i]] = (counts[p[i]] || 0) + 1;
-  }
   const output = [];
-  let n = p.length;
-  let left = 0;
+  const counter = new Counter(p);
+  let start = 0;
   for (let i = 0; i < s.length; i++) {
-    if (counts[s[i]] !== undefined) {
-      counts[s[i]] -= 1;
-      if (counts[s[i]] >= 0) {
-        n -= 1;
+    counter.add(s[i]);
+    while (counter.n === 0) {
+      if (i - start + 1 === p.length) {
+        output.push(start);
       }
-    }
-    while (n <= 0) {
-      if (i - left + 1 === p.length) {
-        output.push(left);
-      }
-      if (counts[s[left]] !== undefined) {
-        counts[s[left]] += 1;
-        if (counts[s[left]] > 0) {
-          n += 1;
-        }
-      }
-      left += 1;
+      counter.delete(s[start++]);
     }
   }
   return output;
 };
+
+class Counter {
+  constructor(target) {
+    this.n = target.length;
+    this.counts = target.split('').reduce((acc, cur) => {
+      acc[cur] = (acc[cur] || 0) + 1;
+      return acc;
+    }, {});
+  }
+
+  add(c) {
+    this.counts[c] = (this.counts[c] || 0) - 1;
+    if (this.counts[c] >= 0) {
+      this.n -= 1;
+    }
+  }
+
+  delete(c) {
+    this.counts[c] += 1;
+    if (this.counts[c] > 0) {
+      this.n += 1;
+    }
+  }
+}
