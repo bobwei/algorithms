@@ -3,33 +3,41 @@
  * @param {string} s2
  * @return {boolean}
  */
-
 var checkInclusion = function(s1, s2) {
-  const counts = {};
-  for (let i = 0; i < s1.length; i++) {
-    counts[s1[i]] = (counts[s1[i]] || 0) + 1;
-  }
-  let n = s1.length;
-  let left = 0;
+  const counter = new Counter(s1);
+  let start = 0;
   for (let i = 0; i < s2.length; i++) {
-    if (counts[s2[i]] !== undefined) {
-      counts[s2[i]] -= 1;
-      if (counts[s2[i]] >= 0) {
-        n -= 1;
+    counter.add(s2[i]);
+    while (counter.n === 0) {
+      if (i - start + 1 === s1.length) {
+        return true;
       }
-    }
-    if (n === 0) {
-      return true;
-    }
-    while ((counts[s2[i]] === undefined && left <= i) || counts[s2[i]] < 0) {
-      if (counts[s2[left]] !== undefined) {
-        counts[s2[left]] += 1;
-        if (counts[s2[left]] > 0) {
-          n += 1;
-        }
-      }
-      left += 1;
+      counter.delete(s2[start++]);
     }
   }
   return false;
 };
+
+class Counter {
+  constructor(target) {
+    this.n = target.length;
+    this.counts = target.split('').reduce((acc, cur) => {
+      acc[cur] = (acc[cur] || 0) + 1;
+      return acc;
+    }, {});
+  }
+
+  add(c) {
+    this.counts[c] = (this.counts[c] || 0) - 1;
+    if (this.counts[c] >= 0) {
+      this.n -= 1;
+    }
+  }
+
+  delete(c) {
+    this.counts[c] = this.counts[c] + 1;
+    if (this.counts[c] > 0) {
+      this.n += 1;
+    }
+  }
+}
