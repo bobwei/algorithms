@@ -1,26 +1,24 @@
+/* global Node */
 /**
- * Definition for undirected graph.
- * function UndirectedGraphNode(label) {
- *     this.label = label;
- *     this.neighbors = [];   // Array of UndirectedGraphNode
- * }
+ * // Definition for a Node.
+ * function Node(val,neighbors) {
+ *    this.val = val;
+ *    this.neighbors = neighbors;
+ * };
  */
-
 /**
- * @param {UndirectedGraphNode} graph
- * @return {UndirectedGraphNode}
+ * @param {Node} node
+ * @return {Node}
  */
-var cloneGraph = function(graph, visited = {}) {
-  if (!graph) {
-    return graph;
+var cloneGraph = function(node, visited = new Map()) {
+  if (!node) return node;
+  if (visited.get(node)) {
+    return visited.get(node);
   }
-  if (visited[graph.label]) {
-    return visited[graph.label];
+  const cloned = new Node(node.val, []);
+  visited.set(node, cloned);
+  for (const neighbor of node.neighbors) {
+    cloned.neighbors.push(cloneGraph(neighbor, visited));
   }
-  const node = new UndirectedGraphNode(graph.label);
-  visited[graph.label] = node;
-  for (let i = 0; i < graph.neighbors.length; i++) {
-    node.neighbors[i] = cloneGraph(graph.neighbors[i], visited);
-  }
-  return node;
+  return cloned;
 };
