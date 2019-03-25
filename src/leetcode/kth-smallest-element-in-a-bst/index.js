@@ -10,22 +10,24 @@
  * @param {number} k
  * @return {number}
  */
-const kthSmallest = function(root, k) {
-  const stack = [];
-  let ptr = root;
-  while (ptr || stack.length) {
-    if (!ptr) {
-      const node = stack.pop();
-      k -= 1;
-      if (k <= 0) {
-        return node.val;
-      }
-      ptr = node.right;
-    } else {
-      stack.push(ptr);
-      ptr = ptr.left;
-    }
-  }
+var kthSmallest = function(root, k) {
+  return counter(root, k);
 };
 
-export default kthSmallest;
+function counter(...args) {
+  let output;
+
+  (function count(root, k) {
+    if (!root) {
+      return 0;
+    }
+    const left = count(root.left, k);
+    const right = count(root.right, k - (left + 1));
+    if (left + 1 === k) {
+      output = root.val;
+    }
+    return left + right + 1;
+  })(...args);
+
+  return output;
+}
