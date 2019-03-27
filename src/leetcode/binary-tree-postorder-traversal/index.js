@@ -13,8 +13,8 @@ var postorderTraversal = function(root) {
   if (!root) {
     return [];
   }
-  const output = [];
   const stack = [root];
+  const output = [];
   while (stack.length) {
     const node = stack.pop();
     output.push(node.val);
@@ -25,6 +25,5 @@ var postorderTraversal = function(root) {
       stack.push(node.right);
     }
   }
-  output.reverse();
-  return output;
+  return output.reverse();
 };
