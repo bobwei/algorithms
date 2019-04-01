@@ -10,19 +10,24 @@
  * @param {ListNode} l2
  * @return {ListNode}
  */
-const mergeTwoLists = function(l1, l2) {
-  if (!l1 || !l2) {
-    return l1 || l2;
+var mergeTwoLists = function(l1, l2) {
+  const dummy = new ListNode();
+  let ptr = dummy;
+  let p1 = l1;
+  let p2 = l2;
+  while (p1 || p2) {
+    if (!p1 || !p2) {
+      ptr.next = p1 || p2;
+      return dummy.next;
+    } else if (p1.val <= p2.val) {
+      ptr.next = p1;
+      ptr = ptr.next;
+      p1 = p1.next;
+    } else {
+      ptr.next = p2;
+      ptr = ptr.next;
+      p2 = p2.next;
+    }
   }
-  let head;
-  if (l1.val <= l2.val) {
-    head = l1;
-    head.next = mergeTwoLists(l1.next, l2);
-  } else if (l1.val > l2.val) {
-    head = l2;
-    head.next = mergeTwoLists(l1, l2.next);
-  }
-  return head;
+  return dummy.next;
 };
-
-export default mergeTwoLists;
