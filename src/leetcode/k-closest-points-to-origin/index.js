@@ -3,31 +3,23 @@
  * @param {number} K
  * @return {number[][]}
  */
-var kClosest = function(points, K) {
-  return quickSelect(points, K, (a, b) => distance(a) < distance(b));
-};
-
-function distance([x, y]) {
-  return Math.sqrt(x ** 2 + y ** 2);
-}
-
-function quickSelect(arr, k, compare) {
+var kClosest = function(points, k, i = 0, j = points.length - 1) {
   let left = 0;
-  let right = arr.length - 1;
+  let right = points.length - 1;
   while (left <= right) {
-    const p = partition(arr, compare, left, right);
+    const p = partition(points, left, right);
     if (k === p + 1) {
-      return arr.slice(0, k);
-    } else if (k > p) {
-      left = p + 1;
-    } else {
+      return points.slice(0, k);
+    } else if (k <= p) {
       right = p - 1;
+    } else {
+      left = p + 1;
     }
   }
   return [];
-}
+};
 
-function partition(arr, compare, start, end) {
+function partition(arr, start, end, compare = (a, b) => distance(a) < distance(b)) {
   const p = end;
   let j = start;
   for (let i = start; i < end; i++) {
@@ -38,4 +30,8 @@ function partition(arr, compare, start, end) {
   }
   [arr[p], arr[j]] = [arr[j], arr[p]];
   return j;
+}
+
+function distance([x, y]) {
+  return Math.sqrt(x ** 2 + y ** 2);
 }
