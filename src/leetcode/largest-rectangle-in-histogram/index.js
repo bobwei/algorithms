@@ -2,21 +2,19 @@
  * @param {number[]} heights
  * @return {number}
  */
-
-/*
-  A largest rectangle is surround by two shorter side at left and right.
-  So for each height, our goal is to find left and right border which is the first height shorter than the target.
-*/
-
 var largestRectangleArea = function(heights) {
-  const stack = [];
-  let max = 0;
-  for (let i = 0; i <= heights.length; i++) {
-    const h = heights[i];
-    while (stack.length && (heights[stack[stack.length - 1]] > h || i === heights.length)) {
-      const height = heights[stack.pop()];
-      const left = stack.length ? stack[stack.length - 1] : -1;
+  if (!heights.length) {
+    return 0;
+  }
+  const n = heights.length;
+  const stack = new Stack();
+  let max = -Infinity;
+  for (let i = 0; i <= n; i++) {
+    while (stack.length && (heights[i] < heights[stack.peek()] || i === n)) {
+      const top = stack.pop();
+      const left = stack.length ? stack.peek() : -1;
       const width = i - left - 1;
+      const height = heights[top];
       const area = width * height;
       max = Math.max(max, area);
     }
@@ -24,3 +22,9 @@ var largestRectangleArea = function(heights) {
   }
   return max;
 };
+
+class Stack extends Array {
+  peek() {
+    return this[this.length - 1];
+  }
+}
