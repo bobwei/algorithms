@@ -2,48 +2,43 @@
  * @param {string} str
  * @return {number}
  */
-
-const isValidNumber = (str) => /[0-9|\-|+]/.test(str);
-const isSign = (str) => /-|\+/.test(str);
-const MAX = 2 ** 31 - 1;
-const MIN = 2 ** 31 * -1;
+const INT_MAX = 2 ** 31 - 1;
+const INT_MIN = -(2 ** 31);
 
 var myAtoi = function(str) {
-  let isNonWhiteSpaceFound = false;
-  let sign = null;
   let output = null;
-  for (let i = 0; i < str.length; i++) {
-    if (!isNonWhiteSpaceFound) {
-      if (str[i] === ' ') {
-        continue;
-      }
-      if (!isValidNumber(str[i])) {
-        return 0;
-      }
-      isNonWhiteSpaceFound = true;
-    }
-    if (str[i] === ' ' || !isValidNumber(str[i])) {
-      break;
-    }
-    if (isSign(str[i])) {
-      if (sign !== null) {
+  let sign = null;
+  let i = 0;
+  while (str[i] === ' ') {
+    i += 1;
+  }
+  while (isValid(str[i])) {
+    if (str[i] === '+' || str[i] === '-') {
+      if (sign !== null || (sign === null && output !== null)) {
         break;
       }
-      if (output !== null) {
-        break;
-      }
-      sign = str[i] === '-' ? -1 : 1;
-      continue;
+      sign = str[i] === '+' ? 1 : -1;
+    } else {
+      if (output === null) output = 0;
+      output = output * 10 + parseInt(str[i]);
     }
-    output = (output || 0) * 10;
-    output = output + parseInt(str[i], 10);
+    i += 1;
   }
-  output = (output || 0) * (sign || 1);
-  if (output > MAX) {
-    return MAX;
+  if (sign === null) {
+    sign = 1;
   }
-  if (output < MIN) {
-    return MIN;
+  if (output === null) {
+    return 0;
   }
-  return output;
+  if (sign > 0 && output > INT_MAX) {
+    return INT_MAX;
+  }
+  if (sign < 0 && -output < INT_MIN) {
+    return INT_MIN;
+  }
+  return sign * output;
 };
+
+function isValid(c) {
+  return /[0-9|+|-]/.test(c);
+}
