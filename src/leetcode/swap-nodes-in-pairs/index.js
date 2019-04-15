@@ -13,8 +13,9 @@ var swapPairs = function(head) {
   if (!head || !head.next) {
     return head;
   }
-  const h = head.next;
-  head.next = swapPairs(head.next.next);
-  h.next = head;
-  return h;
+  const newHead = head.next;
+  const next = head.next.next;
+  head.next.next = head;
+  head.next = swapPairs(next);
+  return newHead;
 };
