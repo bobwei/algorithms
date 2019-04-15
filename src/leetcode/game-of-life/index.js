@@ -8,51 +8,48 @@ var gameOfLife = function(board) {
   }
   const m = board.length;
   const n = board[0].length;
-  const lives = {};
+  const lives = [];
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      const counts = count(board, m, n, [i, j]);
+      const { nLives, nDeads } = count(board, [i, j], m, n);
       const isAlive =
-        (board[i][j] === 1 && (counts.lives >= 2 && counts.lives <= 3)) ||
-        (board[i][j] === 0 && counts.lives === 3);
+        (board[i][j] === 1 && (nLives === 2 || nLives === 3)) ||
+        (board[i][j] === 0 && nLives === 3);
       if (isAlive) {
-        const key = encode([m, n], [i, j]);
-        lives[key] = true;
+        lives.push([i, j]);
       }
     }
   }
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      const key = encode([m, n], [i, j]);
-      board[i][j] = lives[key] || false;
+      board[i][j] = 0;
     }
+  }
+  for (const [i, j] of lives) {
+    board[i][j] = 1;
   }
 };
 
-// prettier-ignore
-const dirs = [
-  [-1, -1], [-1, 0], [-1, 1],
-  [0, -1], [0, 1],
-  [1, -1], [1, 0], [1, 1],
-];
+const dirs = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
 
-function count(board, m, n, p) {
-  const counts = {
-    lives: 0,
-  };
+function count(board, p, m, n) {
+  let nLives = 0;
   for (const [di, dj] of dirs) {
     const i = p[0] + di;
     const j = p[1] + dj;
-    if (i < 0 || i >= m || j < 0 || j >= n) {
-      continue;
-    }
-    if (board[i][j] === 1) {
-      counts.lives += 1;
+    if (isValid(i, j, m, n)) {
+      nLives += board[i][j] === 1 ? 1 : 0;
     }
   }
-  return counts;
+  return {
+    nLives,
+    nDeads: 8 - nLives,
+  };
 }
 
-function encode([m, n], [i, j]) {
-  return n * i + j;
+function isValid(i, j, m, n) {
+  if (i < 0 || i >= m || j < 0 || j >= n) {
+    return false;
+  }
+  return true;
 }
