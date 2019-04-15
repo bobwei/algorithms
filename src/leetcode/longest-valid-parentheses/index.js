@@ -17,8 +17,10 @@ var longestValidParentheses = function(s) {
   }
   stack.push(s.length);
   let output = 0;
-  for (let i = 0; i < stack.length - 1; i++) {
-    output = Math.max(output, stack[i + 1] - stack[i] - 1);
+  for (let i = 0; i <= stack.length - 2; i++) {
+    const left = stack[i];
+    const right = stack[i + 1];
+    output = Math.max(output, right - left - 1);
   }
   return output;
 };
