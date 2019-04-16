@@ -2,28 +2,18 @@
  * @param {number[]} nums
  * @return {number}
  */
-/*
-f(n) = max(arr[n] + f(n - 2), f(n - 1))
-f(0) = arr[0]
-f(1) = max(arr[0], arr[1])
-f(2) = max(arr[2] + f(0), f(1))
-*/
-const rob = (arr) => {
-  if (arr.length <= 0) {
-    return 0;
+var rob = function(nums) {
+  if (nums.length <= 2) {
+    if (!nums.length) return 0;
+    return Math.max(...nums.slice(0, 2));
   }
-  if (arr.length <= 1) {
-    return arr[0];
-  }
-  let x = arr[0];
-  let y = Math.max(arr[0], arr[1]);
+  let x = nums[0];
+  let y = Math.max(nums[0], nums[1]);
   let output = y;
-  for (let i = 2; i < arr.length; i++) {
-    output = Math.max(arr[i] + x, y);
+  for (let i = 2; i < nums.length; i++) {
+    output = Math.max(output, x + nums[i], y);
     x = y;
     y = output;
   }
   return output;
 };
-
-export default rob;
