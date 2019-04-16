@@ -4,17 +4,17 @@
  * @return {number}
  */
 var maxSubArrayLen = function(nums, k) {
-  const cache = new Map([[0, -1]]);
+  const map = { 0: -1 };
+  let output = 0;
   let sum = 0;
-  let max = -Infinity;
   for (let i = 0; i < nums.length; i++) {
     sum += nums[i];
-    if (cache.has(sum - k)) {
-      max = Math.max(max, i - cache.get(sum - k));
+    if (sum - k in map) {
+      output = Math.max(output, i - map[sum - k]);
     }
-    if (!cache.has(sum)) {
-      cache.set(sum, i);
+    if (!(sum in map)) {
+      map[sum] = i;
     }
   }
-  return max > -Infinity ? max : 0;
+  return output;
 };
