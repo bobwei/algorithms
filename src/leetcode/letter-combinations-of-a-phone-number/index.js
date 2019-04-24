@@ -14,15 +14,15 @@ const map = {
   9: 'wxyz',
 };
 
-var letterCombinations = function(digits, i = 0, selected = '', output = []) {
-  if (i >= digits.length) {
-    if (selected.length) {
+var letterCombinations = function(digits, index = 0, selected = '', output = []) {
+  if (selected.length >= digits.length) {
+    if (selected) {
       output.push(selected);
     }
     return output;
   }
-  for (let j = 0; j < map[digits[i]].length; j++) {
-    letterCombinations(digits, i + 1, selected + map[digits[i]][j], output);
+  for (const c of map[digits[index]]) {
+    letterCombinations(digits, index + 1, selected + c, output);
   }
   return output;
 };
