@@ -4,15 +4,15 @@
  * @return {number}
  */
 var subarraySum = function(nums, k) {
-  const sums = { 0: 1 };
+  const prefixSum = { 0: 1 };
   let sum = 0;
-  let count = 0;
+  let output = 0;
   for (let i = 0; i < nums.length; i++) {
     sum += nums[i];
-    if (sum - k in sums) {
-      count += sums[sum - k];
+    if (sum - k in prefixSum) {
+      output += prefixSum[sum - k];
     }
-    sums[sum] = (sums[sum] || 0) + 1;
+    prefixSum[sum] = (prefixSum[sum] || 0) + 1;
   }
-  return count;
+  return output;
 };
