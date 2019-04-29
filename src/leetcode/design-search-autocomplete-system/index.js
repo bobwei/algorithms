@@ -6,6 +6,8 @@ var AutocompleteSystem = function(sentences, times) {
   this.freq = sentences.reduce((acc, str, i) => ({ ...acc, [str]: times[i] }), {});
   this.inputText = '';
   this.topK = 3;
+  this.trie = new Trie();
+  sentences.forEach((str) => this.trie.insert(str));
 };
 
 /**
@@ -15,6 +17,7 @@ var AutocompleteSystem = function(sentences, times) {
 AutocompleteSystem.prototype.input = function(c) {
   if (c === '#') {
     this.freq[this.inputText] = (this.freq[this.inputText] || 0) + 1;
+    this.trie.insert(this.inputText);
     this.inputText = '';
     return [];
   }
@@ -27,8 +30,8 @@ AutocompleteSystem.prototype.input = function(c) {
       return a > b;
     },
   });
-  Object.keys(this.freq)
-    .filter((str) => str.startsWith(this.inputText))
+  // prettier-ignore
+  this.trie.dfs(this.inputText)
     .forEach((str) => {
       pq.enqueue(str);
       if (pq.length > this.topK) {
@@ -98,5 +101,41 @@ function moveDown(arr, i, comparator) {
     const next = right >= arr.length || comparator(arr[left], arr[right]) ? left : right;
     [arr[i], arr[next]] = [arr[next], arr[i]];
     moveDown(arr, next, comparator);
+  }
+}
+
+class Node {
+  constructor() {
+    this.keys = {};
+    this.isWord = false;
+  }
+}
+
+class Trie {
+  constructor() {
+    this.root = new Node();
+  }
+
+  insert(str) {
+    let ptr = this.root;
+    for (const c of str) {
+      if (!(c in ptr.keys)) {
+        ptr.keys[c] = new Node();
+      }
+      ptr = ptr.keys[c];
+    }
+    ptr.isWord = true;
+  }
+
+  dfs(prefix = '', root = this.root, selected = '', output = []) {
+    if (root.isWord && selected.length >= prefix.length) {
+      output.push(selected);
+    }
+    for (const key in root.keys) {
+      if (prefix.startsWith(selected + key) || selected.length >= prefix.length) {
+        this.dfs(prefix, root.keys[key], selected + key, output);
+      }
+    }
+    return output;
   }
 }
