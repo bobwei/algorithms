@@ -9,37 +9,38 @@
  * @param {string} s
  * @return {TreeNode}
  */
-var str2tree = function(s, start = 0, end = s.length - 1, parens = findParenthesis(s)) {
+var str2tree = function(s, start = 0, end = s.length - 1, parens = findParens(s)) {
   if (!s) {
     return null;
   }
   let i = start;
   let num = 0;
   let sign = 1;
-  while (i >= start && i <= end && /[0-9|+|-]/.test(s[i])) {
-    if (s[i] === '-') {
-      sign = -1;
-    } else if (s[i] === '+') {
+  while (/[0-9|+|-]/.test(s[i])) {
+    if (s[i] === '+') {
       sign = 1;
+    } else if (s[i] === '-') {
+      sign = -1;
     } else {
       num = 10 * num + parseInt(s[i]);
     }
     i += 1;
   }
-  const root = new TreeNode(sign * num);
-  if (i >= start && i <= end) {
+  num = sign * num;
+  const root = new TreeNode(num);
+  if (i <= end && s[i] === '(') {
     root.left = str2tree(s, i + 1, parens[i] - 1, parens);
     i = parens[i] + 1;
   }
-  if (i >= start && i <= end) {
+  if (i <= end && s[i] === '(') {
     root.right = str2tree(s, i + 1, parens[i] - 1, parens);
   }
   return root;
 };
 
-function findParenthesis(s) {
-  const stack = [];
+function findParens(s) {
   const map = {};
+  const stack = [];
   for (let i = 0; i < s.length; i++) {
     if (s[i] === '(') {
       stack.push(i);
