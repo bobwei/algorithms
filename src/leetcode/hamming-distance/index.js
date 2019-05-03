@@ -4,13 +4,11 @@
  * @return {number}
  */
 var hammingDistance = function(x, y) {
-  let xor = x ^ y;
+  let n = x ^ y;
   let output = 0;
-  while (xor >= 1) {
-    if (xor % 2 === 1) {
-      output += 1;
-    }
-    xor >>= 1;
+  while (n) {
+    output += n % 2;
+    n >>= 1;
   }
   return output;
 };
