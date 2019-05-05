@@ -11,15 +11,23 @@ var minCostII = function(costs) {
   }
   const m = costs.length;
   const n = costs[0].length;
-  const dp = [...new Array(m)].map(() => new Array(n).fill(Infinity));
-  for (let j = 0; j < n; j++) {
-    dp[0][j] = costs[0][j];
-  }
-  for (let i = 1; i < m; i++) {
+  // min values of pre house
+  let pre = [[0, -1], [0, -1]];
+  for (let i = 0; i < m; i++) {
+    const min = [[Infinity, -1], [Infinity, -1]];
     for (let j = 0; j < n; j++) {
-      const pre = dp[i - 1].filter((_, k) => k !== j);
-      dp[i][j] = costs[i][j] + Math.min(...pre);
+      const value = costs[i][j] + (j !== pre[0][1] ? pre[0][0] : pre[1][0]);
+      if (value < min[0][0]) {
+        min[1][0] = min[0][0];
+        min[1][1] = min[0][1];
+        min[0][0] = value;
+        min[0][1] = j;
+      } else if (value < min[1][0]) {
+        min[1][0] = value;
+        min[1][1] = j;
+      }
     }
+    pre = min;
   }
-  return Math.min(...dp[m - 1]);
+  return pre[0][0];
 };
