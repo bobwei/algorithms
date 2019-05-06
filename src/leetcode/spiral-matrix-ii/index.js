@@ -7,50 +7,29 @@ var generateMatrix = function(n) {
     return [[1]];
   }
   const matrix = [...new Array(n)].map(() => new Array(n).fill(0));
-  const boundary = {
-    top: 1,
-    right: n - 1,
-    bottom: n - 1,
-    left: 0,
-  };
-  const p = { i: 0, j: 0 };
-  for (let i = 1; i < n ** 2; ) {
-    while (p.j <= boundary.right) {
-      matrix[p.i][p.j] = i;
-      if (p.j + 1 > boundary.right) {
-        boundary.right -= 1;
-        break;
-      }
-      p.j += 1;
-      i += 1;
+  let [top, right, bottom, left] = [0, n - 1, n - 1, 0];
+  let num = 1;
+  while (left <= right && top <= bottom) {
+    for (let j = left; j <= right; j++) {
+      matrix[top][j] = num;
+      num += 1;
     }
-    while (p.i <= boundary.bottom) {
-      matrix[p.i][p.j] = i;
-      if (p.i + 1 > boundary.bottom) {
-        boundary.bottom -= 1;
-        break;
-      }
-      p.i += 1;
-      i += 1;
+    top += 1;
+    for (let i = top; i <= bottom; i++) {
+      matrix[i][right] = num;
+      num += 1;
     }
-    while (p.j >= boundary.left) {
-      matrix[p.i][p.j] = i;
-      if (p.j - 1 < boundary.left) {
-        boundary.left += 1;
-        break;
-      }
-      p.j -= 1;
-      i += 1;
+    right -= 1;
+    for (let j = right; j >= left; j--) {
+      matrix[bottom][j] = num;
+      num += 1;
     }
-    while (p.i >= boundary.top) {
-      matrix[p.i][p.j] = i;
-      if (p.i - 1 < boundary.top) {
-        boundary.top += 1;
-        break;
-      }
-      p.i -= 1;
-      i += 1;
+    bottom -= 1;
+    for (let i = bottom; i >= top; i--) {
+      matrix[i][left] = num;
+      num += 1;
     }
+    left += 1;
   }
   return matrix;
 };
