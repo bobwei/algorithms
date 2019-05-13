@@ -3,39 +3,51 @@
  * @param {string} t
  * @return {string}
  */
-
 var minWindow = function(s, t) {
-  if (!s.length || !t.length) {
-    return '';
-  }
-  const counts = {};
-  for (let i = 0; i < t.length; i++) {
-    counts[t[i]] = (counts[t[i]] || 0) + 1;
-  }
-  let output = '';
-  let left = 0;
-  let n = t.length;
-  let min = Infinity;
+  const output = { str: '', length: Infinity };
+  const counter = new Counter({ t });
+  let start = 0;
   for (let i = 0; i < s.length; i++) {
-    if (counts[s[i]] !== undefined) {
-      counts[s[i]] -= 1;
-      if (counts[s[i]] >= 0) {
-        n -= 1;
+    counter.add(s[i]);
+    while (counter.isMatched()) {
+      if (i - start + 1 < output.length) {
+        output.length = i - start + 1;
+        output.str = s.substring(start, i + 1);
       }
-    }
-    while (n <= 0) {
-      if (i - left + 1 < min) {
-        min = i - left + 1;
-        output = s.slice(left, i + 1);
-      }
-      if (counts[s[left]] !== undefined) {
-        counts[s[left]] += 1;
-        if (counts[s[left]] > 0) {
-          n += 1;
-        }
-      }
-      left += 1;
+      counter.delete(s[start]);
+      start += 1;
     }
   }
-  return output;
+  return output.length < Infinity ? output.str : '';
 };
+
+class Counter {
+  constructor({ t }) {
+    this.nRemaining = t.length;
+    // prettier-ignore
+    this.count = t
+      .split('')
+      .reduce((acc, cur) => {
+        acc[cur] = (acc[cur] || 0) + 1;
+        return acc;
+      }, {});
+  }
+
+  isMatched() {
+    return this.nRemaining <= 0;
+  }
+
+  add(c) {
+    this.count[c] = (this.count[c] || 0) - 1;
+    if (this.count[c] >= 0) {
+      this.nRemaining -= 1;
+    }
+  }
+
+  delete(c) {
+    this.count[c] += 1;
+    if (this.count[c] > 0) {
+      this.nRemaining += 1;
+    }
+  }
+}
