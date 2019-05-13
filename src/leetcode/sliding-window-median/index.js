@@ -4,66 +4,83 @@
  * @return {number[]}
  */
 var medianSlidingWindow = function(nums, k) {
-  const win = new Window();
-  for (let i = 0; i < k; i++) {
-    win.add(nums[i]);
-  }
-
-  const output = [win.findMedian()];
-  for (let i = k; i < nums.length; i++) {
-    win.add(nums[i]);
-    win.delete(nums[i - k]);
-    output.push(win.findMedian());
+  const win = new Window({ nums, k });
+  const output = [];
+  for (let i = 0; i < nums.length; i++) {
+    win.add(i);
+    win.delete(i - k);
+    win.balance();
+    if (i >= k - 1) {
+      output.push(win.getMedian());
+    }
   }
   return output;
 };
 
 class Window {
-  constructor() {
+  constructor({ nums, k }) {
     this.minHeap = new PriorityQueue({
-      comparator: (a, b) => a <= b,
-      isEqual: (a, b) => a === b,
+      comparator: createComparator(nums, 'asc'),
     });
     this.maxHeap = new PriorityQueue({
-      comparator: (a, b) => a >= b,
-      isEqual: (a, b) => a === b,
+      comparator: createComparator(nums, 'dsc'),
     });
+    this.nums = nums;
+    this.k = k;
   }
 
-  add(element) {
-    this.minHeap.enqueue(element);
-    this.maxHeap.enqueue(this.minHeap.dequeue());
-    if (!(this.minHeap.length >= this.maxHeap.length)) {
-      this.minHeap.enqueue(this.maxHeap.dequeue());
-    }
-  }
-
-  delete(element) {
-    if (element > this.findMedian()) {
-      this.minHeap.delete(element);
+  add(i) {
+    const { minHeap, maxHeap, nums } = this;
+    const num = nums[i];
+    const m = minHeap.length && maxHeap.length ? this.getMedian() : -Infinity;
+    if (num >= m) {
+      minHeap.enqueue(i);
     } else {
-      this.maxHeap.delete(element);
-    }
-    if (!(this.minHeap.length >= this.maxHeap.length)) {
-      this.minHeap.enqueue(this.maxHeap.dequeue());
-    } else if (this.minHeap.length - this.maxHeap.length > 1) {
-      this.maxHeap.enqueue(this.minHeap.dequeue());
+      maxHeap.enqueue(i);
     }
   }
 
-  findMedian() {
-    if (this.minHeap.length > this.maxHeap.length) {
-      return this.minHeap.peek();
+  delete(i) {
+    if (i < 0) {
+      return;
     }
-    return (this.minHeap.peek() + this.maxHeap.peek()) / 2;
+    const { minHeap, maxHeap } = this;
+    minHeap.delete(i);
+    maxHeap.delete(i);
+  }
+
+  balance() {
+    const { minHeap, maxHeap } = this;
+    if (minHeap.length - maxHeap.length > 1) {
+      maxHeap.enqueue(minHeap.dequeue());
+    } else if (maxHeap.length - minHeap.length > 1) {
+      minHeap.enqueue(maxHeap.dequeue());
+    }
+  }
+
+  getMedian() {
+    const { minHeap, maxHeap, nums } = this;
+    if ((minHeap.length + maxHeap.length) % 2 === 1) {
+      return minHeap.length > maxHeap.length ? nums[minHeap.peek()] : nums[maxHeap.peek()];
+    }
+    return (nums[minHeap.peek()] + nums[maxHeap.peek()]) / 2;
   }
 }
 
+function createComparator(nums, order) {
+  return (i, j) => {
+    if (order === 'asc') {
+      return nums[i] < nums[j];
+    } else if (order === 'dsc') {
+      return nums[i] > nums[j];
+    }
+  };
+}
+
 class PriorityQueue {
-  constructor({ comparator, isEqual }) {
-    this.comparator = comparator;
-    this.isEqual = isEqual;
+  constructor({ comparator }) {
     this.arr = [];
+    this.comparator = comparator;
   }
 
   enqueue(element) {
@@ -80,11 +97,11 @@ class PriorityQueue {
   }
 
   delete(element) {
-    const i = this.arr.findIndex((target) => this.isEqual(target, element));
-    if (i >= 0) {
-      this.arr[i] = this.arr[this.arr.length - 1];
+    const index = this.arr.indexOf(element);
+    if (index >= 0) {
+      this.arr[index] = this.arr[this.arr.length - 1];
       this.arr.pop();
-      moveDown(this.arr, i, this.comparator);
+      moveDown(this.arr, index, this.comparator);
     }
   }
 
