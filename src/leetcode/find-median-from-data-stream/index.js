@@ -15,9 +15,15 @@ var MedianFinder = function() {
  * @return {void}
  */
 MedianFinder.prototype.addNum = function(num) {
-  this.minHeap.enqueue(num);
-  this.maxHeap.enqueue(this.minHeap.dequeue());
-  if (!(this.minHeap.length >= this.maxHeap.length)) {
+  const m = this.minHeap.length && this.maxHeap.length ? this.findMedian() : -Infinity;
+  if (num >= m) {
+    this.minHeap.enqueue(num);
+  } else {
+    this.maxHeap.enqueue(num);
+  }
+  if (this.minHeap.length - this.maxHeap.length > 1) {
+    this.maxHeap.enqueue(this.minHeap.dequeue());
+  } else if (this.maxHeap.length - this.minHeap.length > 1) {
     this.minHeap.enqueue(this.maxHeap.dequeue());
   }
 };
@@ -26,15 +32,15 @@ MedianFinder.prototype.addNum = function(num) {
  * @return {number}
  */
 MedianFinder.prototype.findMedian = function() {
-  if (this.minHeap.length > this.maxHeap.length) {
-    return this.minHeap.peek();
+  if ((this.minHeap.length + this.maxHeap.length) % 2 === 1) {
+    return this.minHeap.length > this.maxHeap.length ? this.minHeap.peek() : this.maxHeap.peek();
   }
   return (this.minHeap.peek() + this.maxHeap.peek()) / 2;
 };
 
 /**
  * Your MedianFinder object will be instantiated and called as such:
- * var obj = Object.create(MedianFinder).createNew()
+ * var obj = new MedianFinder()
  * obj.addNum(num)
  * var param_2 = obj.findMedian()
  */
