@@ -7,23 +7,16 @@ var isAlienSorted = function(words, order) {
   // prettier-ignore
   const map = order
     .split('')
-    .reduce((acc, cur, index) => {
-      acc[cur] = index;
-      return acc;
-    }, {});
-  for (let i = 0; i < words.length - 1; i++) {
+    .reduce((acc, cur, i) => ({ ...acc, [cur]: i }), {});
+  for (let i = 0; i <= words.length - 2; i++) {
     let j = 0;
-    const m = words[i].length;
-    const n = words[i + 1].length;
-    while (words[i][j] === words[i + 1][j] && j < m && j < n) {
+    while (words[i][j] === words[i + 1][j]) {
       j += 1;
     }
-    if (j < m && j >= n) {
-      return false;
-    }
-    const c1 = words[i][j];
-    const c2 = words[i + 1][j];
-    if (map[c1] > map[c2]) {
+    // prettier-ignore
+    const isInvalid = j >= words[i + 1].length && i < words[i].length ||
+      map[words[i][j]] > map[words[i + 1][j]];
+    if (isInvalid) {
       return false;
     }
   }
