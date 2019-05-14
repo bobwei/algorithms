@@ -3,38 +3,31 @@
  * @param {number[][]} prerequisites
  * @return {number[]}
  */
-
-const createGraph = (numCourses, prerequisites) => {
-  const graph = [...new Array(numCourses)].map(() => []);
-  for (let i = 0; i < prerequisites.length; i++) {
-    const [c1, c2] = prerequisites[i];
-    graph[c2].push(c1);
-  }
-  return graph;
-};
-
-const hasCycle = (graph, v, visited, stack) => {
-  if (visited[v]) {
-    return !stack.has(v);
-  }
-  visited[v] = true;
-  for (let i = 0; i < graph[v].length; i++) {
-    if (hasCycle(graph, graph[v][i], visited, stack)) {
-      return true;
-    }
-  }
-  stack.add(v);
-  return false;
-};
-
 var findOrder = function(numCourses, prerequisites) {
-  const graph = createGraph(numCourses, prerequisites);
-  const visited = {};
+  const graph = [...new Array(numCourses)].map(() => []);
+  for (const [u, v] of prerequisites) {
+    graph[v].push(u + '');
+  }
+  const visited = new Set();
   const stack = new Set();
-  for (let i = 0; i < graph.length; i++) {
-    if (hasCycle(graph, i, visited, stack)) {
+  for (const u in graph) {
+    if (hasCycle(graph, u, visited, stack)) {
       return [];
     }
   }
   return [...stack].reverse();
 };
+
+function hasCycle(graph, u, visited, stack) {
+  if (visited.has(u)) {
+    return !stack.has(u);
+  }
+  visited.add(u);
+  for (const v of graph[u]) {
+    if (hasCycle(graph, v, visited, stack)) {
+      return true;
+    }
+  }
+  stack.add(u);
+  return false;
+}
