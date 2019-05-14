@@ -2,55 +2,52 @@
  * @param {string[]} words
  * @return {string}
  */
-
-const createGraph = (words) => {
-  const graph = {};
-  for (let i = 0; i < words.length; i++) {
-    for (let j = 0; j < words[i].length; j++) {
-      if (!graph[words[i][j]]) {
-        graph[words[i][j]] = [];
-      }
-    }
-    if (i + 1 >= words.length) break;
-    const n = Math.min(words[i].length, words[i + 1].length);
-    for (let j = 0; j < n; j++) {
-      const c1 = words[i][j];
-      const c2 = words[i + 1][j];
-      if (c1 !== c2) {
-        if (graph[c1].indexOf(c2) < 0) {
-          graph[c1].push(c2);
-        }
-        break;
-      }
-    }
-  }
-  return graph;
-};
-
-const hasCycle = (graph, v, visited, stack) => {
-  if (visited[v]) {
-    return !stack.has(v);
-  }
-  visited[v] = true;
-  for (let i = 0; i < graph[v].length; i++) {
-    if (hasCycle(graph, graph[v][i], visited, stack)) {
-      return true;
-    }
-  }
-  stack.add(v);
-  return false;
-};
-
-const toOutput = (stack) => [...stack].reverse().join('');
-
 var alienOrder = function(words) {
   const graph = createGraph(words);
-  const visited = {};
+  const visited = new Set();
   const stack = new Set();
-  for (const v in graph) {
-    if (hasCycle(graph, v, visited, stack)) {
+  for (const u in graph) {
+    if (hasCycle(graph, u, visited, stack)) {
       return '';
     }
   }
-  return toOutput(stack);
+  return [...stack].reverse().join('');
 };
+
+function createGraph(words) {
+  const graph = {};
+  for (const word of words) {
+    for (const c of word.split('')) {
+      if (!(c in graph)) {
+        graph[c] = [];
+      }
+    }
+  }
+  const n = words.length;
+  for (let i = 0; i <= n - 2; i++) {
+    let j = 0;
+    while (words[i][j] && words[i + 1][j] && words[i][j] === words[i + 1][j]) {
+      j += 1;
+    }
+    const c1 = words[i][j];
+    const c2 = words[i + 1][j];
+    if (c1 && c2 && c1 !== c2) {
+      graph[c1].push(c2);
+    }
+  }
+  return graph;
+}
+
+function hasCycle(graph, u, visited, stack) {
+  if (visited.has(u)) {
+    return !stack.has(u);
+  }
+  visited.add(u);
+  for (const v of graph[u]) {
+    if (hasCycle(graph, v, visited, stack)) {
+      return true;
+    }
+  }
+  stack.add(u);
+  return false;
+}
