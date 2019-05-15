@@ -6,6 +6,12 @@ var accountsMerge = function(accounts) {
   const names = {};
   const set = new DisjointSet({ accounts });
   for (const account of accounts) {
+    const [, ...emails] = account;
+    for (const email of emails) {
+      set.roots[email] = email;
+    }
+  }
+  for (const account of accounts) {
     const [name, ...emails] = account;
     for (let i = 0; i <= emails.length - 2; i++) {
       set.union(emails[i], emails[i + 1]);
@@ -25,15 +31,10 @@ var accountsMerge = function(accounts) {
 class DisjointSet {
   constructor({ accounts }) {
     this.roots = {};
-    for (const account of accounts) {
-      const [, ...emails] = account;
-      for (const email of emails) {
-        this.roots[email] = email;
-      }
-    }
   }
 
   find(root) {
+    if (!(root in this.roots)) this.roots[root] = root;
     let ptr = root;
     while (this.roots[ptr] !== ptr) {
       this.roots[ptr] = this.roots[this.roots[ptr]];
