@@ -4,25 +4,44 @@
  * @return {number}
  */
 var lengthOfLongestSubstringKDistinct = function(s, k) {
-  const counts = {};
-  let n = 0;
-  let left = 0;
+  const counter = new Counter();
   let max = 0;
+  let start = 0;
   for (let i = 0; i < s.length; i++) {
-    if (!counts[s[i]]) {
-      n += 1;
+    counter.add(s[i]);
+    while (counter.nDistincts > k) {
+      counter.delete(s[start]);
+      start += 1;
     }
-    counts[s[i]] = (counts[s[i]] || 0) + 1;
-    if (n <= k) {
-      max = Math.max(max, i - left + 1);
-    }
-    while (n > k) {
-      counts[s[left]] -= 1;
-      if (counts[s[left]] <= 0) {
-        n -= 1;
-      }
-      left += 1;
-    }
+    max = Math.max(max, i - start + 1);
   }
   return max;
 };
+
+class Counter {
+  constructor() {
+    this.nTotal = 0;
+    this.nDuplicates = 0;
+    this.count = {};
+  }
+
+  add(c) {
+    this.count[c] = (this.count[c] || 0) + 1;
+    this.nTotal += 1;
+    if (this.count[c] > 1) {
+      this.nDuplicates += 1;
+    }
+  }
+
+  delete(c) {
+    this.count[c] -= 1;
+    this.nTotal -= 1;
+    if (this.count[c] >= 1) {
+      this.nDuplicates -= 1;
+    }
+  }
+
+  get nDistincts() {
+    return this.nTotal - this.nDuplicates;
+  }
+}
