@@ -2,6 +2,8 @@
 
 ## Algorithm
 
+- Dp function
+
 ```js
 dp[i][j] = (() => {
   if (word1[i - 1] === word2[j - 1]) {
@@ -9,6 +11,23 @@ dp[i][j] = (() => {
   }
   return Math.min(dp[i][j - 1] + 1, dp[i - 1][j] + 1, dp[i - 1][j - 1] + 1);
 })();
+```
+
+- Optimize space complexity from O(m \* n) to O(n)
+  - According to the Dp function, we only need current array and previous array. So we can create an array with size n for every m iteration.
+
+```js
+for (let i = 1; i <= m; i++) {
+  const arr = new Array(n + 1).fill(0);
+  arr[0] = i;
+  for (let j = 1; j <= n; j++) {
+    // prettier-ignore
+    arr[j] = word1[i - 1] === word2[j - 1]
+      ? dp[j - 1]
+      : Math.min(arr[j - 1] + 1, dp[j] + 1, dp[j - 1] + 1);
+  }
+  dp = arr;
+}
 ```
 
 ## Reference
