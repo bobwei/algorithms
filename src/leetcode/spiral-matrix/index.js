@@ -8,38 +8,39 @@ var spiralOrder = function(matrix) {
   }
   const m = matrix.length;
   const n = matrix[0].length;
-  const total = m * n;
   const output = [];
   let [top, right, bottom, left] = [0, n - 1, m - 1, 0];
-  for (let i = 0, j = 0, k = 0; k < total; ) {
-    while (j <= right && k < total) {
-      output.push(matrix[i][j]);
-      j += 1;
-      k += 1;
+  while (top <= bottom && left <= right) {
+    for (let i = left; i <= right; i++) {
+      output.push(matrix[top][i]);
     }
     top += 1;
-    [i, j] = [top, right];
-    while (i <= bottom && k < total) {
-      output.push(matrix[i][j]);
-      i += 1;
-      k += 1;
+    if (!isValid(top, right, bottom, left)) break;
+
+    for (let i = top; i <= bottom; i++) {
+      output.push(matrix[i][right]);
     }
     right -= 1;
-    [i, j] = [bottom, right];
-    while (j >= left && k < total) {
-      output.push(matrix[i][j]);
-      j -= 1;
-      k += 1;
+    if (!isValid(top, right, bottom, left)) break;
+
+    for (let i = right; i >= left; i--) {
+      output.push(matrix[bottom][i]);
     }
     bottom -= 1;
-    [i, j] = [bottom, left];
-    while (i >= top && k < total) {
-      output.push(matrix[i][j]);
-      i -= 1;
-      k += 1;
+    if (!isValid(top, right, bottom, left)) break;
+
+    for (let i = bottom; i >= top; i--) {
+      output.push(matrix[i][left]);
     }
     left += 1;
-    [i, j] = [top, left];
+    if (!isValid(top, right, bottom, left)) break;
   }
   return output;
 };
+
+function isValid(top, right, bottom, left) {
+  if (left > right || top > bottom) {
+    return false;
+  }
+  return true;
+}
