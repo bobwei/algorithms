@@ -5,17 +5,17 @@
 var isValid = function(s) {
   const stack = [];
   for (let i = 0; i < s.length; i++) {
-    const c = s[i];
-    if (c === '(' || c === '[' || c === '{') {
-      stack.push(c);
+    const isLeft = s[i] === '(' || s[i] === '[' || s[i] === '{';
+    if (isLeft) {
+      stack.push(s[i]);
     } else {
       const left = stack.pop();
-      // prettier-ignore
-      const valid =
-        left ==='(' && c === ')' ||
-        left ==='[' && c === ']' ||
-        left ==='{' && c === '}';
-      if (!valid) {
+      const right = s[i];
+      const isValidPair =
+        (left === '(' && right === ')') ||
+        (left === '[' && right === ']') ||
+        (left === '{' && right === '}');
+      if (!isValidPair) {
         return false;
       }
     }
