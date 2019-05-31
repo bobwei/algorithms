@@ -3,8 +3,8 @@
  * @return {string}
  */
 
-const constants = {
-  0: 'Zero',
+const map = {
+  0: '',
   1: 'One',
   2: 'Two',
   3: 'Three',
@@ -34,56 +34,37 @@ const constants = {
   90: 'Ninety',
 };
 
-const transformHundred = (n) => {
-  const arr = [];
-  const d2 = Math.floor(n / 100);
-  if (d2 > 0) {
-    arr.push(constants[d2]);
-    arr.push('Hundred');
+const units = ['', ' Thousand ', ' Million ', ' Billion '];
+
+var numberToWords = function(num) {
+  if (!num) {
+    return 'Zero';
   }
-  const d10 = Math.floor(n % 100);
-  if (d10 > 0) {
-    if (constants[d10]) {
-      arr.push(constants[d10]);
-    } else {
-      const d1 = Math.floor(d10 / 10) * 10;
-      if (d1 > 0) {
-        arr.push(constants[d1]);
-      }
-      const d0 = Math.floor(d10 % 10);
-      if (d0 > 0) {
-        arr.push(constants[d0]);
-      }
+  let output = '';
+  let n = num;
+  for (let i = 0; i < units.length; i++) {
+    const r = n % 1000;
+    if (r) {
+      output = helper(r).trim() + units[i] + output;
     }
+    n = Math.floor(n / 1000);
   }
-  return arr;
+  return output.trim();
 };
 
-const numberToWords = function(num) {
-  if (num === 0) {
-    return constants[num];
+function helper(num) {
+  if (num < 20) {
+    return map[num];
+  } else if (num < 100) {
+    const ten = Math.floor(num / 10) * 10;
+    const r = num % 10;
+    // prettier-ignore
+    return r > 0
+      ? map[ten] + ' ' + map[r]
+      : map[ten];
+  } else {
+    const hundred = Math.floor(num / 100);
+    const r = num % 100;
+    return map[hundred] + ' Hundred ' + helper(r);
   }
-  const arr = [];
-  const d9 = Math.floor(num / 10 ** 9);
-  if (d9 > 0) {
-    arr.push(...transformHundred(d9));
-    arr.push('Billion');
-  }
-  const d6 = Math.floor((num % 10 ** 9) / 10 ** 6);
-  if (d6 > 0) {
-    arr.push(...transformHundred(d6));
-    arr.push('Million');
-  }
-  const d3 = Math.floor((num % 10 ** 6) / 10 ** 3);
-  if (d3 > 0) {
-    arr.push(...transformHundred(d3));
-    arr.push('Thousand');
-  }
-  const d0 = Math.floor(num % 10 ** 3);
-  if (d0 > 0) {
-    arr.push(...transformHundred(d0));
-  }
-  return arr.join(' ');
-};
-
-export default numberToWords;
+}
