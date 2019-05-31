@@ -10,8 +10,12 @@ var merge = function(intervals) {
   const output = [];
   let ptr = intervals[0];
   for (let i = 1; i < intervals.length; i++) {
-    if (shouldMerge(ptr, intervals[i])) {
-      ptr = [Math.min(ptr[0], intervals[i][0]), Math.max(ptr[1], intervals[i][1])];
+    if (isOverlapped(ptr, intervals[i])) {
+      // prettier-ignore
+      ptr = [
+        Math.min(ptr[0], intervals[i][0]),
+        Math.max(ptr[1], intervals[i][1]),
+      ];
     } else {
       output.push(ptr);
       ptr = intervals[i];
@@ -21,9 +25,6 @@ var merge = function(intervals) {
   return output;
 };
 
-function shouldMerge(interval1, interval2) {
-  if (interval1[0] > interval2[0]) {
-    return shouldMerge(interval2, interval1);
-  }
-  return interval2[0] <= interval1[1] && interval2[1] >= interval1[0];
+function isOverlapped(i1, i2) {
+  return i2[0] <= i1[1] && i2[1] >= i1[0];
 }
