@@ -36,3 +36,7 @@
 
 - [Longest Increasing Subsequence (LIS):DP](https://medium.com/@william456821/longest-increasing-subsequence-lis-dp-1211fc7933f6)
 - [Lintcode Longest Increasing Subsequence 最长上升序列](https://segmentfault.com/a/1190000003819886)
+
+### TopK problem
+
+- [拜托，面试别再问我 TopK 了！！！](https://mp.weixin.qq.com/s/FFsvWXiaZK96PtUg-mmtEw)
