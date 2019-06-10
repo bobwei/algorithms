@@ -17,7 +17,7 @@ var serialize = function(root) {
   const output = [];
   while (queue.length) {
     const node = queue.shift();
-    output.push(node ? node.val : node);
+    output.push(node === null ? node : node.val);
     if (node) {
       queue.push(node.left, node.right);
     }
@@ -35,15 +35,15 @@ var deserialize = function(data) {
   if (!data.length) {
     return null;
   }
-  const root = createNode(data);
+  const root = createNode(data.shift());
   const queue = [root];
   while (data.length) {
     const node = queue.shift();
-    node.left = createNode(data);
+    node.left = createNode(data.shift());
     if (node.left) {
       queue.push(node.left);
     }
-    node.right = createNode(data);
+    node.right = createNode(data.shift());
     if (node.right) {
       queue.push(node.right);
     }
@@ -51,14 +51,11 @@ var deserialize = function(data) {
   return root;
 };
 
-function createNode(data) {
-  if (!data.length) {
-    return null;
+function createNode(val) {
+  if (val === null) {
+    return val;
   }
-  if (data[0] === null) {
-    return data.shift();
-  }
-  return new TreeNode(data.shift());
+  return new TreeNode(val);
 }
 
 /**
