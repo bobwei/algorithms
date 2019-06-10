@@ -4,49 +4,43 @@
  * @return {string}
  */
 var minWindow = function(s, t) {
-  const output = { str: '', length: Infinity };
-  const counter = new Counter({ t });
+  const counter = new Counter(t);
   let start = 0;
+  let min = Infinity;
+  let str = '';
   for (let i = 0; i < s.length; i++) {
     counter.add(s[i]);
-    while (counter.isMatched()) {
-      if (i - start + 1 < output.length) {
-        output.length = i - start + 1;
-        output.str = s.substring(start, i + 1);
+    while (counter.nRemaining <= 0) {
+      if (i - start + 1 < min) {
+        min = i - start + 1;
+        str = s.substring(start, i + 1);
       }
       counter.delete(s[start]);
       start += 1;
     }
   }
-  return output.length < Infinity ? output.str : '';
+  return min < Infinity ? str : '';
 };
 
 class Counter {
-  constructor({ t }) {
+  constructor(t) {
     this.nRemaining = t.length;
-    // prettier-ignore
-    this.count = t
-      .split('')
-      .reduce((acc, cur) => {
-        acc[cur] = (acc[cur] || 0) + 1;
-        return acc;
-      }, {});
-  }
-
-  isMatched() {
-    return this.nRemaining <= 0;
+    this.freq = {};
+    for (const c of t) {
+      this.freq[c] = (this.freq[c] || 0) + 1;
+    }
   }
 
   add(c) {
-    this.count[c] = (this.count[c] || 0) - 1;
-    if (this.count[c] >= 0) {
+    this.freq[c] = (this.freq[c] || 0) - 1;
+    if (this.freq[c] >= 0) {
       this.nRemaining -= 1;
     }
   }
 
   delete(c) {
-    this.count[c] += 1;
-    if (this.count[c] > 0) {
+    this.freq[c] += 1;
+    if (this.freq[c] > 0) {
       this.nRemaining += 1;
     }
   }
