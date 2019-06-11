@@ -2,22 +2,19 @@
  * @param {string[]} strs
  * @return {string[][]}
  */
+var groupAnagrams = function(strs) {
+  const group = {};
+  for (const str of strs) {
+    const key = encode(str);
+    if (!(key in group)) group[key] = [];
+    group[key].push(str);
+  }
+  return Object.values(group);
+};
 
-const createHashKey = (str) => {
+function encode(str) {
   return str
     .split('')
     .sort()
     .join('');
-};
-
-var groupAnagrams = function(strs) {
-  const cache = {};
-  for (let i = 0; i < strs.length; i++) {
-    const key = createHashKey(strs[i]);
-    if (!cache[key]) {
-      cache[key] = [];
-    }
-    cache[key].push(strs[i]);
-  }
-  return Object.values(cache);
-};
+}
