@@ -3,20 +3,24 @@
  * @return {number}
  */
 var cutOffTree = function(forest) {
+  if (!forest.length || !forest[0].length) {
+    return 0;
+  }
   const m = forest.length;
   const n = forest[0].length;
   const trees = getTrees(forest, m, n);
   let nSteps = 0;
-  let origin = [0, 0];
+  let position = [0, 0];
   while (trees.length) {
     const distance = [...new Array(m)].map(() => new Array(n).fill(Infinity));
-    const dest = trees.shift();
-    bfs(forest, m, n, origin, distance);
-    if (distance[dest[0]][dest[1]] >= Infinity) {
+    const [dest] = trees.shift();
+    const [i, j] = dest;
+    bfs(forest, m, n, position, distance);
+    if (distance[i][j] >= Infinity) {
       return -1;
     }
-    nSteps += distance[dest[0]][dest[1]];
-    origin = dest;
+    nSteps += distance[i][j];
+    position = dest;
   }
   return nSteps;
 };
@@ -26,24 +30,24 @@ function getTrees(forest, m, n) {
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
       if (forest[i][j] > 1) {
-        trees.push([i, j, forest[i][j]]);
+        trees.push([[i, j], forest[i][j]]);
       }
     }
   }
-  return trees.sort((a, b) => a[2] - b[2]);
+  return trees.sort((a, b) => a[1] - b[1]);
 }
 
-const dirs = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-function bfs(forest, m, n, origin, distance) {
-  distance[origin[0]][origin[1]] = 0;
-  const queue = [[origin, 0]];
+function bfs(forest, m, n, position, distance) {
+  distance[position[0]][position[1]] = 0;
+  const queue = [[position, 0]];
   while (queue.length) {
-    const [p, d] = queue.shift();
+    const [[x, y], d] = queue.shift();
     for (const [di, dj] of dirs) {
-      const i = p[0] + di;
-      const j = p[1] + dj;
-      if (isValid(i, j, m, n) && d + 1 < distance[i][j] && forest[i][j] > 0) {
+      const i = x + di;
+      const j = y + dj;
+      if (isValid(i, j, m, n) && forest[i][j] > 0 && d + 1 < distance[i][j]) {
         distance[i][j] = d + 1;
         queue.push([[i, j], d + 1]);
       }
