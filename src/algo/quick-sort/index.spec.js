@@ -1,11 +1,4 @@
-import quicksort, { partition } from './index';
-
-test('quicksort.partition', () => {
-  const arr = [1, 3, 4, 2];
-  const result = partition(arr);
-  expect(arr).toEqual([1, 2, 4, 3]);
-  expect(result).toEqual(1);
-});
+import quicksort from './index';
 
 test('quicksort', () => {
   const arr = [1, 3, 4, 2];
