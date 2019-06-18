@@ -5,18 +5,18 @@
  */
 var search = function(nums, target) {
   let left = 0;
-  let right = nums.length - 1;
-  while (left <= right) {
+  let right = nums.length;
+  while (left < right) {
     const mid = Math.floor((left + right) / 2);
     if (target === nums[mid]) {
       return mid;
     } else if (
-      (nums[left] < nums[mid] && target >= nums[left] && target <= nums[mid]) ||
-      (nums[mid] < nums[right] && !(target >= nums[mid] && target <= nums[right]))
+      (nums[right - 1] > nums[mid] && (target >= nums[mid] && target <= nums[right - 1])) ||
+      (nums[left] < nums[mid] && !(target >= nums[left] && target <= nums[mid]))
     ) {
-      right = mid - 1;
-    } else {
       left = mid + 1;
+    } else {
+      right = mid;
     }
   }
   return -1;
