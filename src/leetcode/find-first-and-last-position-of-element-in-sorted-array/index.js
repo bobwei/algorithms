@@ -4,21 +4,24 @@
  * @return {number[]}
  */
 var searchRange = function(nums, target) {
-  const low = binarySearch(nums, target, 'low');
-  const high = binarySearch(nums, target, 'high');
-  return low <= high ? [low, high] : [-1, -1];
+  const start = lowerBound(nums, target);
+  if (start >= nums.length || nums[start] !== target) {
+    return [-1, -1];
+  }
+  const end = lowerBound(nums, target + 1) - 1;
+  return [start, end];
 };
 
-function binarySearch(arr, target, type) {
+function lowerBound(arr, target) {
   let left = 0;
-  let right = arr.length - 1;
-  while (left <= right) {
+  let right = arr.length;
+  while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target < arr[mid] || (target === arr[mid] && type === 'low')) {
-      right = mid - 1;
-    } else if (target > arr[mid] || (target === arr[mid] && type === 'high')) {
+    if (target > arr[mid]) {
       left = mid + 1;
+    } else {
+      right = mid;
     }
   }
-  return type === 'low' ? left : left - 1;
+  return left;
 }
