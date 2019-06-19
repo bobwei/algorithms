@@ -3,31 +3,34 @@
  * @param {number[][]} prerequisites
  * @return {boolean}
  */
-
-const hasCycle = (graph, v, visited = {}) => {
-  if (visited[v]) {
-    return true;
-  }
-  visited[v] = true;
-  for (let i = 0; i < graph[v].length; i++) {
-    if (hasCycle(graph, graph[v][i], visited)) {
-      return true;
-    }
-  }
-  visited[v] = false;
-  return false;
-};
-
 var canFinish = function(numCourses, prerequisites) {
-  const graph = [...new Array(numCourses)].map(() => []);
-  for (let i = 0; i < prerequisites.length; i++) {
-    const p = prerequisites[i];
-    graph[p[0]].push(p[1]);
-  }
-  for (let i = 0; i < numCourses; i++) {
-    if (hasCycle(graph, i)) {
+  const graph = createGraph(prerequisites, numCourses);
+  for (const u in graph) {
+    if (hasCycle(graph, u)) {
       return false;
     }
   }
   return true;
 };
+
+function createGraph(edges, m) {
+  const graph = [...new Array(m)].map(() => []);
+  for (const [u, v] of edges) {
+    graph[u].push(v);
+  }
+  return graph;
+}
+
+function hasCycle(graph, u, visited = new Set()) {
+  if (visited.has(u)) {
+    return true;
+  }
+  visited.add(u);
+  for (const v of graph[u]) {
+    if (hasCycle(graph, v, visited)) {
+      return true;
+    }
+  }
+  visited.delete(u);
+  return false;
+}
