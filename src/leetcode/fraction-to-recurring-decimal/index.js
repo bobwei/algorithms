@@ -4,35 +4,30 @@
  * @return {string}
  */
 var fractionToDecimal = function(numerator, denominator) {
-  const output = {
-    sign: numerator * denominator < 0 ? '-' : '',
-    integer: Math.floor(Math.abs(numerator / denominator)) + '',
-    fractions: [],
-  };
-  const d = Math.abs(denominator);
-  let n = Math.abs(numerator);
-  n = n % d;
-
-  const reminders = {};
-  while (n && !(n in reminders)) {
-    reminders[n] = output.fractions.length;
-    n = n < d ? n * 10 : n;
-    output.fractions.push(Math.floor(n / d));
-    n = n % d;
-  }
-
-  if (n in reminders) {
-    const p = reminders[n];
-    // prettier-ignore
-    return output.sign + output.integer +
-      '.' +
-      output.fractions.slice(0, p).join('') +
-      '(' + output.fractions.slice(p).join('') + ')';
-  }
-  if (output.fractions.length) {
-    // prettier-ignore
-    return output.sign + output.integer + '.' +
-      output.fractions.join('');
-  }
-  return output.sign + output.integer;
+  const sign = numerator * denominator >= 0 ? 1 : -1;
+  const result = helper(Math.abs(numerator), Math.abs(denominator));
+  return sign > 0 ? result : '-' + result;
 };
+
+function helper(numerator, denominator) {
+  const int = Math.floor(numerator / denominator);
+  if (numerator - int * denominator === 0) {
+    return int + '';
+  }
+  const visited = {};
+  let fraction = '';
+  let n = (numerator - int * denominator) * 10;
+  while (n) {
+    if (n in visited) {
+      const s = visited[n];
+      const nonRepeated = fraction.substring(0, s);
+      const repeated = fraction.substring(s);
+      return `${int}.${nonRepeated}(${repeated})`;
+    }
+    const q = Math.floor(n / denominator);
+    visited[n] = fraction.length;
+    fraction += q;
+    n = (n - denominator * q) * 10;
+  }
+  return `${int}.${fraction}`;
+}
