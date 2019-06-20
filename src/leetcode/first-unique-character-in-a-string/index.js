@@ -3,13 +3,16 @@
  * @return {number}
  */
 var firstUniqChar = function(s) {
-  const cache = {};
+  const map = {};
   for (let i = 0; i < s.length; i++) {
-    cache[s[i]] = (cache[s[i]] || 0) + 1;
+    const c = s[i];
+    if (!(c in map)) map[c] = [];
+    map[c].push(i);
   }
-  for (const key in cache) {
-    if (cache[key] <= 1) {
-      return s.indexOf(key);
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (map[c].length === 1) {
+      return map[c].pop();
     }
   }
   return -1;
