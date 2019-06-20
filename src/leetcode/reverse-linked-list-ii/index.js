@@ -11,40 +11,41 @@
  * @param {number} n
  * @return {ListNode}
  */
-
 /*
-  Input: 1->2->3->4->5->NULL, m = 2, n = 4
-  Output: 1->4->3->2->5->NULL
+   p1          p2
+d->1->2->3->4->5->NULL
 */
+var reverseBetween = function(head, m, n) {
+  const dummy = new ListNode();
+  dummy.next = head;
+  const [p1, p2] = getPtrs(dummy, m, n);
+  const [h, t] = reverse(p1.next, n - m + 1);
+  p1.next = h;
+  t.next = p2;
+  return dummy.next;
+};
 
-const reverse = (head, n) => {
-  let rtail = head;
-  let ptr = head;
+function getPtrs(head, m, n) {
+  let p1 = head;
+  for (let i = 0; i < m - 1; i++) {
+    p1 = p1.next;
+  }
+  let p2 = head;
+  for (let i = 0; i <= n; i++) {
+    p2 = p2.next;
+  }
+  return [p1, p2];
+}
+
+function reverse(head, nTimes) {
   let pre = null;
+  let ptr = head;
   let next;
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < nTimes; i++) {
     next = ptr.next;
     ptr.next = pre;
     pre = ptr;
     ptr = next;
   }
-  rtail.next = ptr;
-  return pre;
-};
-
-const reverseBetween = function(head, m, n) {
-  if (!head || !head.next) {
-    return head;
-  }
-  if (m <= 1) {
-    return reverse(head, n - m + 1);
-  }
-  let ptr = head;
-  for (let i = 1; i < m - 1; i++) {
-    ptr = ptr.next;
-  }
-  ptr.next = reverse(ptr.next, n - m + 1);
-  return head;
-};
-
-export default reverseBetween;
+  return [pre, head];
+}
