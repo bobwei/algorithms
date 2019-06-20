@@ -8,16 +8,17 @@ var intervalIntersection = function(A, B) {
   let i = 0;
   let j = 0;
   while (i < A.length && j < B.length) {
-    const interval = [Math.max(A[i][0], B[j][0]), Math.min(A[i][1], B[j][1])];
+    // prettier-ignore
+    const interval = [
+      Math.max(A[i][0], B[j][0]),
+      Math.min(A[i][1], B[j][1]),
+    ];
     if (isValid(interval)) {
       output.push(interval);
     }
     if (A[i][1] < B[j][1]) {
       i += 1;
-    } else if (B[j][1] < A[i][1]) {
-      j += 1;
     } else {
-      i += 1;
       j += 1;
     }
   }
