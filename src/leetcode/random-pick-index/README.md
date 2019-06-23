@@ -5,9 +5,7 @@
 - Use Reservoir Sampling algorithm to pick items from large data or stream of data randomly.
 - [Detail Explanation of Reservoir Sampling](https://www.cnblogs.com/snowInPluto/p/5996269.html)
 
-<p align="center">
-  <img src="./reservoir_sampling.png" />
-</p>
+<img src="./reservoir_sampling.png" />
 
 ```js
 // create sampler with size of k
