@@ -6,18 +6,13 @@
 var prisonAfterNDays = function(cells, N) {
   N = N % 14 > 0 ? N % 14 : 14;
   const m = cells.length;
-  let state = cells;
-  for (let d = 0; d < N; d++) {
-    const next = new Array(m).fill(null);
-    for (let i = 0; i < m; i++) {
-      next[i] = (() => {
-        if (i === 0 || i === m - 1) {
-          return 0;
-        }
-        return state[i - 1] === state[i + 1] ? 1 : 0;
-      })();
+  let arr = [...cells];
+  for (let i = 0; i < N; i++) {
+    const next = new Array(m).fill(0);
+    for (let j = 1; j < m - 1; j++) {
+      next[j] = arr[j - 1] === arr[j + 1] ? 1 : 0;
     }
-    state = next;
+    arr = next;
   }
-  return state;
+  return arr;
 };
