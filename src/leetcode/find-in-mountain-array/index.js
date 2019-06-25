@@ -1,43 +1,26 @@
 /**
- * // This is the MountainArray's API interface.
- * // You should not implement it, or speculate about its implementation
- * function MountainArray() {
- *
- *     @param {integer} index
- *     @return {integer}
- *     this.get = function(index) {
- *         ...
- *     };
- *
- *     @return {integer}
- *     this.length = function() {
- *         ...
- *     };
- * };
- */
-/**
+ * @param {number[]} secret
  * @param {number} target
- * @param {MountainArray} mountainArr
  * @return {number}
  */
-var findInMountainArray = function(target, mountainArr) {
-  const p = findPeak(mountainArr);
-  if (mountainArr.get(p) === target) {
+var findInMountainArray = function(secret, target) {
+  const p = findPeak(secret);
+  if (secret[p] === target) {
     return p;
   }
-  const left = binarySeach(mountainArr, 0, p, target, 'asc');
-  if (left > -1) {
+  const left = binarySearch(secret, 0, p, 'asc', target);
+  if (left >= 0) {
     return left;
   }
-  return binarySeach(mountainArr, p + 1, mountainArr.length(), target, 'dsc');
+  return binarySearch(secret, p + 1, secret.length, 'dsc', target);
 };
 
-function findPeak(arr) {
+function findPeak(mArr) {
   let left = 0;
-  let right = arr.length();
+  let right = mArr.length;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (arr.get(mid) < arr.get(mid + 1)) {
+    if (mArr[mid + 1] > mArr[mid]) {
       left = mid + 1;
     } else {
       right = mid;
@@ -46,17 +29,14 @@ function findPeak(arr) {
   return left;
 }
 
-function binarySeach(mountainArr, start, end, target, order) {
+function binarySearch(mArr, start, end, order, target) {
   let left = start;
   let right = end;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target === mountainArr.get(mid)) {
+    if (target === mArr[mid]) {
       return mid;
-    } else if (
-      (target > mountainArr.get(mid) && order === 'asc') ||
-      (target < mountainArr.get(mid) && order === 'dsc')
-    ) {
+    } else if ((target > mArr[mid] && order === 'asc') || (target < mArr[mid] && order === 'dsc')) {
       left = mid + 1;
     } else {
       right = mid;
