@@ -8,6 +8,12 @@
         "alias": {}
       }
     ],
+    [
+      "@babel/plugin-transform-runtime",
+      {
+        "regenerator": true
+      }
+    ],
     "transform-object-rest-spread"
   ]
 }
