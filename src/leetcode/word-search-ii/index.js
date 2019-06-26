@@ -3,69 +3,94 @@
  * @param {string[]} words
  * @return {string[]}
  */
-
-const TrieNode = function() {
-  this.chars = {};
-  this.word = null;
-};
-
-const insert = (root, str) => {
-  let ptr = root;
-  for (let i = 0; i < str.length; i++) {
-    const c = str[i];
-    if (!ptr.chars[c]) {
-      ptr.chars[c] = new TrieNode();
-    }
-    ptr = ptr.chars[c];
-  }
-  ptr.word = str;
-};
-
-const startsWith = (root, c) => {
-  return root.chars[c];
-};
-
-const search = (root, c) => {
-  return root.chars[c].word;
-};
-
-const dfs = (board, i, j, root, selected, output) => {
-  if (i < 0 || j < 0 || i >= board.length || j >= board[0].length || !root) {
-    return;
-  }
-  const c = board[i][j];
-  if (!startsWith(root, c)) {
-    return;
-  }
-  if (selected[i][j]) {
-    return;
-  }
-  const word = search(root, c);
-  if (word) {
-    output.add(word);
-  }
-  selected[i][j] = true;
-  dfs(board, i - 1, j, root.chars[c], selected, output);
-  dfs(board, i, j + 1, root.chars[c], selected, output);
-  dfs(board, i + 1, j, root.chars[c], selected, output);
-  dfs(board, i, j - 1, root.chars[c], selected, output);
-  selected[i][j] = false;
-};
-
 var findWords = function(board, words) {
   if (!board.length || !board[0].length) {
     return [];
   }
-  const root = new TrieNode();
-  for (let i = 0; i < words.length; i++) {
-    insert(root, words[i]);
+  const trie = new Trie();
+  for (const word of words) {
+    trie.add(word);
   }
-  const selected = [...new Array(board.length)].map(() => new Array(board[0].length).fill(false));
+  const m = board.length;
+  const n = board[0].length;
   const output = new Set();
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[0].length; j++) {
-      dfs(board, i, j, root, selected, output);
+  const visited = [...new Array(m)].map(() => new Array(n).fill(false));
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (trie.startsWith(board[i][j])) {
+        dfs(board, m, n, trie, board[i][j], [i, j], output, visited);
+      }
     }
   }
   return [...output];
 };
+
+const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+
+function dfs(board, m, n, trie, selected, [x, y], output, visited) {
+  if (trie.search(selected)) {
+    output.add(selected);
+  }
+  visited[x][y] = true;
+  for (const [di, dj] of dirs) {
+    const i = x + di;
+    const j = y + dj;
+    if (isValid(i, j, m, n) && !visited[i][j] && trie.startsWith(selected + board[i][j])) {
+      dfs(board, m, n, trie, selected + board[i][j], [i, j], output, visited);
+    }
+  }
+  visited[x][y] = false;
+}
+
+function isValid(i, j, m, n) {
+  if (i < 0 || i >= m || j < 0 || j >= n) {
+    return false;
+  }
+  return true;
+}
+
+class Node {
+  constructor() {
+    this.chars = {};
+    this.isWord = false;
+  }
+}
+
+class Trie {
+  constructor() {
+    this.root = new Node();
+  }
+
+  add(word) {
+    let ptr = this.root;
+    for (const c of word) {
+      if (!(c in ptr.chars)) {
+        ptr.chars[c] = new Node();
+      }
+      ptr = ptr.chars[c];
+    }
+    ptr.isWord = true;
+  }
+
+  startsWith(str) {
+    let ptr = this.root;
+    for (const c of str) {
+      if (!(c in ptr.chars)) {
+        return false;
+      }
+      ptr = ptr.chars[c];
+    }
+    return true;
+  }
+
+  search(word) {
+    let ptr = this.root;
+    for (const c of word) {
+      if (!(c in ptr.chars)) {
+        return false;
+      }
+      ptr = ptr.chars[c];
+    }
+    return ptr.isWord;
+  }
+}
