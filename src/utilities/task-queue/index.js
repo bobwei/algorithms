@@ -1,27 +1,23 @@
 export default function createQueue(fn, concurrency = 2) {
   const queue = [];
   let nRunning = 0;
-  const execute = () => {
+
+  const run = async () => {
     if (nRunning + 1 <= concurrency && queue.length) {
       nRunning += 1;
-      // prettier-ignore
-      return Promise
-        .resolve(fn(queue.shift()))
-        .then(() => {
-          nRunning -= 1;
-          return execute();
-        });
+      await fn(queue.shift());
+      nRunning -= 1;
+      await run();
     }
-    return Promise.resolve();
   };
+
   return {
     push(...args) {
-      return Promise.all(
-        args.map((arg) => {
-          queue.push(arg);
-          return execute();
-        }),
-      );
+      const promises = args.map((arg) => {
+        queue.push(arg);
+        return run();
+      });
+      return Promise.all(promises);
     },
   };
 }
