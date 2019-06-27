@@ -1,56 +1,57 @@
-const Node = function() {
-  this.chars = {};
-  this.isWord = false;
-};
+class Node {
+  constructor() {
+    this.chars = {};
+    this.isWord = false;
+  }
+}
 
-const Trie = function() {
-  this.root = new Node();
-};
+class Trie {
+  constructor() {
+    this.root = new Node();
+  }
 
-Trie.prototype.insert = function(word) {
-  let ptr = this.root;
-  for (let i = 0; i < word.length; i++) {
-    if (!ptr.chars[word[i]]) {
-      ptr.chars[word[i]] = new Node();
+  add(word) {
+    let ptr = this.root;
+    for (const c of word) {
+      if (!(c in ptr.chars)) {
+        ptr.chars[c] = new Node();
+      }
+      ptr = ptr.chars[c];
     }
-    ptr = ptr.chars[word[i]];
+    ptr.isWord = true;
   }
-  ptr.isWord = true;
-  return this;
-};
 
-Trie.prototype.search = function(word) {
-  let ptr = this.root;
-  for (let i = 0; i < word.length; i++) {
-    if (!ptr.chars[word[i]]) {
-      return false;
+  startsWith(str) {
+    let ptr = this.root;
+    for (const c of str) {
+      if (!(c in ptr.chars)) {
+        return false;
+      }
+      ptr = ptr.chars[c];
     }
-    ptr = ptr.chars[word[i]];
+    return true;
   }
-  return ptr.isWord;
-};
 
-Trie.prototype.startsWith = function(prefix) {
-  let ptr = this.root;
-  for (let i = 0; i < prefix.length; i++) {
-    if (!ptr.chars[prefix[i]]) {
-      return false;
+  search(word) {
+    let ptr = this.root;
+    for (const c of word) {
+      if (!(c in ptr.chars)) {
+        return false;
+      }
+      ptr = ptr.chars[c];
     }
-    ptr = ptr.chars[prefix[i]];
+    return ptr.isWord;
   }
-  return true;
-};
 
-Trie.prototype.dfs = function(root = this.root, selected = [], output = []) {
-  if (root.isWord) {
-    output.push(selected.join(''));
+  dfs(root = this.root, selected = '', output = []) {
+    if (root.isWord) {
+      output.push(selected);
+    }
+    for (const c in root.chars) {
+      this.dfs(root.chars[c], selected + c, output);
+    }
+    return output;
   }
-  for (const key in root.chars) {
-    selected.push(key);
-    this.dfs(root.chars[key], selected, output);
-    selected.pop();
-  }
-  return output;
-};
+}
 
 export default Trie;
