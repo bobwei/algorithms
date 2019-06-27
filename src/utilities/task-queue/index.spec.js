@@ -24,6 +24,16 @@ test('task queue', async () => {
   expect(results).toEqual(data);
 });
 
+test('test queue', async () => {
+  const results = [];
+  const queue = createQueue((arg) => {
+    results.push(arg);
+  });
+  const data = [1, 2, 3, 4, 5];
+  await queue.push(...data);
+  expect(results).toEqual(data);
+});
+
 function createTimeout(ms) {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
