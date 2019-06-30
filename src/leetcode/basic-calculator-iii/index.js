@@ -2,7 +2,7 @@
  * @param {string} s
  * @return {number}
  */
-var calculate = function(s, start = 0, end = s.length - 1) {
+var calculate = function(s, start = 0, end = s.length - 1, parens = findParentheses(s)) {
   const nums = [0];
   let op = '+';
   for (let i = start; i <= end; i++) {
@@ -12,8 +12,8 @@ var calculate = function(s, start = 0, end = s.length - 1) {
       addNum(nums, op, num);
       i += str.length - 1;
     } else if (s[i] === '(') {
-      const right = findParentheses(s, i);
-      const num = calculate(s, i + 1, right - 1);
+      const right = parens[i];
+      const num = calculate(s, i + 1, right - 1, parens);
       addNum(nums, op, num);
       i = right;
     } else if (isOp(s[i])) {
@@ -35,19 +35,17 @@ function parseNum(s, start) {
   return s.substring(start, i);
 }
 
-function findParentheses(s, start) {
-  let n = 0;
-  for (let i = start; i < s.length; i++) {
+function findParentheses(s) {
+  const map = {};
+  const stack = [];
+  for (let i = 0; i < s.length; i++) {
     if (s[i] === '(') {
-      n += 1;
+      stack.push(i);
     } else if (s[i] === ')') {
-      n -= 1;
-    }
-    if (n === 0) {
-      return i;
+      map[stack.pop()] = i;
     }
   }
-  return -1;
+  return map;
 }
 
 function isOp(c) {
