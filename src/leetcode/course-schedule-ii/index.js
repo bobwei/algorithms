@@ -4,18 +4,15 @@
  * @return {number[]}
  */
 var findOrder = function(numCourses, prerequisites) {
-  const graph = [...new Array(numCourses)].map(() => []);
-  for (const [u, v] of prerequisites) {
-    graph[v].push(u + '');
-  }
-  const visited = new Set();
+  const graph = createGraph(numCourses, prerequisites);
   const stack = new Set();
-  for (const u in graph) {
-    if (hasCycle(graph, u, visited, stack)) {
+  const visited = new Set();
+  for (let i = 0; i < numCourses; i++) {
+    if (hasCycle(graph, i, visited, stack)) {
       return [];
     }
   }
-  return [...stack].reverse();
+  return [...stack];
 };
 
 function hasCycle(graph, u, visited, stack) {
@@ -30,4 +27,12 @@ function hasCycle(graph, u, visited, stack) {
   }
   stack.add(u);
   return false;
+}
+
+function createGraph(numCourses, prerequisites) {
+  const graph = [...new Array(numCourses)].map(() => []);
+  for (const [c1, c2] of prerequisites) {
+    graph[c1].push(c2);
+  }
+  return graph;
 }
