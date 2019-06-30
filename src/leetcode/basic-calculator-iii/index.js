@@ -4,67 +4,35 @@
  */
 var calculate = function(s, start = 0, end = s.length - 1) {
   const nums = [0];
-  const ops = [];
-  for (let i = start; i <= end; ) {
-    if (isOp(s[i])) {
-      ops.push(s[i]);
-      i += 1;
-    } else if (isNum(s[i])) {
+  let op = '+';
+  for (let i = start; i <= end; i++) {
+    if (isNum(s[i])) {
       const str = parseNum(s, i);
       const num = parseInt(str);
-      pushNum(nums, ops, num);
-      computeHighPrecedence(nums, ops);
-      i += str.length;
+      addNum(nums, op, num);
+      i += str.length - 1;
     } else if (s[i] === '(') {
       const right = findParentheses(s, i);
       const num = calculate(s, i + 1, right - 1);
-      pushNum(nums, ops, num);
-      computeHighPrecedence(nums, ops);
-      i = right + 1;
-    } else {
-      i += 1;
+      addNum(nums, op, num);
+      i = right;
+    } else if (isOp(s[i])) {
+      op = s[i];
     }
   }
-  while (ops.length) {
-    compute(nums, ops);
-  }
-  return nums.pop();
+  return nums.reduce((acc, cur) => acc + cur, 0);
 };
 
-function computeHighPrecedence(nums, ops) {
-  const lastOp = ops[ops.length - 1];
-  if (nums.length >= 2 && (lastOp === '*' || lastOp === '/')) {
-    compute(nums, ops);
-  }
+function isNum(c) {
+  return /[0-9]/.test(c);
 }
 
-function pushNum(nums, ops, num) {
-  if (ops[ops.length - 1] === '-') {
-    ops.pop();
-    ops.push('+');
-    nums.push(-num);
-  } else {
-    nums.push(num);
+function parseNum(s, start) {
+  let i = start;
+  while (isNum(s[i])) {
+    i += 1;
   }
-}
-
-function compute(nums, ops) {
-  const n1 = nums.pop();
-  const n2 = nums.pop();
-  const op = ops.pop();
-  const num = (() => {
-    if (op === '+') {
-      return n2 + n1;
-    } else if (op === '-') {
-      return n2 - n1;
-    } else if (op === '*') {
-      return n2 * n1;
-    } else if (op === '/') {
-      const sign = n2 * n1 >= 0 ? 1 : -1;
-      return sign * Math.floor(Math.abs(n2 / n1));
-    }
-  })();
-  nums.push(num);
+  return s.substring(start, i);
 }
 
 function findParentheses(s, start) {
@@ -82,18 +50,20 @@ function findParentheses(s, start) {
   return -1;
 }
 
-function parseNum(s, start) {
-  let i = start;
-  while (isNum(s[i])) {
-    i += 1;
-  }
-  return s.substring(start, i);
-}
-
 function isOp(c) {
   return c === '+' || c === '-' || c === '*' || c === '/';
 }
 
-function isNum(c) {
-  return /[0-9]/.test(c);
+function addNum(nums, op, num) {
+  if (op === '+') {
+    nums.push(num);
+  } else if (op === '-') {
+    nums.push(-num);
+  } else if (op === '*') {
+    nums.push(nums.pop() * num);
+  } else if (op === '/') {
+    const n = nums.pop();
+    const sign = n * num >= 0 ? 1 : -1;
+    nums.push(sign * Math.floor(Math.abs(n / num)));
+  }
 }
