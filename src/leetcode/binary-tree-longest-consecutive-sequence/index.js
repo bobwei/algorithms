@@ -9,21 +9,25 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var longestConsecutive = function(root, pre = null, n = 0, max = 0) {
-  if (!root) {
-    return max;
-  }
-  const nConsecutive = isSeq(pre, root) ? n + 1 : 1;
-  max = Math.max(max, nConsecutive);
-  return Math.max(
-    longestConsecutive(root.left, root, nConsecutive, max),
-    longestConsecutive(root.right, root, nConsecutive, max),
-  );
+var longestConsecutive = function(r) {
+  let max = 0;
+
+  (function helper(root, parent = null, n = 0) {
+    if (!root) {
+      return;
+    }
+    const nConsecutives = isSeq(parent, root) ? n + 1 : 1;
+    max = Math.max(max, nConsecutives);
+    helper(root.left, root, nConsecutives);
+    helper(root.right, root, nConsecutives);
+  })(r);
+
+  return max;
 };
 
-function isSeq(pre, root) {
-  if (!pre) {
+function isSeq(parent, root) {
+  if (!parent || !root) {
     return false;
   }
-  return pre.val + 1 === root.val;
+  return parent.val + 1 === root.val;
 }
