@@ -27,11 +27,11 @@ function right([d, p]) {
 }
 
 function createMap(nums) {
-  const tuples = nums.map((num) => {
-    return (num + '').split('').map((c) => parseInt(c));
-  });
   const map = {};
-  for (const [d, p, val] of tuples) {
+  for (const num of nums) {
+    const d = Math.floor(num / 100);
+    const p = Math.floor((num % 100) / 10);
+    const val = num % 10;
     map[[d, p]] = val;
   }
   return map;
