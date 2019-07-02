@@ -6,13 +6,6 @@
  * }
  */
 
-const createNode = (val) => {
-  if (val === null) {
-    return val;
-  }
-  return new TreeNode(val);
-};
-
 /**
  * Encodes a tree to a single string.
  *
@@ -20,9 +13,6 @@ const createNode = (val) => {
  * @return {string}
  */
 var serialize = function(root) {
-  if (!root) {
-    return [];
-  }
   const output = [];
   const queue = [root];
   while (queue.length) {
@@ -32,7 +22,7 @@ var serialize = function(root) {
       queue.push(node.left);
       queue.push(node.right);
     } else {
-      output.push(null);
+      output.push(node);
     }
   }
   return output;
@@ -45,23 +35,26 @@ var serialize = function(root) {
  * @return {TreeNode}
  */
 var deserialize = function(data) {
-  if (!data.length) {
-    return null;
-  }
-  const root = new TreeNode(data.shift());
+  const root = createNode(data.shift());
   const queue = [root];
-  while (data.length) {
+  while (queue.length) {
     const node = queue.shift();
-    if (!node) {
-      continue;
+    if (node) {
+      node.left = createNode(data.shift());
+      node.right = createNode(data.shift());
+      queue.push(node.left);
+      queue.push(node.right);
     }
-    node.left = createNode(data.shift());
-    queue.push(node.left);
-    node.right = createNode(data.shift());
-    queue.push(node.right);
   }
   return root;
 };
+
+function createNode(val) {
+  if (val === null || val === undefined) {
+    return null;
+  }
+  return new TreeNode(val);
+}
 
 /**
  * Your functions will be called as such:
