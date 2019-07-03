@@ -3,26 +3,23 @@
  * @param {number} target
  * @return {number[][]}
  */
-const combinationSum = function(
-  candidates,
-  target,
-  startIndex = 0,
-  selected = [],
-  output = [],
-) {
-  const sum = selected.reduce((acc, cur) => acc + cur, 0);
-  if (sum === target) {
-    output.push([...selected]);
-    return output;
-  } else if (sum > target) {
+var combinationSum = function(candidates, target) {
+  candidates.sort((a, b) => a - b);
+  return helper(candidates, target);
+};
+
+function helper(candidates, target, start = 0, sum = 0, selected = [], output = []) {
+  if (sum >= target) {
+    if (sum === target) {
+      output.push([...selected]);
+    }
     return output;
   }
-  for (let i = startIndex; i < candidates.length; i++) {
+  for (let i = start; i < candidates.length; i++) {
+    if (sum + candidates[i] > target) break;
     selected.push(candidates[i]);
-    combinationSum(candidates, target, i, selected, output);
+    helper(candidates, target, i, sum + candidates[i], selected, output);
     selected.pop();
   }
   return output;
-};
-
-export default combinationSum;
+}
