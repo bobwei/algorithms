@@ -4,25 +4,33 @@
  * @return {number[]}
  */
 var topKFrequent = function(nums, k) {
-  const freq = nums.reduce((acc, cur) => {
-    acc[cur] = (acc[cur] || 0) + 1;
-    return acc;
-  }, {});
-  const bucket = Object.entries(freq).reduce((acc, [char, count]) => {
-    if (!(count in acc)) acc[count] = [];
-    acc[count].push(char);
-    return acc;
-  }, {});
+  const freq = createFreq(nums);
+  const map = createMap(freq);
   const output = [];
-  let j = k;
-  for (let i = nums.length; i >= 0; i--) {
-    if (i in bucket) {
-      output.push(...bucket[i]);
-      j -= bucket[i].length;
-      if (j <= 0) {
-        return output;
-      }
+  for (let f = nums.length; f >= 0; f--) {
+    if (map.has(f)) {
+      output.push(...map.get(f));
+    }
+    if (output.length >= k) {
+      return output;
     }
   }
   return output;
 };
+
+function createFreq(nums) {
+  const freq = new Map();
+  for (const num of nums) {
+    freq.set(num, (freq.get(num) || 0) + 1);
+  }
+  return freq;
+}
+
+function createMap(freq) {
+  const map = new Map();
+  for (const [num, count] of freq) {
+    if (!map.has(count)) map.set(count, []);
+    map.get(count).push(num);
+  }
+  return map;
+}
