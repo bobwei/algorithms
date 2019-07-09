@@ -2,45 +2,52 @@
  * @param {number[]} nums
  * @return {number}
  */
-
-const find = (roots, r) => {
-  let ptr = r;
-  while (roots[ptr] !== ptr) {
-    roots[ptr] = roots[roots[ptr]];
-    ptr = roots[ptr];
-  }
-  return ptr;
-};
-
-const union = (roots, r1, r2) => {
-  roots[r2] = r1;
-};
-
 var longestConsecutive = function(nums) {
-  if (!nums.length) {
-    return 0;
-  }
-  const roots = {};
-  const counts = {};
-  let max = 1;
+  const set = new DisjointSet(nums);
   for (const num of nums) {
-    if (roots[num] !== undefined) continue;
-    if (roots[num] === undefined) roots[num] = num;
-    if (counts[num] === undefined) counts[num] = 1;
-    if (roots[num - 1] !== undefined) {
-      const r1 = find(roots, num - 1);
-      const r2 = find(roots, num);
-      union(roots, r1, r2);
-      counts[r1] += counts[r2];
-      max = Math.max(max, counts[r1]);
+    if (set.find(num + 1) !== null) {
+      set.union(num, num + 1);
     }
-    if (roots[num + 1] !== undefined) {
-      const r1 = find(roots, num);
-      const r2 = find(roots, num + 1);
-      union(roots, r1, r2);
-      counts[r1] += counts[r2];
-      max = Math.max(max, counts[r1]);
+    if (set.find(num - 1) !== null) {
+      set.union(num, num - 1);
     }
   }
-  return max;
+  const freq = {};
+  for (const key of set.keys()) {
+    const root = set.find(key);
+    freq[root] = (freq[root] || 0) + 1;
+  }
+  return Math.max(...Object.values(freq), 0);
 };
+
+class DisjointSet {
+  constructor(keys) {
+    this.roots = new Map();
+    for (const key of keys) {
+      this.roots.set(key, key);
+    }
+  }
+
+  find(root) {
+    if (!this.roots.has(root)) {
+      return null;
+    }
+    let ptr = root;
+    while (this.roots.get(ptr) !== ptr) {
+      this.roots.set(ptr, this.roots.get(this.roots.get(ptr)));
+      ptr = this.roots.get(ptr);
+    }
+    return ptr;
+  }
+
+  union(r1, r2) {
+    if (r1 > r2) {
+      return this.union(r2, r1);
+    }
+    this.roots.set(r2, r1);
+  }
+
+  keys() {
+    return this.roots.keys();
+  }
+}
