@@ -9,38 +9,18 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-
-const isBalancedBT = (root) => {
-  if (!root) {
-    return {
-      isBalanced: true,
-      height: -1,
-    };
-  }
-
-  const left = isBalancedBT(root.left);
-  if (!left.isBalanced) {
-    return {
-      isBalanced: false,
-      height: left.height + 1,
-    };
-  }
-
-  const right = isBalancedBT(root.right);
-  if (!right.isBalanced) {
-    return {
-      isBalanced: false,
-      height: right.height + 1,
-    };
-  }
-
-  const isBalanced = Math.abs(left.height - right.height) <= 1;
-  return {
-    isBalanced,
-    height: Math.max(left.height, right.height) + 1,
-  };
-};
-
 var isBalanced = function(root) {
-  return isBalancedBT(root).isBalanced;
+  return helper(root)[0];
 };
+
+function helper(root) {
+  if (!root) {
+    return [true, -1];
+  }
+  const left = helper(root.left);
+  const right = helper(root.right);
+  return [
+    left[0] && right[0] && Math.abs(left[1] - right[1]) <= 1,
+    Math.max(left[1], right[1]) + 1,
+  ];
+}
