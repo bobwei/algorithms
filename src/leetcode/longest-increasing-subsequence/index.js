@@ -7,8 +7,6 @@ var lengthOfLIS = function(nums) {
   for (const num of nums) {
     if (!arr.length || num > arr[arr.length - 1]) {
       arr.push(num);
-    } else if (num < arr[0]) {
-      arr[0] = num;
     } else {
       const index = lowerBound(arr, num);
       arr[index] = num;
