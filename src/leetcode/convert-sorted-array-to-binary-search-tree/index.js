@@ -9,13 +9,13 @@
  * @param {number[]} nums
  * @return {TreeNode}
  */
-var sortedArrayToBST = function(nums, i = 0, j = nums.length - 1) {
-  if (i > j) {
+var sortedArrayToBST = function(nums, start = 0, end = nums.length) {
+  if (start >= end) {
     return null;
   }
-  const mid = Math.floor((i + j) / 2);
+  const mid = Math.floor((start + end) / 2);
   const root = new TreeNode(nums[mid]);
-  root.left = sortedArrayToBST(nums, i, mid - 1);
-  root.right = sortedArrayToBST(nums, mid + 1, j);
+  root.left = sortedArrayToBST(nums, start, mid);
+  root.right = sortedArrayToBST(nums, mid + 1, end);
   return root;
 };
