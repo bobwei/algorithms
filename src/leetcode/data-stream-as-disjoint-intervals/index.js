@@ -1,30 +1,9 @@
-/* global Interval */
-/**
- * Definition for an interval.
- * function Interval(start, end) {
- *     this.start = start;
- *     this.end = end;
- * }
- */
 /**
  * Initialize your data structure here.
  */
 var SummaryRanges = function() {
-  this.roots = {};
+  this.set = new DisjointSet();
   this.intervals = {};
-};
-
-const find = (roots, v) => {
-  let ptr = v;
-  while (roots[ptr] !== ptr) {
-    roots[ptr] = roots[roots[ptr]];
-    ptr = roots[ptr];
-  }
-  return ptr;
-};
-
-const union = (roots, v1, v2) => {
-  roots[v2] = v1;
 };
 
 /**
@@ -32,43 +11,70 @@ const union = (roots, v1, v2) => {
  * @return {void}
  */
 SummaryRanges.prototype.addNum = function(val) {
-  if (this.roots[val] !== undefined) {
-    return;
+  if (!this.set.has(val)) {
+    this.set.add(val);
+    this.intervals[val] = [val, val];
   }
-  this.roots[val] = val;
-  this.intervals[val] = new Interval(val, val);
-  if (this.roots[val - 1] !== undefined) {
-    const r1 = find(this.roots, val - 1);
-    const r2 = find(this.roots, val);
-    if (r1 !== r2) {
-      this.intervals[r1].start = Math.min(this.intervals[r1].start, this.intervals[r2].start);
-      this.intervals[r1].end = Math.max(this.intervals[r1].end, this.intervals[r2].end);
-      delete this.intervals[r2];
-      union(this.roots, r1, r2);
-    }
+  if (this.set.has(val + 1)) {
+    merge(this.set, this.intervals, val, val + 1);
   }
-  if (this.roots[val + 1] !== undefined) {
-    const r1 = find(this.roots, val);
-    const r2 = find(this.roots, val + 1);
-    if (r1 !== r2) {
-      this.intervals[r1].start = Math.min(this.intervals[r1].start, this.intervals[r2].start);
-      this.intervals[r1].end = Math.max(this.intervals[r1].end, this.intervals[r2].end);
-      delete this.intervals[r2];
-      union(this.roots, r1, r2);
-    }
+  if (this.set.has(val - 1)) {
+    merge(this.set, this.intervals, val - 1, val);
   }
 };
 
 /**
- * @return {Interval[]}
+ * @return {number[][]}
  */
 SummaryRanges.prototype.getIntervals = function() {
-  return Object.keys(this.intervals).map((key) => this.intervals[key]);
+  return Object.values(this.intervals);
 };
 
 /**
  * Your SummaryRanges object will be instantiated and called as such:
- * var obj = Object.create(SummaryRanges).createNew()
+ * var obj = new SummaryRanges()
  * obj.addNum(val)
  * var param_2 = obj.getIntervals()
  */
+
+function merge(set, intervals, k1, k2) {
+  const r1 = set.find(k1);
+  const r2 = set.find(k2);
+  const interval1 = intervals[r1];
+  const interval2 = intervals[r2];
+  set.union(r1, r2);
+  delete intervals[r1];
+  delete intervals[r2];
+  // prettier-ignore
+  intervals[r1] = [
+    Math.min(interval1[0], interval2[0]),
+    Math.max(interval1[1], interval2[1]),
+  ];
+}
+
+class DisjointSet {
+  constructor() {
+    this.roots = {};
+  }
+
+  has(key) {
+    return key in this.roots;
+  }
+
+  add(key) {
+    this.roots[key] = key;
+  }
+
+  find(key) {
+    let ptr = key;
+    while (this.roots[ptr] !== ptr) {
+      this.roots[ptr] = this.roots[this.roots[ptr]];
+      ptr = this.roots[ptr];
+    }
+    return ptr;
+  }
+
+  union(k1, k2) {
+    this.roots[k2] = k1;
+  }
+}
