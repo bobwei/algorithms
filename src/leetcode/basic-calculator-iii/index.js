@@ -2,38 +2,27 @@
  * @param {string} s
  * @return {number}
  */
-var calculate = function(s, start = 0, end = s.length - 1, parens = findParentheses(s)) {
-  const nums = [0];
+var calculate = function(s, start = 0, end = s.length, parentheses = findParentheses(s)) {
+  const stack = [];
   let op = '+';
-  for (let i = start; i <= end; i++) {
-    if (isNum(s[i])) {
-      const str = parseNum(s, i);
-      const num = parseInt(str);
-      addNum(nums, op, num);
-      i += str.length - 1;
-    } else if (s[i] === '(') {
-      const right = parens[i];
-      const num = calculate(s, i + 1, right - 1, parens);
-      addNum(nums, op, num);
-      i = right;
-    } else if (isOp(s[i])) {
-      op = s[i];
+  let num = 0;
+  for (let i = start; i < end; i++) {
+    const c = s[i];
+    if (/[0-9]+/.test(c)) {
+      const n = parseInt(c);
+      num = 10 * num + n;
+    } else if (isOperator(c)) {
+      compute(op, stack, num);
+      op = c;
+      num = 0;
+    } else if (c === '(') {
+      num = calculate(s, i + 1, parentheses[i], parentheses);
+      i = parentheses[i];
     }
   }
-  return nums.reduce((acc, cur) => acc + cur, 0);
+  compute(op, stack, num);
+  return stack.reduce((acc, cur) => acc + cur, 0);
 };
-
-function isNum(c) {
-  return /[0-9]/.test(c);
-}
-
-function parseNum(s, start) {
-  let i = start;
-  while (isNum(s[i])) {
-    i += 1;
-  }
-  return s.substring(start, i);
-}
 
 function findParentheses(s) {
   const map = {};
@@ -48,20 +37,21 @@ function findParentheses(s) {
   return map;
 }
 
-function isOp(c) {
-  return c === '+' || c === '-' || c === '*' || c === '/';
+function compute(op, stack, num) {
+  if (op === '-') {
+    stack.push(-num);
+  } else if (op === '+') {
+    stack.push(num);
+  } else if (op === '*') {
+    stack.push(stack.pop() * num);
+  } else if (op === '/') {
+    const pre = stack.pop();
+    const sign = pre / num >= 0 ? 1 : -1;
+    const val = Math.floor(Math.abs(pre / num));
+    stack.push(Math.floor(sign * val));
+  }
 }
 
-function addNum(nums, op, num) {
-  if (op === '+') {
-    nums.push(num);
-  } else if (op === '-') {
-    nums.push(-num);
-  } else if (op === '*') {
-    nums.push(nums.pop() * num);
-  } else if (op === '/') {
-    const n = nums.pop();
-    const sign = n * num >= 0 ? 1 : -1;
-    nums.push(sign * Math.floor(Math.abs(n / num)));
-  }
+function isOperator(c) {
+  return c === '+' || c === '-' || c === '*' || c === '/';
 }
