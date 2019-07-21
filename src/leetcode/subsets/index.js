@@ -2,26 +2,18 @@
  * @param {number[]} nums
  * @return {number[][]}
  */
-
-const dfs = (nums, start, length, selected = [], output = []) => {
-  if (selected.length >= length || start >= nums.length) {
-    if (selected.length === length) {
-      output.push([...selected]);
-    }
+var subsets = function(nums, start = 0, selected = [], output = []) {
+  output.push([...selected]);
+  if (start >= nums.length) {
     return output;
   }
   for (let i = start; i < nums.length; i++) {
+    if (nums[i] === nums[i - 1] && i !== start) {
+      continue;
+    }
     selected.push(nums[i]);
-    dfs(nums, i + 1, length, selected, output);
+    subsets(nums, i + 1, selected, output);
     selected.pop();
-  }
-  return output;
-};
-
-var subsets = function(nums) {
-  const output = [];
-  for (let length = 0; length <= nums.length; length++) {
-    output.push(...dfs(nums, 0, length));
   }
   return output;
 };
