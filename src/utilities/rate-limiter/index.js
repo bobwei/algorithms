@@ -1,13 +1,12 @@
 function createRateLimiter(timesPerMin, onSuccess, onError) {
   const counter = new HitCounter();
-  return (...args) => {
+  return () => {
     const timestamp = Math.floor(new Date().getTime() / 1000);
     if (counter.getHits(timestamp) + 1 <= timesPerMin) {
       counter.hit(timestamp);
-      onSuccess(...args);
-      return;
+      return true;
     }
-    onError(...args);
+    return false;
   };
 }
 

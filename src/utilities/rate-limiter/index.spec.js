@@ -5,10 +5,13 @@ jest.useFakeTimers();
 test('test', () => {
   let nSuccess = 0;
   let nError = 0;
-  // prettier-ignore
-  const inc = createRateLimiter(5, () => { nSuccess += 1 }, () => { nError += 1 });
+  const isAllowed = createRateLimiter(5);
   for (let i = 0; i < 10; i++) {
-    inc();
+    if (isAllowed()) {
+      nSuccess += 1;
+    } else {
+      nError += 1;
+    }
   }
   expect(nSuccess).toEqual(5);
   expect(nError).toEqual(5);
