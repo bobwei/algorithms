@@ -4,12 +4,12 @@
  * @return {number[]}
  */
 var searchRange = function(nums, target) {
-  const start = lowerBound(nums, target);
-  if (start >= nums.length || nums[start] !== target) {
-    return [-1, -1];
+  const left = lowerBound(nums, target);
+  const right = upperBound(nums, target);
+  if (left < right) {
+    return [left, right - 1];
   }
-  const end = lowerBound(nums, target + 1) - 1;
-  return [start, end];
+  return [-1, -1];
 };
 
 function lowerBound(arr, target) {
@@ -18,6 +18,20 @@ function lowerBound(arr, target) {
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
     if (target > arr[mid]) {
+      left = mid + 1;
+    } else {
+      right = mid;
+    }
+  }
+  return left;
+}
+
+function upperBound(arr, target) {
+  let left = 0;
+  let right = arr.length;
+  while (left < right) {
+    const mid = Math.floor((left + right) / 2);
+    if (target >= arr[mid]) {
       left = mid + 1;
     } else {
       right = mid;
