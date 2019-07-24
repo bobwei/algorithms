@@ -4,65 +4,67 @@
  * @param {string[]} wordList
  * @return {string[][]}
  */
-
-const isTransformedWord = (w1, w2) => {
-  let nDiff = 0;
-  for (let i = 0; i < w1.length; i++) {
-    if (w1[i] !== w2[i]) {
-      nDiff += 1;
-    }
-    if (nDiff > 1) {
-      return false;
-    }
-  }
-  return true;
+var findLadders = function(beginWord, endWord, wordList) {
+  const graph = bfs(beginWord, endWord, wordList);
+  return dfs(graph, beginWord, endWord);
 };
 
-const dfs = (graph, start, end, min, selected = [start], output = []) => {
-  if (selected.length >= min) {
-    if (start === end) {
-      output.push([...selected]);
-    }
+function dfs(graph, beginWord, endWord, selected = [beginWord], output = []) {
+  if (selected[selected.length - 1] === endWord) {
+    output.push([...selected]);
     return output;
   }
-  if (!graph[start]) {
-    return output;
-  }
-  const nodes = [...graph[start]];
-  for (let i = 0; i < nodes.length; i++) {
-    const next = nodes[i];
-    selected.push(next);
-    dfs(graph, next, end, min, selected, output);
+  for (const u of graph[beginWord]) {
+    selected.push(u);
+    dfs(graph, u, endWord, selected, output);
     selected.pop();
   }
   return output;
-};
+}
 
-const findLadders = function(beginWord, endWord, wordList) {
-  const visited = {
-    [beginWord]: 0,
-  };
-  const graph = {};
+function bfs(beginWord, endWord, wordList) {
+  const graph = createGraph([beginWord, ...wordList]);
+  const distance = { [beginWord]: 1 };
+  const visited = new Set();
   const queue = [beginWord];
   while (queue.length) {
-    const word = queue.shift();
-    const n = visited[word] || 0;
-    for (let i = 0; i < wordList.length; i++) {
-      if (isTransformedWord(word, wordList[i])) {
-        const nextN = n + 1;
-        if (nextN <= (visited[wordList[i]] || Infinity)) {
-          queue.push(wordList[i]);
-          visited[wordList[i]] = nextN;
-          if (!graph[word]) {
-            graph[word] = new Set();
-          }
-          graph[word].add(wordList[i]);
+    const w = queue.shift();
+    for (const word of wordList) {
+      if (isTransformedWord(w, word)) {
+        if (distance[w] + 1 <= (distance[word] || Infinity)) {
+          distance[word] = distance[w] + 1;
+          graph[w].add(word);
+        }
+        if (!visited.has(word) && !(endWord in distance)) {
+          visited.add(word);
+          queue.push(word);
         }
       }
     }
   }
-  const min = visited[endWord] + 1;
-  return min ? dfs(graph, beginWord, endWord, min) : [];
-};
+  return graph;
+}
 
-export default findLadders;
+function createGraph(arr) {
+  const graph = {};
+  for (const node of arr) {
+    graph[node] = new Set();
+  }
+  return graph;
+}
+
+function isTransformedWord(w1, w2) {
+  if (w1 === w2) {
+    return false;
+  }
+  let nDiffs = 0;
+  for (let i = 0; i < w1.length; i++) {
+    if (w1[i] !== w2[i]) {
+      nDiffs += 1;
+    }
+    if (nDiffs > 1) {
+      return false;
+    }
+  }
+  return true;
+}
