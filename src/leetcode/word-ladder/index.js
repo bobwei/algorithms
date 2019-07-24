@@ -4,39 +4,33 @@
  * @param {string[]} wordList
  * @return {number}
  */
-
-const isSibling = (w1, w2) => {
-  if (w1.length !== w2.length) {
-    return false;
-  }
-  let n = 0;
-  for (let i = 0; i < w1.length; i++) {
-    if (w1[i] !== w2[i]) {
-      n += 1;
-    }
-    if (n > 1) {
-      return false;
-    }
-  }
-  return true;
-};
-
 var ladderLength = function(beginWord, endWord, wordList) {
-  const n = wordList.length;
-  const visited = {};
+  const visited = new Set([beginWord]);
   const queue = [[beginWord, 1]];
   while (queue.length) {
-    const [w1, d] = queue.shift();
-    for (const w2 of wordList) {
-      if (visited[w2]) continue;
-      if (isSibling(w1, w2)) {
-        if (w2 === endWord) {
-          return d + 1;
-        }
-        visited[w2] = true;
-        queue.push([w2, d + 1]);
+    const [word, length] = queue.shift();
+    if (word === endWord) {
+      return length;
+    }
+    for (const w of wordList) {
+      if (isValid(word, w) && !visited.has(w)) {
+        visited.add(w);
+        queue.push([w, length + 1]);
       }
     }
   }
   return 0;
 };
+
+function isValid(w1, w2) {
+  let diff = 0;
+  for (let i = 0; i < w1.length; i++) {
+    if (w1[i] !== w2[i]) {
+      diff += 1;
+    }
+    if (diff > 1) {
+      return false;
+    }
+  }
+  return true;
+}
