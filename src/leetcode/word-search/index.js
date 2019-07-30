@@ -11,7 +11,7 @@ var exist = function(board, word) {
   const n = board[0].length;
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      if (dfs(board, m, n, word, [i, j])) {
+      if (helper(board, m, n, i, j, word, 0)) {
         return true;
       }
     }
@@ -19,27 +19,26 @@ var exist = function(board, word) {
   return false;
 };
 
+const visited = 'O';
 const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-const empty = '';
-
-function dfs(board, m, n, word, [x, y], index = 0) {
-  if (!isValid(x, y, m, n) || board[x][y] === empty || word[index] !== board[x][y]) {
+function helper(board, m, n, x, y, word, start) {
+  if (!isValid(x, y, m, n) || board[x][y] !== word[start]) {
     return false;
   }
-  if (index + 1 >= word.length) {
+  if (start + 1 >= word.length) {
     return true;
   }
-  const c = board[x][y];
-  board[x][y] = empty;
+  const tmp = board[x][y];
+  board[x][y] = visited;
   for (const [di, dj] of dirs) {
     const i = x + di;
     const j = y + dj;
-    if (dfs(board, m, n, word, [i, j], index + 1)) {
+    if (helper(board, m, n, i, j, word, start + 1)) {
       return true;
     }
   }
-  board[x][y] = c;
+  board[x][y] = tmp;
   return false;
 }
 
@@ -48,8 +47,4 @@ function isValid(i, j, m, n) {
     return false;
   }
   return true;
-}
-
-function encode(p) {
-  return p + '';
 }
