@@ -10,20 +10,21 @@
  * @param {number} sum
  * @return {number[][]}
  */
-var pathSum = function(root, sum, curSum = 0, selected = [], output = []) {
+var pathSum = function(root, sum, selected = [], selectedSum = 0, output = []) {
   if (!root) {
     return output;
   }
+  selected.push(root.val);
+  selectedSum += root.val;
   if (root.left || root.right) {
-    const nextSum = curSum + root.val;
-    selected.push(root.val);
-    pathSum(root.left, sum, nextSum, selected, output);
-    pathSum(root.right, sum, nextSum, selected, output);
-    selected.pop();
-    return output;
+    pathSum(root.left, sum, selected, selectedSum, output);
+    pathSum(root.right, sum, selected, selectedSum, output);
+  } else {
+    if (selectedSum === sum) {
+      output.push([...selected]);
+    }
   }
-  if (curSum + root.val === sum) {
-    output.push([...selected, root.val]);
-  }
+  selected.pop();
+  selectedSum -= root.val;
   return output;
 };
