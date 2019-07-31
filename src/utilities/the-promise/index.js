@@ -57,6 +57,34 @@ class ThePromise {
   }
 }
 
+ThePromise.resolve = (value) => {
+  return new ThePromise((resolve) => resolve(value));
+};
+
+ThePromise.reject = (reason) => {
+  return new ThePromise((resolve, reject) => reject(reason));
+};
+
+ThePromise.all = (promises) => {
+  const results = new Array(promises.length).fill(null);
+  let nResolved = 0;
+  return new ThePromise((resolve, reject) => {
+    for (let i = 0; i < promises.length; i++) {
+      promises[i]
+        .then((result) => {
+          results[i] = result;
+          nResolved += 1;
+          if (nResolved === promises.length) {
+            resolve(results);
+          }
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    }
+  });
+};
+
 ThePromise.states = {
   pending: 'pending',
   fulfilled: 'fulfilled',

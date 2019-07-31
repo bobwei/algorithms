@@ -94,3 +94,44 @@ test('promise', (done) => {
     })
     .then(() => done());
 });
+
+test('ThePromise.all', (done) => {
+  const promises = [1, 2, 3, 4, 5].map((val) => ThePromise.resolve(val));
+  ThePromise.all(promises)
+    .then((val) => {
+      expect(val).toEqual([1, 2, 3, 4, 5]);
+    })
+    .then(() => done());
+});
+
+test('ThePromise.all', (done) => {
+  const promises = [1, 2, 1, 1, 1].map((val) => {
+    return new ThePromise((resolve) => {
+      setTimeout(() => resolve(val), val * 1000);
+    });
+  });
+  ThePromise.all(promises)
+    .then((val) => {
+      expect(val).toEqual([1, 2, 1, 1, 1]);
+    })
+    .then(() => done());
+});
+
+test('ThePromise.all with error', (done) => {
+  const promises = [1, 2, 1, 1, 1].map((val) => {
+    return new ThePromise((resolve, reject) => {
+      setTimeout(() => {
+        if (val < 2) {
+          resolve(val);
+          return;
+        }
+        reject(val);
+      }, val * 1000);
+    });
+  });
+  ThePromise.all(promises)
+    .catch((error) => {
+      expect(error).toEqual(2);
+    })
+    .then(() => done());
+});
