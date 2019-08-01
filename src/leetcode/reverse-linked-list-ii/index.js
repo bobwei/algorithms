@@ -11,30 +11,23 @@
  * @param {number} n
  * @return {ListNode}
  */
-/*
-   p1          p2
-d->1->2->3->4->5->NULL
-*/
 var reverseBetween = function(head, m, n) {
   const dummy = new ListNode();
   dummy.next = head;
-  const [p1, p2] = getPtrs(dummy, m, n);
-  const [h, t] = reverse(p1.next, n - m + 1);
-  p1.next = h;
-  t.next = p2;
+  const h1 = findNth(dummy, m - 1);
+  const h2 = findNth(dummy, n + 1);
+  const [rh, rt] = reverse(h1.next, n - m + 1);
+  h1.next = rh;
+  rt.next = h2;
   return dummy.next;
 };
 
-function getPtrs(head, m, n) {
-  let p1 = head;
-  for (let i = 0; i < m - 1; i++) {
-    p1 = p1.next;
+function findNth(head, n) {
+  let ptr = head;
+  for (let i = 0; i < n; i++) {
+    ptr = ptr.next;
   }
-  let p2 = head;
-  for (let i = 0; i <= n; i++) {
-    p2 = p2.next;
-  }
-  return [p1, p2];
+  return ptr;
 }
 
 function reverse(head, nTimes) {
