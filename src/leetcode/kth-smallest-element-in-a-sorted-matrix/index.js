@@ -4,13 +4,13 @@
  * @return {number}
  */
 var kthSmallest = function(matrix, k) {
-  const m = matrix.length;
+  let m = matrix.length;
   let left = matrix[0][0];
-  let right = matrix[m - 1][m - 1];
+  let right = matrix[m - 1][m - 1] + 1;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    const n = count(matrix, m, mid, (a, b) => a <= b);
-    if (n < k) {
+    const n = count(matrix, m, mid);
+    if (k > n) {
       left = mid + 1;
     } else {
       right = mid;
@@ -19,11 +19,11 @@ var kthSmallest = function(matrix, k) {
   return left;
 };
 
-function count(matrix, m, target, comparator) {
+function count(matrix, m, target) {
   let j = m - 1;
   let n = 0;
   for (let i = 0; i < m; i++) {
-    while (j >= 0 && !comparator(matrix[i][j], target)) {
+    while (j >= 0 && matrix[i][j] > target) {
       j -= 1;
     }
     n += j + 1;
