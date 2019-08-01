@@ -5,32 +5,33 @@
  */
 var topKFrequent = function(nums, k) {
   const freq = createFreq(nums);
-  const map = createMap(freq);
+  const rFreq = reverse(freq);
   const output = [];
-  for (let f = nums.length; f >= 0; f--) {
-    if (map.has(f)) {
-      output.push(...map.get(f));
+  for (let i = nums.length; i >= 0; i--) {
+    if (i in rFreq) {
+      output.push(...rFreq[i]);
     }
     if (output.length >= k) {
-      return output;
+      return output.slice(0, k);
     }
   }
   return output;
 };
 
-function createFreq(nums) {
-  const freq = new Map();
-  for (const num of nums) {
-    freq.set(num, (freq.get(num) || 0) + 1);
+function reverse(map) {
+  const rMap = {};
+  for (const key in map) {
+    const val = map[key];
+    if (!(val in rMap)) rMap[val] = [];
+    rMap[val].push(key);
   }
-  return freq;
+  return rMap;
 }
 
-function createMap(freq) {
-  const map = new Map();
-  for (const [num, count] of freq) {
-    if (!map.has(count)) map.set(count, []);
-    map.get(count).push(num);
+function createFreq(arr) {
+  const map = {};
+  for (const el of arr) {
+    map[el] = (map[el] || 0) + 1;
   }
   return map;
 }
