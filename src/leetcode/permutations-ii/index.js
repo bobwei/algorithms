@@ -2,20 +2,18 @@
  * @param {number[]} nums
  * @return {number[][]}
  */
+var permuteUnique = function(nums) {
+  nums.sort((a, b) => a - b);
+  return helper(nums);
+};
 
-const helper = (nums, selected = new Set(), output = []) => {
-  if (!nums.length) {
-    return [];
-  }
+function helper(nums, selected = new Set(), output = []) {
   if (selected.size >= nums.length) {
     output.push([...selected].map((i) => nums[i]));
     return output;
   }
   for (let i = 0; i < nums.length; i++) {
-    if (selected.has(i)) {
-      continue;
-    }
-    if (nums[i] === nums[i - 1] && !selected.has(i - 1)) {
+    if (selected.has(i) || (nums[i - 1] === nums[i] && !selected.has(i - 1))) {
       continue;
     }
     selected.add(i);
@@ -23,9 +21,4 @@ const helper = (nums, selected = new Set(), output = []) => {
     selected.delete(i);
   }
   return output;
-};
-
-var permuteUnique = function(nums) {
-  nums.sort();
-  return helper(nums);
-};
+}
