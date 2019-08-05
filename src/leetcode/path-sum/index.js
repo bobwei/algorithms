@@ -10,12 +10,12 @@
  * @param {number} sum
  * @return {boolean}
  */
-var hasPathSum = function(root, sum) {
+var hasPathSum = function(root, sum, pre = 0) {
   if (!root) {
     return false;
   }
-  if (root.left || root.right) {
-    return hasPathSum(root.left, sum - root.val) || hasPathSum(root.right, sum - root.val);
+  if (!root.left && !root.right) {
+    return pre + root.val === sum;
   }
-  return sum === root.val;
+  return hasPathSum(root.left, sum, pre + root.val) || hasPathSum(root.right, sum, pre + root.val);
 };
