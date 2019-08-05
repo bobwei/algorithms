@@ -38,3 +38,10 @@ When using UDP, packets are just sent to the recipient. The sender will not wait
 UDP is used when speed is desirable and error correction is not necessary. For example, UDP is frequently used for live broadcasts and online games.
 
 This explanation is from: https://www.howtogeek.com/190014/htg-explains-what-is-the-difference-between-tcp-and-udp/
+
+## Javascript new operator
+
+- Create an empty object.
+- Assign the object to `this`
+- Execute function body
+- return `this`
