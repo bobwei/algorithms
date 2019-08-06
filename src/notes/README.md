@@ -1,5 +1,13 @@
 # README
 
+- [README](#readme)
+  - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
+  - [Closure](#closure)
+  - [TCP & UDP](#tcp--udp)
+  - [Javascript new operator](#javascript-new-operator)
+  - [CSS vertical align](#css-vertical-align)
+    - [vertical align with pseudo elements](#vertical-align-with-pseudo-elements)
+
 ## Event Propagation, Event Delegation
 
 <img height="600" src="assets/event-propagation.svg">
