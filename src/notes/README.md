@@ -45,3 +45,47 @@ This explanation is from: https://www.howtogeek.com/190014/htg-explains-what-is-
 - Assign the object to `this`
 - Execute function body
 - return `this`
+
+## CSS vertical align
+
+- https://www.oxxostudio.tw/articles/201408/css-vertical-align.html
+- https://www.oxxostudio.tw/articles/201502/css-vertical-align-7methods.html
+  - 設定行高 ( line-height )
+  - 添加偽元素
+  - calc 動態計算
+  - 使用表格或假裝表格
+  - transform
+  - 絕對定位
+  - 使用 Flexbox
+
+### vertical align with pseudo elements
+
+https://codepen.io/bobwei/pen/ympoWw
+
+```html
+<div class="vertical-align container">
+  <div class="vertical-align-element">
+    center
+  </div>
+</div>
+```
+
+```css
+.container {
+  height: 300px;
+  text-align: center;
+  background-color: red;
+}
+
+.vertical-align::before {
+  content: '';
+  width: 0;
+  height: 100%;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.vertical-align-element {
+  display: inline-block;
+}
+```
