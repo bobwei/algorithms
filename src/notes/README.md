@@ -8,6 +8,8 @@
   - [CSS vertical align](#css-vertical-align)
     - [vertical align with pseudo elements](#vertical-align-with-pseudo-elements)
   - [Javascript Prototype](#javascript-prototype)
+  - [React vs Vue](#react-vs-vue)
+    - [Composition of components](#composition-of-components)
 
 ## Event Propagation, Event Delegation
 
@@ -105,3 +107,19 @@ https://codepen.io/bobwei/pen/ympoWw
 - http://dmitrysoshnikov.com/ecmascript/javascript-the-core/
 
 <img height="600" src="assets/constructor-proto-chain.png">
+
+## React vs Vue
+
+|           | React                                               | Vue                                                    |
+| --------- | --------------------------------------------------- | ------------------------------------------------------ |
+| summary   | 函數式編程、易於組合、資料流清晰，適用於大型場景    | 簡單易懂、容易上手                                     |
+| data flow | 單向資料流、數據不可變，故資料較清晰、具可預測性    | 資料劫持以監聽變化，修改物件屬性即可反應變化，易於上手 |
+| principle | composition of components, designed for composition |                                                        |
+
+### Composition of components
+
+- Higher Order Function
+- Hooks
+- Render Props
+
+All of above help easier to separate concerns and having abstraction.
