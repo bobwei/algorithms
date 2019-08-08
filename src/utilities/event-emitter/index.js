@@ -9,7 +9,7 @@ function createEmitter() {
 
     off(name, cb) {
       const index = listeners[name].indexOf(cb);
-      listeners[name].spice(index, 1);
+      listeners[name].splice(index, 1);
     },
 
     emit(name, ...args) {
