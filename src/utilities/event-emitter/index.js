@@ -17,6 +17,14 @@ function createEmitter() {
         cb(...args);
       }
     },
+
+    once(name, cb) {
+      const fn = (...args) => {
+        this.off(name, fn);
+        cb(...args);
+      };
+      this.on(name, fn);
+    },
   };
 }
 
