@@ -7,6 +7,7 @@
   - [Javascript new operator](#javascript-new-operator)
   - [CSS vertical align](#css-vertical-align)
     - [vertical align with pseudo elements](#vertical-align-with-pseudo-elements)
+  - [Javascript Prototype](#javascript-prototype)
 
 ## Event Propagation, Event Delegation
 
@@ -50,6 +51,7 @@ This explanation is from: https://www.howtogeek.com/190014/htg-explains-what-is-
 ## Javascript new operator
 
 - Create an empty object.
+- Assign `obj.__proto__` to `ConstructorFn.prototype`
 - Assign the object to `this`
 - Execute function body
 - return `this`
@@ -97,3 +99,9 @@ https://codepen.io/bobwei/pen/ympoWw
   display: inline-block;
 }
 ```
+
+## Javascript Prototype
+
+- http://dmitrysoshnikov.com/ecmascript/javascript-the-core/
+
+<img height="600" src="assets/constructor-proto-chain.png">
