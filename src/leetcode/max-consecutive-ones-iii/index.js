@@ -8,13 +8,9 @@ var longestOnes = function(A, K) {
   let max = 0;
   let start = 0;
   for (let i = 0; i < A.length; i++) {
-    if (A[i] === 0) {
-      counter.inc();
-    }
-    while (counter.n > K) {
-      if (A[start] === 0) {
-        counter.dec();
-      }
+    counter.add(A[i]);
+    while (counter.nZeros > K) {
+      counter.delete(A[start]);
       start += 1;
     }
     max = Math.max(max, i - start + 1);
@@ -24,14 +20,14 @@ var longestOnes = function(A, K) {
 
 class Counter {
   constructor() {
-    this.n = 0;
+    this.nZeros = 0;
   }
 
-  inc() {
-    this.n += 1;
+  add(val) {
+    this.nZeros += val === 0 ? 1 : 0;
   }
 
-  dec() {
-    this.n -= 1;
+  delete(val) {
+    this.nZeros -= val === 0 ? 1 : 0;
   }
 }
