@@ -9,36 +9,37 @@ var findAnagrams = function(s, p) {
   let start = 0;
   for (let i = 0; i < s.length; i++) {
     counter.add(s[i]);
-    while (counter.n === 0) {
-      if (i - start + 1 === p.length) {
-        output.push(start);
-      }
-      counter.delete(s[start++]);
+    while (counter.nRedundant > 0) {
+      counter.delete(s[start]);
+      start += 1;
+    }
+    if (i - start + 1 === p.length) {
+      output.push(start);
     }
   }
   return output;
 };
 
 class Counter {
-  constructor(target) {
-    this.n = target.length;
-    this.counts = target.split('').reduce((acc, cur) => {
-      acc[cur] = (acc[cur] || 0) + 1;
-      return acc;
-    }, {});
+  constructor(str) {
+    this.counter = {};
+    for (const c of str) {
+      this.counter[c] = (this.counter[c] || 0) + 1;
+    }
+    this.nRedundant = 0;
   }
 
   add(c) {
-    this.counts[c] = (this.counts[c] || 0) - 1;
-    if (this.counts[c] >= 0) {
-      this.n -= 1;
+    this.counter[c] = (this.counter[c] || 0) - 1;
+    if (this.counter[c] < 0) {
+      this.nRedundant += 1;
     }
   }
 
   delete(c) {
-    this.counts[c] += 1;
-    if (this.counts[c] > 0) {
-      this.n += 1;
+    this.counter[c] += 1;
+    if (this.counter[c] === 0) {
+      this.nRedundant -= 1;
     }
   }
 }
