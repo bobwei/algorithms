@@ -4,24 +4,25 @@
  * @return {string[]}
  */
 var topKFrequent = function(words, k) {
-  const freq = words.reduce((acc, cur) => {
-    acc[cur] = (acc[cur] || 0) + 1;
-    return acc;
-  }, {});
-  const map = Object.entries(freq).reduce((acc, [w, count]) => {
-    if (!(count in acc)) acc[count] = [];
-    acc[count].push(w);
-    return acc;
-  }, {});
-  for (const count in map) {
-    map[count].sort();
+  const freq = {};
+  for (const word of words) {
+    freq[word] = (freq[word] || 0) + 1;
+  }
+  const rFreq = {};
+  for (const word in freq) {
+    const f = freq[word];
+    if (!(f in rFreq)) rFreq[f] = [];
+    rFreq[f].push(word);
+  }
+  for (const f in rFreq) {
+    rFreq[f].sort();
   }
   const output = [];
   for (let f = words.length; f >= 0; f--) {
-    if (f in map) {
-      output.push(...map[f].slice(0, k - output.length));
+    if (f in rFreq) {
+      output.push(...rFreq[f]);
       if (output.length >= k) {
-        return output;
+        return output.slice(0, k);
       }
     }
   }
