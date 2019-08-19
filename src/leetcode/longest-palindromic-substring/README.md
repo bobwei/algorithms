@@ -1,6 +1,6 @@
 # README
 
-## Algorithm
+## Algorithm DP
 
 ```js
 dp[i][j] = s[i] === s[j] ? dp[i + 1][j - 1] : false;
