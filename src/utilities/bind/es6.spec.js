@@ -1,4 +1,4 @@
-import bind from './index';
+import bind from './es6';
 
 test('bind', () => {
   const helper = function(a, b) {
