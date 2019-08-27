@@ -4,7 +4,7 @@
  * @return {number}
  */
 var strStr = function(haystack, needle) {
-  const arr = createSuffixArray(needle);
+  const arr = createPrefixTable(needle);
   let i = 0,
     j = 0;
   while (i < haystack.length) {
@@ -32,16 +32,15 @@ function match(s, p, sStart, pStart) {
   return j;
 }
 
-function createSuffixArray(str) {
+function createPrefixTable(str) {
   const arr = new Array(str.length).fill(0);
   let j = 0;
   for (let i = 1; i < str.length; i++) {
+    while (str[i] !== str[j] && j > 0) {
+      j = arr[j - 1];
+    }
     if (str[i] === str[j]) {
       j += 1;
-    } else {
-      while (str[i] !== str[j] && j > 0) {
-        j -= 1;
-      }
     }
     arr[i] = j;
   }
