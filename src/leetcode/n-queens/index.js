@@ -2,35 +2,47 @@
  * @param {number} n
  * @return {string[][]}
  */
-var solveNQueens = function(n, selected = [], output = []) {
-  if (selected.length >= n) {
-    output.push(transform(n, selected));
+var solveNQueens = function(n) {
+  const combinations = helper(n);
+  return createBoards(n, combinations);
+};
+
+function helper(n, i = 0, selected = [], output = []) {
+  if (i >= n) {
+    output.push([...selected]);
     return output;
   }
   for (let j = 0; j < n; j++) {
-    const i = selected.length;
-    if (isValid([i, j], selected)) {
+    if (isSelectable(selected, i, j)) {
       selected.push([i, j]);
-      solveNQueens(n, selected, output);
+      helper(n, i + 1, selected, output);
       selected.pop();
     }
   }
   return output;
-};
+}
 
-function isValid(p, selected) {
-  for (const q of selected) {
-    if (p[0] === q[0] || p[1] === q[1] || Math.abs(p[0] - q[0]) === Math.abs(p[1] - q[1])) {
+function isSelectable(selected, i, j) {
+  for (const [x, y] of selected) {
+    if (x === i || y === j) {
+      return false;
+    }
+    const slope = (y - j) / (x - i);
+    if (slope === 1 || slope === -1) {
       return false;
     }
   }
   return true;
 }
 
-function transform(n, selected) {
-  const output = [...new Array(n)].map(() => new Array(n).fill('.'));
-  for (const [i, j] of selected) {
-    output[i][j] = 'Q';
+function createBoards(n, combinations) {
+  const output = [];
+  for (const queens of combinations) {
+    const board = [...new Array(n)].map(() => new Array(n).fill('.'));
+    for (const [i, j] of queens) {
+      board[i][j] = 'Q';
+    }
+    output.push(board.map((row) => row.join('')));
   }
-  return output.map((row) => row.join(''));
+  return output;
 }
