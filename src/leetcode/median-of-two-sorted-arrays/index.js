@@ -21,12 +21,18 @@ function findKth(arr1, arr2, k) {
   while (left < right) {
     const m = Math.floor((left + right) / 2);
     const n = k - m - 2;
-    const max1 = m in arr1 ? arr1[m] : -Infinity;
-    const max2 = n in arr2 ? arr2[n] : -Infinity;
-    const min1 = m + 1 in arr1 ? arr1[m + 1] : Infinity;
-    const min2 = n + 1 in arr2 ? arr2[n + 1] : Infinity;
-    if (Math.max(max1, max2) <= Math.min(min1, min2)) {
-      return Math.max(max1, max2);
+    // prettier-ignore
+    const leftMax = Math.max(
+      m in arr1 ? arr1[m] : -Infinity,
+      n in arr2 ? arr2[n] : -Infinity,
+    );
+    // prettier-ignore
+    const rightMin = Math.min(
+      m + 1 in arr1 ? arr1[m + 1] : Infinity,
+      n + 1 in arr2 ? arr2[n + 1] : Infinity,
+    );
+    if (leftMax <= rightMin) {
+      return leftMax;
     } else if (arr1[m + 1] < arr2[n]) {
       left = m + 1;
     } else {
