@@ -7,7 +7,7 @@ var validUtf8 = function(data) {
     return false;
   }
   for (let i = 0; i < data.length; ) {
-    if (data[i] >= 256) {
+    if (data[i] >= 0b100000000) {
       return false;
     }
     const nBytes = getNBytes(data[i]);
@@ -15,7 +15,7 @@ var validUtf8 = function(data) {
       return false;
     }
     for (let j = 1; j < nBytes; j++) {
-      if (i + j > data.length || (data[i + j] & 192) !== 128) {
+      if (i + j > data.length || (data[i + j] & 0b11000000) !== 0b10000000) {
         return false;
       }
     }
@@ -25,16 +25,16 @@ var validUtf8 = function(data) {
 };
 
 function getNBytes(n) {
-  if ((n & 128) === 0) {
+  if ((n & 0b10000000) === 0) {
     return 1;
   }
-  if ((n & 224) === 192) {
+  if ((n & 0b11100000) === 0b11000000) {
     return 2;
   }
-  if ((n & 240) === 224) {
+  if ((n & 0b11110000) === 0b11100000) {
     return 3;
   }
-  if ((n & 248) === 240) {
+  if ((n & 0b11111000) === 0b11110000) {
     return 4;
   }
   return -1;
