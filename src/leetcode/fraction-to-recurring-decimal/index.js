@@ -4,30 +4,29 @@
  * @return {string}
  */
 var fractionToDecimal = function(numerator, denominator) {
-  const sign = numerator * denominator >= 0 ? 1 : -1;
+  if (numerator % denominator === 0) {
+    return numerator / denominator + '';
+  }
+  const sign = numerator * denominator < 0 ? -1 : 1;
   const result = helper(Math.abs(numerator), Math.abs(denominator));
-  return sign > 0 ? result : '-' + result;
+  if (sign < 0) {
+    return '-' + result;
+  }
+  return result;
 };
 
 function helper(numerator, denominator) {
-  const int = Math.floor(numerator / denominator);
-  if (numerator - int * denominator === 0) {
-    return int + '';
-  }
+  let output = Math.floor(numerator / denominator) + '.';
+  let num = (numerator % denominator) * 10;
   const visited = {};
-  let fraction = '';
-  let n = (numerator - int * denominator) * 10;
-  while (n) {
-    if (n in visited) {
-      const s = visited[n];
-      const nonRepeated = fraction.substring(0, s);
-      const repeated = fraction.substring(s);
-      return `${int}.${nonRepeated}(${repeated})`;
+  while (num > 0) {
+    if (num in visited) {
+      const i = visited[num];
+      return output.substring(0, i) + '(' + output.substring(i) + ')';
     }
-    const q = Math.floor(n / denominator);
-    visited[n] = fraction.length;
-    fraction += q;
-    n = (n - denominator * q) * 10;
+    visited[num] = output.length;
+    output += Math.floor(num / denominator);
+    num = (num % denominator) * 10;
   }
-  return `${int}.${fraction}`;
+  return output;
 }
