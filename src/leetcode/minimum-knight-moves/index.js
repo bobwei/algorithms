@@ -36,7 +36,10 @@ var minKnightMoves = function(x, y) {
 };
 
 function createKey(i, j) {
-  return i + ',' + j;
+  const m = 600;
+  const n = 600;
+  // prettier-ignore
+  return n * (i - (-m)) + j - (-n);
 }
 
 function getDist(x, y, i, j) {
