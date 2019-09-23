@@ -6,25 +6,30 @@ var merge = function(intervals) {
   if (intervals.length <= 1) {
     return intervals;
   }
-  intervals.sort((a, b) => a[0] - b[0]);
+  intervals.sort((a, b) => {
+    if (a[0] !== b[0]) {
+      return a[0] - b[0];
+    }
+    return a[1] - b[1];
+  });
   const output = [];
-  let ptr = intervals[0];
+  let pre = intervals[0];
   for (let i = 1; i < intervals.length; i++) {
-    if (isOverlapped(ptr, intervals[i])) {
-      // prettier-ignore
-      ptr = [
-        Math.min(ptr[0], intervals[i][0]),
-        Math.max(ptr[1], intervals[i][1]),
-      ];
+    if (isMergeable(pre, intervals[i])) {
+      pre[0] = Math.min(pre[0], intervals[i][0]);
+      pre[1] = Math.max(pre[1], intervals[i][1]);
     } else {
-      output.push(ptr);
-      ptr = intervals[i];
+      output.push(pre);
+      pre = intervals[i];
     }
   }
-  output.push(ptr);
+  output.push(pre);
   return output;
 };
 
-function isOverlapped(i1, i2) {
-  return i2[0] <= i1[1] && i2[1] >= i1[0];
+function isMergeable(i1, i2) {
+  if (Math.max(i1[0], i2[0]) <= Math.min(i1[1], i2[1])) {
+    return true;
+  }
+  return false;
 }
