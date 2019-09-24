@@ -5,39 +5,39 @@
  */
 var findMedianSortedArrays = function(nums1, nums2) {
   const n = nums1.length + nums2.length;
-  const k = Math.ceil(n / 2);
+  const k = Math.floor(n / 2);
   if (n % 2 === 1) {
-    return findKth(nums1, nums2, k);
+    return findKth(nums1, nums2, k + 1);
   }
   return (findKth(nums1, nums2, k) + findKth(nums1, nums2, k + 1)) / 2;
 };
 
-function findKth(arr1, arr2, k) {
-  if (arr1.length > arr2.length) {
-    return findKth(arr2, arr1, k);
+function findKth(nums1, nums2, k) {
+  if (nums1.length > nums2.length) {
+    return findKth(nums2, nums1, k);
   }
   let left = 0;
-  let right = arr1.length;
+  let right = nums1.length;
   while (left < right) {
-    const m = Math.floor((left + right) / 2);
-    const n = k - m - 2;
+    const i = Math.floor((left + right) / 2);
+    const j = k - i - 2;
     // prettier-ignore
-    const leftMax = Math.max(
-      m in arr1 ? arr1[m] : -Infinity,
-      n in arr2 ? arr2[n] : -Infinity,
+    const maxLeft = Math.max(
+      i in nums1 ? nums1[i] : -Infinity,
+      j in nums2 ? nums2[j] : -Infinity,
     );
     // prettier-ignore
-    const rightMin = Math.min(
-      m + 1 in arr1 ? arr1[m + 1] : Infinity,
-      n + 1 in arr2 ? arr2[n + 1] : Infinity,
+    const minRight = Math.min(
+      i + 1 in nums1 ? nums1[i + 1] : Infinity,
+      j + 1 in nums2 ? nums2[j + 1] : Infinity,
     );
-    if (leftMax <= rightMin) {
-      return leftMax;
-    } else if (arr1[m + 1] < arr2[n]) {
-      left = m + 1;
+    if (maxLeft <= minRight) {
+      return maxLeft;
+    } else if (nums1[i] > nums2[j + 1]) {
+      right = i;
     } else {
-      right = m;
+      left = i + 1;
     }
   }
-  return arr2[k - 1];
+  return nums2[k - 1];
 }
