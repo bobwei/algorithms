@@ -3,11 +3,14 @@
  * @param {number[]} times
  */
 var AutocompleteSystem = function(sentences, times) {
-  this.freq = sentences.reduce((acc, str, i) => ({ ...acc, [str]: times[i] }), {});
-  this.inputText = '';
-  this.topK = 3;
   this.trie = new Trie();
-  sentences.forEach((str) => this.trie.insert(str));
+  this.topK = 3;
+  this.freq = {};
+  for (let i = 0; i < sentences.length; i++) {
+    this.freq[sentences[i]] = times[i];
+    this.trie.add(sentences[i]);
+  }
+  this.inputText = '';
 };
 
 /**
@@ -17,27 +20,26 @@ var AutocompleteSystem = function(sentences, times) {
 AutocompleteSystem.prototype.input = function(c) {
   if (c === '#') {
     this.freq[this.inputText] = (this.freq[this.inputText] || 0) + 1;
-    this.trie.insert(this.inputText);
+    this.trie.add(this.inputText);
     this.inputText = '';
     return [];
   }
-  this.inputText += c;
   const pq = new PriorityQueue({
     comparator: (a, b) => {
       if (this.freq[a] !== this.freq[b]) {
-        return this.freq[a] < this.freq[b];
+        return this.freq[a] <= this.freq[b];
       }
       return a > b;
     },
   });
-  // prettier-ignore
-  this.trie.dfs(this.inputText)
-    .forEach((str) => {
-      pq.enqueue(str);
-      if (pq.length > this.topK) {
-        pq.dequeue();
-      }
-    });
+  this.inputText += c;
+  const strs = this.trie.dfs(this.inputText);
+  for (const str of strs) {
+    pq.enqueue(str);
+    if (pq.length > this.topK) {
+      pq.dequeue();
+    }
+  }
   return [...pq].reverse();
 };
 
@@ -47,14 +49,51 @@ AutocompleteSystem.prototype.input = function(c) {
  * var param_1 = obj.input(c)
  */
 
+class Node {
+  constructor() {
+    this.chars = {};
+    this.isEnd = false;
+  }
+}
+
+class Trie {
+  constructor() {
+    this.root = new Node();
+  }
+
+  dfs(prefix, root = this.root, selected = '', output = []) {
+    if (root.isEnd && selected.length >= prefix.length) {
+      output.push(selected);
+    }
+    for (const key in root.chars) {
+      const str = selected + key;
+      if (prefix.startsWith(str) || selected.length >= prefix.length) {
+        this.dfs(prefix, root.chars[key], str, output);
+      }
+    }
+    return output;
+  }
+
+  add(str) {
+    let ptr = this.root;
+    for (const c of str) {
+      if (!(c in ptr.chars)) {
+        ptr.chars[c] = new Node();
+      }
+      ptr = ptr.chars[c];
+    }
+    ptr.isEnd = true;
+  }
+}
+
 class PriorityQueue {
   constructor({ comparator }) {
     this.arr = [];
     this.comparator = comparator;
   }
 
-  enqueue(element) {
-    this.arr.push(element);
+  enqueue(val) {
+    this.arr.push(val);
     moveUp(this.arr, this.arr.length - 1, this.comparator);
   }
 
@@ -101,41 +140,5 @@ function moveDown(arr, i, comparator) {
     const next = right >= arr.length || comparator(arr[left], arr[right]) ? left : right;
     [arr[i], arr[next]] = [arr[next], arr[i]];
     moveDown(arr, next, comparator);
-  }
-}
-
-class Node {
-  constructor() {
-    this.keys = {};
-    this.isWord = false;
-  }
-}
-
-class Trie {
-  constructor() {
-    this.root = new Node();
-  }
-
-  insert(str) {
-    let ptr = this.root;
-    for (const c of str) {
-      if (!(c in ptr.keys)) {
-        ptr.keys[c] = new Node();
-      }
-      ptr = ptr.keys[c];
-    }
-    ptr.isWord = true;
-  }
-
-  dfs(prefix = '', root = this.root, selected = '', output = []) {
-    if (root.isWord && selected.length >= prefix.length) {
-      output.push(selected);
-    }
-    for (const key in root.keys) {
-      if (prefix.startsWith(selected + key) || selected.length >= prefix.length) {
-        this.dfs(prefix, root.keys[key], selected + key, output);
-      }
-    }
-    return output;
   }
 }
