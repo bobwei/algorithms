@@ -25,28 +25,28 @@ TimeMap.prototype.set = function(key, value, timestamp) {
  */
 TimeMap.prototype.get = function(key, timestamp) {
   if (!(key in this.map)) {
-    return '';
+    return null;
   }
   const arr = this.map[key];
-  const index = lowerBound(arr, timestamp, (obj) => obj[0]);
-  if (index < arr.length && arr[index][0] === timestamp) {
+  const index = binarySearch(arr, ([t]) => timestamp <= t);
+  if (index < arr.length && timestamp === arr[index][0]) {
     return arr[index][1];
   }
-  if (index - 1 >= 0 && arr[index - 1][0] < timestamp) {
-    return arr[index - 1][1];
+  if (index === 0 && timestamp < arr[index][0]) {
+    return '';
   }
-  return '';
+  return arr[index - 1][1];
 };
 
-function lowerBound(arr, target, getter) {
+function binarySearch(arr, comparator) {
   let left = 0;
   let right = arr.length;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target > getter(arr[mid])) {
-      left = mid + 1;
-    } else {
+    if (comparator(arr[mid])) {
       right = mid;
+    } else {
+      left = mid + 1;
     }
   }
   return left;
