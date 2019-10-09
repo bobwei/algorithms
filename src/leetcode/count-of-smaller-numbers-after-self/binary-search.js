@@ -4,15 +4,14 @@
  */
 var countSmaller = function(nums) {
   const m = nums.length;
-  const output = [];
+  const output = new Array(m).fill(0);
   const arr = [];
   for (let i = m - 1; i >= 0; i--) {
-    const num = nums[i];
-    const index = lowerBound(arr, num);
-    output.push(index);
-    arr.splice(index, 0, num);
+    const index = lowerBound(arr, nums[i]);
+    output[i] = index;
+    arr.splice(index, 0, nums[i]);
   }
-  return output.reverse();
+  return output;
 };
 
 function lowerBound(arr, target) {
@@ -20,10 +19,10 @@ function lowerBound(arr, target) {
   let right = arr.length;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target > arr[mid]) {
-      left = mid + 1;
-    } else {
+    if (target <= arr[mid]) {
       right = mid;
+    } else {
+      left = mid + 1;
     }
   }
   return left;
