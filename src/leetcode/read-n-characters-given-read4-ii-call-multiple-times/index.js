@@ -19,15 +19,14 @@ var solution = function(read4) {
    * @return {number} The number of actual characters read
    */
   const arr = [];
-  let isEof = false;
   return function(buf, n) {
-    while (arr.length < n && !isEof) {
+    let isEnd = false;
+    while (arr.length < n && !isEnd) {
       const tmp = [];
-      isEof = read4(tmp) < 4;
+      isEnd = read4(tmp) < 4;
       arr.push(...tmp);
     }
-    buf.push(...arr.slice(0, n));
-    arr.splice(0, n);
+    buf.push(...arr.splice(0, n));
     return buf.length;
   };
 };
