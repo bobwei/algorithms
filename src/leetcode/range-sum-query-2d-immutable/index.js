@@ -3,24 +3,25 @@
  */
 var NumMatrix = function(matrix) {
   if (!matrix.length || !matrix[0].length) {
+    this.sum = [];
     return;
   }
-  this.m = matrix.length;
-  this.n = matrix[0].length;
-  this.sum = [...new Array(this.m)].map(() => new Array(this.n).fill(0));
-  for (let j = 0; j < this.n; j++) {
-    this.sum[0][j] = (j - 1 >= 0 ? this.sum[0][j - 1] : 0) + matrix[0][j];
+  const m = matrix.length;
+  const n = matrix[0].length;
+  this.sum = [...new Array(m)].map(() => new Array(n).fill(0));
+  this.sum[0][0] = matrix[0][0];
+  for (let j = 1; j < n; j++) {
+    const i = 0;
+    this.sum[i][j] = this.sum[i][j - 1] + matrix[i][j];
   }
-  for (let i = 0; i < this.m; i++) {
-    this.sum[i][0] = (i - 1 >= 0 ? this.sum[i - 1][0] : 0) + matrix[i][0];
+  for (let i = 1; i < m; i++) {
+    const j = 0;
+    this.sum[i][j] = this.sum[i - 1][j] + matrix[i][j];
   }
-  for (let i = 1; i < this.m; i++) {
-    for (let j = 1; j < this.n; j++) {
+  for (let i = 1; i < m; i++) {
+    for (let j = 1; j < n; j++) {
       // prettier-ignore
-      this.sum[i][j] = this.sum[i - 1][j]
-        + this.sum[i][j - 1]
-        - this.sum[i - 1][j - 1]
-        + matrix[i][j];
+      this.sum[i][j] = matrix[i][j] + this.sum[i - 1][j] + this.sum[i][j - 1] - this.sum[i - 1][j - 1];
     }
   }
 };
@@ -33,18 +34,18 @@ var NumMatrix = function(matrix) {
  * @return {number}
  */
 NumMatrix.prototype.sumRegion = function(row1, col1, row2, col2) {
-  if (!this.sum) {
+  if (row1 >= this.sum.length || col1 >= this.sum[0].length) {
     return 0;
   }
   // prettier-ignore
   return this.sum[row2][col2]
-    - (row1 - 1 >= 0 ? this.sum[row1 - 1][col2] : 0)
-    - (col1 - 1 >= 0 ? this.sum[row2][col1 - 1] : 0)
-    + (row1 - 1 >= 0 && col1 - 1 >= 0 ? this.sum[row1 - 1][col1 - 1] : 0);
+    - (col1 > 0 ? this.sum[row2][col1 - 1] : 0)
+    - (row1 > 0 ? this.sum[row1 - 1][col2] : 0)
+    + (col1 > 0 && row1 > 0 ? this.sum[row1 - 1][col1 - 1] : 0);
 };
 
 /**
  * Your NumMatrix object will be instantiated and called as such:
- * var obj = Object.create(NumMatrix).createNew(matrix)
+ * var obj = new NumMatrix(matrix)
  * var param_1 = obj.sumRegion(row1,col1,row2,col2)
  */
