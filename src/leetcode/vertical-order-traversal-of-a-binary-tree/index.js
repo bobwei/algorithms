@@ -10,15 +10,12 @@
  * @return {number[][]}
  */
 var verticalTraversal = function(root) {
-  if (!root) {
-    return [];
-  }
-  const cols = {};
   const queue = [[root, 0, 0]];
+  const map = {};
   while (queue.length) {
     const [node, i, j] = queue.shift();
-    if (!(j in cols)) cols[j] = [];
-    cols[j].push([node.val, i, j]);
+    if (!(j in map)) map[j] = [];
+    map[j].push([node.val, i]);
     if (node.left) {
       queue.push([node.left, i + 1, j - 1]);
     }
@@ -26,27 +23,14 @@ var verticalTraversal = function(root) {
       queue.push([node.right, i + 1, j + 1]);
     }
   }
-  return Object.keys(cols)
-    .map((c) => parseInt(c))
-    .sort((a, b) => a - b)
-    .map((key) => sort(cols[key]))
-    .map((arr) => arr.map(prop(0)));
+  return Object.keys(map)
+    .sort((a, b) => parseInt(a) - parseInt(b))
+    .map((key) => map[key].sort(sort).map(([val]) => val));
 };
 
-function sort(arr) {
-  return arr.sort((a, b) => {
-    if (a[1] !== b[1]) {
-      return a[1] - b[1];
-    }
-    if (a[2] !== b[2]) {
-      return a[2] - b[2];
-    }
-    return a[0] - b[0];
-  });
-}
-
-function prop(key) {
-  return (obj) => {
-    return obj[key];
-  };
+function sort([val1, i1], [val2, i2]) {
+  if (i1 !== i2) {
+    return i1 - i2;
+  }
+  return val1 - val2;
 }
