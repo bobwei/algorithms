@@ -3,14 +3,16 @@
  * @return {boolean}
  */
 var increasingTriplet = function(nums) {
-  let p1 = Infinity;
-  let p2 = Infinity;
-  for (const n of nums) {
-    if (n < p1) {
-      p1 = n;
-    } else if (n > p1 && n < p2) {
-      p2 = n;
-    } else if (n > p1 && n > p2) {
+  const arr = [];
+  for (const num of nums) {
+    if (!arr.length || num > arr[arr.length - 1]) {
+      arr.push(num);
+    } else if (num <= arr[0]) {
+      arr[0] = num;
+    } else if (num <= arr[1]) {
+      arr[1] = num;
+    }
+    if (arr.length >= 3) {
       return true;
     }
   }
