@@ -35,31 +35,27 @@
  * @param {Robot} robot
  * @return {void}
  */
-
 const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-var cleanRoom = function(robot, p = [0, 0], dir = 0, visited = new Set()) {
-  if (visited.has(encode(p))) {
+var cleanRoom = function(robot, x = 0, y = 0, dir = 0, visited = new Set()) {
+  const key = createKey(x, y);
+  if (visited.has(key)) {
     return;
   }
-  visited.add(encode(p));
   robot.clean();
-  const [x, y] = p;
+  visited.add(key);
   for (let k = 0; k < dirs.length; k++) {
-    const i = x + dirs[dir][0];
-    const j = y + dirs[dir][1];
+    const d = (dir + k) % dirs.length;
     if (robot.move()) {
-      cleanRoom(robot, [i, j], dir, visited);
+      const [di, dj] = dirs[d];
+      const i = x + di;
+      const j = y + dj;
+      cleanRoom(robot, i, j, d, visited);
       backtrack(robot);
     }
-    dir = (dir + 1) % 4;
     robot.turnRight();
   }
 };
-
-function encode(p) {
-  return p + '';
-}
 
 function backtrack(robot) {
   robot.turnLeft();
@@ -67,4 +63,8 @@ function backtrack(robot) {
   robot.move();
   robot.turnRight();
   robot.turnRight();
+}
+
+function createKey(x, y) {
+  return x + ':' + y;
 }
