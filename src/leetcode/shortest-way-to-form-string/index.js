@@ -3,26 +3,25 @@
  * @param {string} target
  * @return {number}
  */
-
 var shortestWay = function(source, target) {
-  let i = 0;
-  let nWays = 0;
-  while (i < target.length) {
-    const length = dfs(source, target, 0, i);
-    if (!length) {
+  let nSeqs = 0;
+  for (let i = 0; i < target.length; ) {
+    const n = match(target, i, source);
+    if (n === 0) {
       return -1;
     }
-    nWays += 1;
-    i += length;
+    i += n;
+    nSeqs += 1;
   }
-  return nWays;
+  return nSeqs;
 };
 
-function dfs(source, target, si, tj) {
-  for (let i = si; i < source.length; i++) {
-    if (source[i] === target[tj]) {
-      return dfs(source, target, i + 1, tj + 1) + 1;
+function match(target, start, source) {
+  let i = start;
+  for (let j = 0; j < source.length; j++) {
+    if (source[j] === target[i]) {
+      i += 1;
     }
   }
-  return 0;
+  return i - start;
 }
