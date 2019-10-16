@@ -2,53 +2,49 @@
  * @param {string} expression
  * @return {string[]}
  */
-var braceExpansionII = function(exp, start = 0, end = exp.length, braces = findBraces(exp)) {
+var braceExpansionII = function(str, start = 0, end = str.length, map = findBraces(str)) {
   const stack = [['']];
   for (let i = start; i < end; i++) {
-    if (exp[i] === '{') {
-      const arr = braceExpansionII(exp, i + 1, braces[i], braces);
-      stack.push(product(stack.pop(), arr));
-      i = braces[i];
-    } else if (exp[i] === '}') {
-      continue;
-    } else if (exp[i] === ',') {
+    if (str[i] === '{') {
+      const top = stack.pop();
+      const result = braceExpansionII(str, i + 1, map[i], map);
+      stack.push(product(top, result));
+      i = map[i];
+    } else if (str[i] === ',') {
       stack.push(['']);
     } else {
-      stack.push(product(stack.pop(), [exp[i]]));
+      const top = stack.pop();
+      stack.push(product(top, [str[i]]));
     }
   }
-  return union(stack).sort();
-};
-
-function union(stack) {
   const output = new Set();
   for (const arr of stack) {
     for (const val of arr) {
       output.add(val);
     }
   }
-  return [...output];
-}
+  return [...output].sort();
+};
 
 function product(arr1, arr2) {
-  const arr = [];
+  const output = [];
   for (const val1 of arr1) {
     for (const val2 of arr2) {
-      arr.push(val1 + val2);
+      output.push(val1 + val2);
     }
   }
-  return arr;
+  return output;
 }
 
-function findBraces(expression) {
-  const braces = {};
+function findBraces(str) {
+  const map = {};
   const stack = [];
-  for (let i = 0; i < expression.length; i++) {
-    if (expression[i] === '{') {
+  for (let i = 0; i < str.length; i++) {
+    if (str[i] === '{') {
       stack.push(i);
-    } else if (expression[i] === '}') {
-      braces[stack.pop()] = i;
+    } else if (str[i] === '}') {
+      map[stack.pop()] = i;
     }
   }
-  return braces;
+  return map;
 }
