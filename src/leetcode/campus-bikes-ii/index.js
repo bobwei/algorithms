@@ -4,74 +4,59 @@
  * @return {number}
  */
 var assignBikes = function(workers, bikes) {
-  const visited = new Visited();
-  return createHelper()(workers, bikes, 0, 0, visited);
+  return helper(workers, bikes, 0, 0, new Selected(), {}, { globalMin: Infinity });
 };
 
-function createHelper() {
-  let globalMin = Infinity;
-  const helper = memorize((workers, bikes, i, dist, visited) => {
-    if (dist > globalMin) {
-      return dist;
+function helper(workers, bikes, start, sum, selected, memo, data) {
+  if (sum > data.globalMin) {
+    return data.globalMin;
+  }
+  const key = createKey(start, sum, selected.val);
+  if (key in memo) {
+    return memo[key];
+  }
+  if (start >= workers.length) {
+    memo[key] = sum;
+    data.globalMin = Math.min(data.globalMin, memo[key]);
+    return memo[key];
+  }
+  let min = Infinity;
+  for (let i = 0; i < bikes.length; i++) {
+    if (!selected.has(i)) {
+      selected.add(i);
+      const dist = getDist(workers[start], bikes[i]);
+      const result = helper(workers, bikes, start + 1, sum + dist, selected, memo, data);
+      min = Math.min(min, result);
+      selected.delete(i);
     }
-    if (i >= workers.length) {
-      globalMin = Math.min(globalMin, dist);
-      return dist;
-    }
-    let min = Infinity;
-    for (let j = 0; j < bikes.length; j++) {
-      if (!visited.has(j)) {
-        visited.set(j);
-        const d = helper(workers, bikes, i + 1, dist + getDist(workers[i], bikes[j]), visited);
-        min = Math.min(min, d);
-        visited.unset(j);
-      }
-    }
-    return min;
-  });
-  return helper;
+  }
+  memo[key] = min;
+  return memo[key];
+}
+
+function createKey(...args) {
+  return args.join(':');
 }
 
 function getDist([x1, y1], [x2, y2]) {
   return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
 
-function memorize(fn, getKey = createKey) {
-  const map = {};
-  return (...args) => {
-    const key = getKey(...args);
-    if (key in map) {
-      return map[key];
-    }
-    map[key] = fn(...args);
-    return map[key];
-  };
-}
-
-function createKey(workers, bikes, i, dist, visited) {
-  return i + ':' + dist + ':' + visited;
-}
-
-class Visited {
+class Selected {
   constructor() {
-    this.n = 0;
+    this.val = 0;
   }
 
-  has(key) {
-    return ((this.n >> key) & 1) === 1;
+  add(i) {
+    this.val = this.val | (2 ** i);
   }
 
-  set(key) {
-    const mask = 2 ** key;
-    this.n = this.n | mask;
+  delete(i) {
+    const mask = -1 ^ (2 ** i);
+    this.val = this.val & mask;
   }
 
-  unset(key) {
-    const mask = -1 ^ (2 ** key);
-    this.n = this.n & mask;
-  }
-
-  toString() {
-    return this.n + '';
+  has(i) {
+    return ((this.val >> i) & 1) === 1;
   }
 }
