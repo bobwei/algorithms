@@ -1,12 +1,8 @@
 /**
  * Initialize your data structure here.
  */
-var HitCounter = function() {
-  this.bucketSize = 5 * 60;
-  this.bucket = [...new Array(this.bucketSize)].map(() => ({
-    count: 0,
-    timestamp: 0,
-  }));
+var HitCounter = function({ size = 300 } = {}) {
+  this.arr = [...new Array(size)].map(() => [0, 0]);
 };
 
 /**
@@ -16,13 +12,12 @@ var HitCounter = function() {
  * @return {void}
  */
 HitCounter.prototype.hit = function(timestamp) {
-  const index = timestamp % this.bucketSize;
-  if (this.bucket[index].timestamp !== timestamp) {
-    this.bucket[index].count = 1;
-    this.bucket[index].timestamp = timestamp;
-    return;
+  const index = timestamp % this.arr.length;
+  if (this.arr[index][0] !== timestamp) {
+    this.arr[index][0] = timestamp;
+    this.arr[index][1] = 0;
   }
-  this.bucket[index].count += 1;
+  this.arr[index][1] += 1;
 };
 
 /**
@@ -32,9 +27,8 @@ HitCounter.prototype.hit = function(timestamp) {
  * @return {number}
  */
 HitCounter.prototype.getHits = function(timestamp) {
-  return this.bucket
-    .filter((row) => timestamp - row.timestamp < this.bucketSize)
-    .map(({ count }) => count)
+  return this.arr
+    .map(([t, count]) => (timestamp - t < this.arr.length ? count : 0))
     .reduce((acc, cur) => acc + cur, 0);
 };
 
