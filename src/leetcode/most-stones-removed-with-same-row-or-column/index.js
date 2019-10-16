@@ -3,16 +3,17 @@
  * @return {number}
  */
 var removeStones = function(stones) {
-  const N = 10000;
   const set = new DisjointSet();
-  for (const [x, y] of stones) {
-    set.union(x, encode(N, y));
+  const m = 10000;
+  for (const stone of stones) {
+    const [k1, k2] = createKey(stone, m);
+    set.union(k1, k2);
   }
   return stones.length - set.nRoots;
 };
 
-function encode(N, y) {
-  return y + N;
+function createKey([x, y], m) {
+  return [x, m + y];
 }
 
 class DisjointSet {
@@ -29,6 +30,7 @@ class DisjointSet {
     }
     let ptr = root;
     while (this.roots[ptr] !== ptr) {
+      this.roots[ptr] = this.roots[this.roots[ptr]];
       ptr = this.roots[ptr];
     }
     return ptr;
