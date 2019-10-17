@@ -11,12 +11,9 @@
  * @return {TreeNode[]}
  */
 var delNodes = function(root, to_delete) {
-  if (!root) {
-    return [];
-  }
   const set = new Set(to_delete);
   const output = [];
-  if (!set.has(root.val)) {
+  if (root && !set.has(root.val)) {
     output.push(root);
   }
   helper(root, set, output);
@@ -27,6 +24,8 @@ function helper(root, set, output) {
   if (!root) {
     return root;
   }
+  root.left = helper(root.left, set, output);
+  root.right = helper(root.right, set, output);
   if (set.has(root.val)) {
     if (root.left && !set.has(root.left.val)) {
       output.push(root.left);
@@ -34,11 +33,7 @@ function helper(root, set, output) {
     if (root.right && !set.has(root.right.val)) {
       output.push(root.right);
     }
-    helper(root.left, set, output);
-    helper(root.right, set, output);
     return null;
   }
-  root.left = helper(root.left, set, output);
-  root.right = helper(root.right, set, output);
   return root;
 }
