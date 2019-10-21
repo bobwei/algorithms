@@ -3,10 +3,10 @@
  * @return {number}
  */
 var largestRectangleArea = function(heights) {
-  const stack = new Stack();
+  const stack = [];
   let max = 0;
   for (let i = 0; i < heights.length; i++) {
-    while (stack.length && heights[stack.peek] > heights[i]) {
+    while (stack.length && heights[i] < heights[stack[stack.length - 1]]) {
       const area = getArea(heights, stack, i);
       max = Math.max(max, area);
     }
@@ -20,14 +20,8 @@ var largestRectangleArea = function(heights) {
 };
 
 function getArea(heights, stack, i) {
-  const j = stack.pop();
-  const width = stack.length ? i - stack.peek - 1 : i;
-  const height = heights[j];
-  return width * height;
-}
-
-class Stack extends Array {
-  get peek() {
-    return this[this.length - 1];
-  }
+  const height = heights[stack.pop()];
+  const width = stack.length ? i - stack[stack.length - 1] - 1 : i;
+  const area = width * height;
+  return area;
 }
