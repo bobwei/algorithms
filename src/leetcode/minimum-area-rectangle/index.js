@@ -18,6 +18,7 @@ var minAreaRect = function(points) {
   return min < Infinity ? min : 0;
 };
 
-function createKey([x, y]) {
-  return x + ',' + y;
+const N = 40000;
+function createKey([i, j]) {
+  return N * i + j;
 }
