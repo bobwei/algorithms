@@ -2,22 +2,15 @@
  * @param {number[]} A
  * @return {boolean}
  */
-const isMonotonic = function(A) {
-  if (!A.length) {
-    return false;
-  }
-  if (A.length <= 2) {
-    return true;
-  }
-  const isIncreasing = A[A.length - 1] >= A[0];
+var isMonotonic = function(A) {
+  let delta = 0;
   for (let i = 0; i < A.length - 1; i++) {
-    if (isIncreasing && A[i] > A[i + 1]) {
+    if ((delta > 0) & (A[i + 1] < A[i]) || (delta < 0 && A[i + 1] > A[i])) {
       return false;
-    } else if (!isIncreasing && A[i] < A[i + 1]) {
-      return false;
+    }
+    if (delta === 0) {
+      delta = A[i + 1] - A[i];
     }
   }
   return true;
 };
-
-export default isMonotonic;
