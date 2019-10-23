@@ -8,11 +8,12 @@ var longestIncreasingPath = function(matrix) {
   }
   const m = matrix.length;
   const n = matrix[0].length;
-  const length = [...new Array(m)].map(() => new Array(n).fill(0));
-  let max = 0;
+  const memo = {};
+  let max = 1;
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      max = Math.max(max, dfs(matrix, [i, j], m, n, length));
+      const result = helper(matrix, m, n, [i, j], memo);
+      max = Math.max(max, result);
     }
   }
   return max;
@@ -20,19 +21,26 @@ var longestIncreasingPath = function(matrix) {
 
 const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
 
-function dfs(matrix, [x, y], m, n, length) {
-  if (length[x][y] > 0) {
-    return length[x][y];
+function helper(matrix, m, n, [x, y], memo) {
+  const key = createKey(x, y, m, n);
+  if (key in memo) {
+    return memo[key];
   }
-  length[x][y] = 1;
+  let max = 1;
   for (const [di, dj] of dirs) {
     const i = x + di;
     const j = y + dj;
-    if (isValid(i, j, m, n) && matrix[x][y] < matrix[i][j]) {
-      length[x][y] = Math.max(length[x][y], dfs(matrix, [i, j], m, n, length) + 1);
+    if (isValid(i, j, m, n) && matrix[i][j] > matrix[x][y]) {
+      const result = helper(matrix, m, n, [i, j], memo);
+      max = Math.max(max, result + 1);
     }
   }
-  return length[x][y];
+  memo[key] = max;
+  return memo[key];
+}
+
+function createKey(i, j, m, n) {
+  return n * i + j;
 }
 
 function isValid(i, j, m, n) {
