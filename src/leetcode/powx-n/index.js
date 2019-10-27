@@ -3,16 +3,19 @@
  * @param {number} n
  * @return {number}
  */
+const MIN = -(2 ** 31);
 
 var myPow = function(x, n) {
-  if (x === 0) return 0;
-  if (x === 1) return 1;
-  if (n < 0) return myPow(1 / x, -n);
-  if (n === 0) return 1;
-  if (n === 1) return x;
-  const half = myPow(x, Math.floor(n / 2));
-  if (n % 2 === 1) {
-    return x * half * half;
+  if (x > 1 && n <= MIN) {
+    return 0;
   }
-  return half * half;
+  let p = x;
+  let q = Math.abs(n);
+  let output = 1;
+  while (q > 0) {
+    output = (q & 1) === 1 ? output * p : output;
+    p = p * p;
+    q = q >> 1;
+  }
+  return n >= 0 ? output : 1 / output;
 };
