@@ -1,5 +1,5 @@
 export default class PriorityQueue {
-  constructor({ comparator, isEqual }) {
+  constructor({ comparator, isEqual = (a, b) => a === b }) {
     this.comparator = comparator;
     this.isEqual = isEqual;
     this.arr = [];
@@ -27,7 +27,7 @@ export default class PriorityQueue {
     }
   }
 
-  peek() {
+  get peek() {
     return this.arr[0];
   }
 
