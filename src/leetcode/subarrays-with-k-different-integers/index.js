@@ -4,45 +4,41 @@
  * @return {number}
  */
 var subarraysWithKDistinct = function(A, K) {
-  return atMostK(A, K) - atMostK(A, K - 1);
+  return atMost(A, K) - atMost(A, K - 1);
 };
 
-function atMostK(A, K) {
-  const set = new DistinctSet();
+function atMost(arr, k) {
+  const counter = new Counter();
   let start = 0;
-  let output = 0;
-  for (let i = 0; i < A.length; i++) {
-    set.add(A[i]);
-    while (set.size > K) {
-      set.delete(A[start]);
+  let count = 0;
+  for (let i = 0; i < arr.length; i++) {
+    counter.add(arr[i]);
+    while (counter.nDistinct > k) {
+      counter.delete(arr[start]);
       start += 1;
     }
-    output += i - start + 1;
+    count += i - start + 1;
   }
-  return output;
+  return count;
 }
 
-class DistinctSet {
+class Counter {
   constructor() {
+    this.freq = {};
     this.nDistinct = 0;
-    this.map = {};
   }
 
-  add(key) {
-    if (!this.map[key]) {
+  add(c) {
+    this.freq[c] = (this.freq[c] || 0) + 1;
+    if (this.freq[c] === 1) {
       this.nDistinct += 1;
     }
-    this.map[key] = (this.map[key] || 0) + 1;
   }
 
-  delete(key) {
-    this.map[key] -= 1;
-    if (!this.map[key]) {
+  delete(c) {
+    this.freq[c] -= 1;
+    if (this.freq[c] === 0) {
       this.nDistinct -= 1;
     }
-  }
-
-  get size() {
-    return this.nDistinct;
   }
 }
