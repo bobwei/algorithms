@@ -4,19 +4,20 @@
  * @return {number}
  */
 var numberOfSubarrays = function(nums, k) {
-  const m = nums.length;
-  const arr = [];
-  for (let i = 0; i < m; i++) {
-    if (nums[i] % 2 === 1) {
-      arr.push(i);
-    }
-  }
+  return atMost(nums, k) - atMost(nums, k - 1);
+};
+
+function atMost(arr, k) {
+  let nOdds = 0;
+  let start = 0;
   let count = 0;
-  for (let i = 0; i <= arr.length - k; i++) {
-    const j = i + k - 1;
-    const nLefts = i - 1 >= 0 ? arr[i] - arr[i - 1] - 1 : arr[i];
-    const nRights = j + 1 < arr.length ? arr[j + 1] - arr[j] - 1 : m - arr[j] - 1;
-    count += (nLefts + 1) * (nRights + 1);
+  for (let i = 0; i < arr.length; i++) {
+    nOdds += arr[i] % 2 === 1 ? 1 : 0;
+    while (nOdds > k) {
+      nOdds -= arr[start] % 2 === 1 ? 1 : 0;
+      start += 1;
+    }
+    count += i - start + 1;
   }
   return count;
-};
+}
