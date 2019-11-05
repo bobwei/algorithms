@@ -16,5 +16,12 @@ var findMissingRanges = function(nums, lower, upper) {
   if (upper >= pre) {
     output.push([pre, upper]);
   }
-  return output.map(([s, e]) => (s === e ? `${s}` : `${s}->${e}`));
+  return output.map(format);
 };
+
+function format([start, end]) {
+  if (start === end) {
+    return start + '';
+  }
+  return start + '->' + end;
+}
