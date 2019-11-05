@@ -3,9 +3,9 @@
  * @return {string[]}
  */
 var removeInvalidParentheses = function(s) {
-  let queue = [s];
   const output = [];
   const visited = new Set();
+  let queue = [s];
   while (queue.length) {
     const next = [];
     while (queue.length) {
@@ -13,23 +13,20 @@ var removeInvalidParentheses = function(s) {
       if (isValid(str)) {
         output.push(str);
       }
-      if (output.length) {
-        continue;
-      }
-      for (let i = 0; i < str.length; i++) {
-        if (!(str[i] === '(' || str[i] === ')')) {
-          continue;
-        }
-        const candidate = str.substring(0, i) + str.substring(i + 1);
-        if (!visited.has(candidate)) {
-          visited.add(candidate);
-          next.push(candidate);
+      if (!output.length) {
+        for (let i = 0; i < str.length; i++) {
+          if (!(str[i] === '(' || str[i] === ')')) {
+            continue;
+          }
+          const candidate = str.substring(0, i) + str.substring(i + 1);
+          if (!visited.has(candidate)) {
+            visited.add(candidate);
+            next.push(candidate);
+          }
         }
       }
     }
-    if (!output.length) {
-      queue = next;
-    }
+    queue = next;
   }
   return output;
 };
