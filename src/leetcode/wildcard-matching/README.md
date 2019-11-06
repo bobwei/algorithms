@@ -1,5 +1,15 @@
 # README
 
+## Algorithm with constant space
+
+Use two pointers for matching.
+
+`s[i] === p[j] || p[j] === '?'` in these cases, it's matched, advance both pointers.
+
+`p[j] === '*'` in this case, there are two cases that we need to try. `[i, j + 1]` and `[i + 1, j]`. So we try one case and store another case into the stack. Whenever one path is not matched, restore `i, j` from stack.
+
+After running `while (i < m) {}` this loop, `i` must be equal to `m`. However, there may be remaining patterns. And also there could only be `*` in remaining patterns.
+
 ## Algorithm with DP
 
 ```js
