@@ -6,31 +6,6 @@
  * }
  */
 
-const preOrder = (root) => {
-  const output = [];
-  const stack = [root];
-  while (stack.length) {
-    const node = stack.pop();
-    output.push(node.val);
-    if (node.right) {
-      stack.push(node.right);
-    }
-    if (node.left) {
-      stack.push(node.left);
-    }
-  }
-  return output;
-};
-
-const getRightIndex = (arr, i, j) => {
-  for (let k = i; k <= j; k++) {
-    if (arr[k] > arr[i]) {
-      return k;
-    }
-  }
-  return j + 1;
-};
-
 /**
  * Encodes a tree to a single string.
  *
@@ -38,10 +13,17 @@ const getRightIndex = (arr, i, j) => {
  * @return {string}
  */
 var serialize = function(root) {
-  if (!root) {
-    return [];
+  let output = '';
+  if (root) {
+    output += root.val;
   }
-  return preOrder(root);
+  if (root && root.left) {
+    output += ',' + serialize(root.left);
+  }
+  if (root && root.right) {
+    output += ',' + serialize(root.right);
+  }
+  return output;
 };
 
 /**
@@ -50,16 +32,29 @@ var serialize = function(root) {
  * @param {string} data
  * @return {TreeNode}
  */
-var deserialize = function(data, i = 0, j = data.length - 1) {
-  if (i > j) {
+var deserialize = function(data, nodes = toArr(data), min = -Infinity, max = Infinity) {
+  if (!nodes.length || nodes[0] <= min || nodes[0] >= max) {
     return null;
   }
-  const r = getRightIndex(data, i, j);
-  const root = new TreeNode(data[i]);
-  root.left = deserialize(data, i + 1, r - 1);
-  root.right = deserialize(data, r, j);
+  const root = createNode(nodes.shift());
+  root.left = deserialize(data, nodes, min, root.val);
+  root.right = deserialize(data, nodes, root.val, max);
   return root;
 };
+
+function toArr(str) {
+  return str
+    .split(',')
+    .filter((c) => !!c)
+    .map((c) => parseInt(c));
+}
+
+function createNode(val) {
+  if (val === '') {
+    return null;
+  }
+  return new TreeNode(val);
+}
 
 /**
  * Your functions will be called as such:
