@@ -1,13 +1,11 @@
-## README
+# README
 
-## Test Cases
+## Algorithm with DP
 
 ```js
 s = 'adceb';
 p = '*a*b';
 ```
-
-## Algorithm
 
 - `dp[i][j]`: Is match for string `s.slice(0, i)` and `p.slice(0, j)`
 - `dp[i][j] = dp[k][j]` means `*` represents n characters.
