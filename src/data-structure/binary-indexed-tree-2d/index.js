@@ -7,7 +7,6 @@ class BinaryIndexedTree {
     for (let i = 0; i < this.m; i++) {
       for (let j = 0; j < this.n; j++) {
         this.update(i, j, matrix[i][j]);
-        this.matrix[i][j] = matrix[i][j];
       }
     }
   }
@@ -29,6 +28,7 @@ class BinaryIndexedTree {
         this.bit[i][j] += delta;
       }
     }
+    this.matrix[row][col] = value;
   }
 }
 
