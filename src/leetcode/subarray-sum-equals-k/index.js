@@ -4,13 +4,13 @@
  * @return {number}
  */
 var subarraySum = function(nums, k) {
+  const prefixSum = { 0: 1 };
+  let count = 0;
   let sum = 0;
-  let nSubarray = 0;
-  const map = { 0: 1 };
   for (const num of nums) {
     sum += num;
-    nSubarray += map[sum - k] || 0;
-    map[sum] = (map[sum] || 0) + 1;
+    count += prefixSum[sum - k] || 0;
+    prefixSum[sum] = (prefixSum[sum] || 0) + 1;
   }
-  return nSubarray;
+  return count;
 };
