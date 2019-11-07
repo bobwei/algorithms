@@ -2,13 +2,10 @@
  * @param {number[]} nums
  */
 var NumArray = function(nums) {
-  if (!nums.length) {
-    return;
-  }
   this.m = nums.length;
-  this.bit = new Array(this.m + 1).fill(0);
   this.arr = new Array(this.m).fill(0);
-  for (let i = 0; i < nums.length; i++) {
+  this.bit = new Array(this.m + 1).fill(0);
+  for (let i = 0; i < this.m; i++) {
     this.update(i, nums[i]);
   }
 };
@@ -18,18 +15,18 @@ var NumArray = function(nums) {
  * @param {number} val
  * @return {void}
  */
-NumArray.prototype.update = function(i, val) {
-  const delta = val - this.arr[i];
-  for (let j = i + 1; j < this.m + 1; j += lowBit(j)) {
-    this.bit[j] += delta;
+NumArray.prototype.update = function(index, val) {
+  const delta = val - this.arr[index];
+  for (let i = index + 1; i < this.m + 1; i += getLastBit(i)) {
+    this.bit[i] += delta;
   }
-  this.arr[i] = val;
+  this.arr[index] = val;
 };
 
-NumArray.prototype.getSum = function(i) {
+NumArray.prototype.getSum = function(index) {
   let sum = 0;
-  for (let j = i + 1; j > 0; j -= lowBit(j)) {
-    sum += this.bit[j];
+  for (let i = index + 1; i > 0; i -= getLastBit(i)) {
+    sum += this.bit[i];
   }
   return sum;
 };
@@ -39,14 +36,11 @@ NumArray.prototype.getSum = function(i) {
  * @param {number} j
  * @return {number}
  */
-NumArray.prototype.sumRange = function(i, j) {
-  if (!this.arr) {
-    return 0;
-  }
-  return this.getSum(j) - this.getSum(i - 1);
+NumArray.prototype.sumRange = function(index, j) {
+  return this.getSum(j) - this.getSum(index - 1);
 };
 
-function lowBit(i) {
+function getLastBit(i) {
   return i & -i;
 }
 
