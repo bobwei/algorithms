@@ -11,23 +11,21 @@
  * @return {number}
  */
 var kthSmallest = function(root, k) {
-  return counter(root, k);
+  const stack = [];
+  let ptr = root;
+  let count = 0;
+  while (ptr || stack.length) {
+    if (ptr) {
+      stack.push(ptr);
+      ptr = ptr.left;
+    } else {
+      const node = stack.pop();
+      count += 1;
+      if (count === k) {
+        return node.val;
+      }
+      ptr = node.right;
+    }
+  }
+  return null;
 };
-
-function counter(...args) {
-  let output;
-
-  (function count(root, k) {
-    if (!root) {
-      return 0;
-    }
-    const left = count(root.left, k);
-    const right = count(root.right, k - (left + 1));
-    if (left + 1 === k) {
-      output = root.val;
-    }
-    return left + right + 1;
-  })(...args);
-
-  return output;
-}
