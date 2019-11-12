@@ -23,14 +23,9 @@ var NumMatrix = function(matrix) {
  * @return {void}
  */
 NumMatrix.prototype.update = function(row, col, val) {
-  if (!this.m || !this.n) {
-    return;
-  }
   const delta = val - this.matrix[row][col];
-  for (let i = row + 1; i <= this.m; i += getLastBit(i)) {
-    for (let j = col + 1; j <= this.n; j += getLastBit(j)) {
-      this.bit[i][j] += delta;
-    }
+  for (let j = col + 1; j <= this.n; j += getLastBit(j)) {
+    this.bit[row][j] += delta;
   }
   this.matrix[row][col] = val;
 };
@@ -43,21 +38,17 @@ NumMatrix.prototype.update = function(row, col, val) {
  * @return {number}
  */
 NumMatrix.prototype.sumRegion = function(row1, col1, row2, col2) {
-  if (!this.m || !this.n) {
-    return 0;
+  let sum = 0;
+  for (let i = row1; i <= row2; i++) {
+    sum += this.getSum(i, col2) - this.getSum(i, col1 - 1);
   }
-  // prettier-ignore
-  return this.getSum(row2, col2)
-    - this.getSum(row2, col1 - 1) - this.getSum(row1 - 1, col2)
-    + this.getSum(row1 - 1, col1 - 1);
+  return sum;
 };
 
 NumMatrix.prototype.getSum = function(row, col) {
   let sum = 0;
-  for (let i = row + 1; i > 0; i -= getLastBit(i)) {
-    for (let j = col + 1; j > 0; j -= getLastBit(j)) {
-      sum += this.bit[i][j];
-    }
+  for (let j = col + 1; j > 0; j -= getLastBit(j)) {
+    sum += this.bit[row][j];
   }
   return sum;
 };
