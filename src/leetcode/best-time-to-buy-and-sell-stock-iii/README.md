@@ -1,7 +1,38 @@
 # README
 
 - [README](#readme)
+  - [Algorithm of dp[i][n]](#algorithm-of-dpin)
   - [Algorithm of dp[n][i]](#algorithm-of-dpni)
+
+## Algorithm of dp[i][n]
+
+Define `dp[i][n]` as max profit with `n` transactions in total and have a transaction at position `i`.
+
+```js
+dp[i][n] = max {
+  dp[i - 1][n],
+  max {
+    prices[i] + dp[j - 1][n - 1] - prices[j], j from 0 to i - 1, n from 1 to k
+  }
+}
+```
+
+```js
+max {
+  prices[i] + dp[j - 1][n - 1] - prices[j], j from 0 to i - 1, n from 1 to k
+}
+```
+
+When computing max value, there are some parts that are recomputed and can be reduced. So we can rewrite it as:
+
+```js
+maxs[n] = Math.max(maxs[n], dp[n - 1] - prices[i - 1]);
+```
+
+So it can reduce time from O(kmm) to O(km)
+
+Time Complexity: O(km)
+Space Complexity: O(k)
 
 ## Algorithm of dp[n][i]
 
