@@ -1,6 +1,9 @@
 # README
 
-## Algorithm
+- [README](#readme)
+  - [Algorithm of dp[n][i]](#algorithm-of-dpni)
+
+## Algorithm of dp[n][i]
 
 Define `dp[n][i]` as max profit with `n` transactions in total and have a transaction at position `i`.
 
