@@ -24,13 +24,12 @@
  *     };
  * };
  */
-
 /**
  * @constructor
  * @param {NestedInteger[]} nestedList
  */
 var NestedIterator = function(nestedList) {
-  this.stack = [...nestedList].reverse();
+  this.stack = [...nestedList.reverse()];
 };
 
 /**
@@ -40,8 +39,8 @@ var NestedIterator = function(nestedList) {
 NestedIterator.prototype.hasNext = function() {
   const stack = this.stack;
   while (stack.length && !stack[stack.length - 1].isInteger()) {
-    const nested = [...stack.pop().getList()].reverse();
-    stack.push(...nested);
+    const nestedInteger = stack.pop();
+    stack.push(...nestedInteger.getList().reverse());
   }
   return stack.length > 0;
 };
@@ -51,8 +50,7 @@ NestedIterator.prototype.hasNext = function() {
  * @returns {integer}
  */
 NestedIterator.prototype.next = function() {
-  const stack = this.stack;
-  return stack.pop().getInteger();
+  return this.stack.pop().getInteger();
 };
 
 /**
