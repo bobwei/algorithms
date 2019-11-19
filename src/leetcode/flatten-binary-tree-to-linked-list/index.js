@@ -13,19 +13,26 @@ var flatten = function(root) {
   if (!root) {
     return;
   }
-  const dummy = new TreeNode();
-  let pre = dummy;
-  const stack = [root];
-  while (stack.length) {
-    const node = stack.pop();
-    pre.left = null;
-    pre.right = node;
-    pre = node;
-    if (node.right) {
-      stack.push(node.right);
-    }
-    if (node.left) {
-      stack.push(node.left);
-    }
+  const { left, right } = root;
+  flatten(left);
+  flatten(right);
+  if (left) {
+    root.left = null;
+    insertAfter(left, root);
   }
 };
+
+function insertAfter(source, target) {
+  const { right } = target;
+  const tail = findTail(source);
+  target.right = source;
+  tail.right = right;
+}
+
+function findTail(root) {
+  let ptr = root;
+  while (ptr.right) {
+    ptr = ptr.right;
+  }
+  return ptr;
+}
