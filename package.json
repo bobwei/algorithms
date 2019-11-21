@@ -1,6 +1,6 @@
 {
-  "name": "",
-  "version": "",
+  "name": "@bobwei/algorithms",
+  "version": "1.0.0",
   "description": "",
   "scripts": {
     "dev": "nodemon src/index.js --exec babel-node",
