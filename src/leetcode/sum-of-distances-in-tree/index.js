@@ -7,8 +7,7 @@ var sumOfDistancesInTree = function(N, edges) {
   const graph = createGraph(N, edges);
   const counts = new Array(N).fill(0);
   const dists = new Array(N).fill(0);
-  getCount(graph, 0, -1, counts);
-  dists[0] = getDist(graph, 0, -1, counts, dists);
+  dists[0] = getCount(graph, 0, -1, counts).sum;
   return transferDist(N, graph, 0, -1, counts, dists);
 };
 
@@ -26,25 +25,18 @@ function transferDist(N, graph, u, pre, counts, dists) {
   return dists;
 }
 
-function getDist(graph, u, pre, counts) {
-  let sum = 0;
-  for (const v of graph[u]) {
-    if (v !== pre) {
-      sum += counts[v] + getDist(graph, v, u, counts);
-    }
-  }
-  return sum;
-}
-
 function getCount(graph, u, pre, counts) {
-  let sum = 1;
+  const output = { nNodes: 0, sum: 0 };
   for (const v of graph[u]) {
     if (v !== pre) {
-      sum += getCount(graph, v, u, counts);
+      const result = getCount(graph, v, u, counts);
+      output.nNodes += result.nNodes;
+      output.sum += result.nNodes + result.sum;
     }
   }
-  counts[u] = sum;
-  return sum;
+  output.nNodes += 1;
+  counts[u] = output.nNodes;
+  return output;
 }
 
 function createGraph(N, edges) {
