@@ -10,18 +10,16 @@
  * @return {number}
  */
 var distributeCoins = function(root) {
-  const { nMoves } = helper(root);
-  return nMoves;
+  return helper(root)[0];
 };
 
 function helper(root) {
   if (!root) {
-    return { nNodes: 0, nCoins: 0, nMoves: 0 };
+    return [0, 0, 0];
   }
-  const left = helper(root.left);
-  const right = helper(root.right);
-  const nNodes = left.nNodes + right.nNodes + 1;
-  const nCoins = left.nCoins + right.nCoins + root.val;
-  const nMoves = Math.abs(nCoins - nNodes) + left.nMoves + right.nMoves;
-  return { nNodes, nCoins, nMoves };
+  const [lSum, lCount, lCoins] = helper(root.left);
+  const [rSum, rCount, rCoins] = helper(root.right);
+  const count = lCount + rCount + 1;
+  const coins = lCoins + rCoins + root.val;
+  return [lSum + rSum + Math.abs(count - coins), count, coins];
 }
