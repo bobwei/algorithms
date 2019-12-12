@@ -2,25 +2,12 @@
  * @param {string} s
  * @return {boolean}
  */
-
-const isRepeated = (s, length) => {
-  const repeatTimes = s.length / length;
-  for (let r = 1; r < repeatTimes; r++) {
-    for (let i = 0; i < length; i++) {
-      if (s[r * length + i] !== s[i]) {
-        return false;
-      }
-    }
-  }
-  return true;
-};
-
 var repeatedSubstringPattern = function(s) {
-  for (let length = 1; length < s.length; length++) {
-    if (s.length % length > 0) {
-      continue;
-    }
-    if (isRepeated(s, length)) {
+  const m = s.length;
+  for (let length = 1; length < m; length++) {
+    const isDivisible = m % length === 0;
+    const repeated = s.substring(0, length).repeat(m / length);
+    if (isDivisible && repeated === s) {
       return true;
     }
   }
