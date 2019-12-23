@@ -3,63 +3,42 @@
  * @param {number} target
  * @return {number[][]}
  */
-
-/* [-4, -4, -1, -1, -1, -1, 0, 0, 0, 1, 2, 2, 2] 0 */
-/* [-2, -1, 0, 0, 1, 2] 0 */
-
-const getSum = (arrIndex, arr) => {
-  return arrIndex.reduce((acc, cur) => acc + arr[cur], 0);
+var fourSum = function(nums, target) {
+  nums.sort((a, b) => a - b);
+  return helper(nums, target);
 };
 
-const toArr = (arrIndex, arr) => {
-  return arrIndex.map((i) => arr[i]);
-};
-
-const fn = (
-  nums,
-  target,
-  nSums = 4,
-  startIndex = 0,
-  selectedIndex = [],
-  output = [],
-) => {
-  if (selectedIndex.length + 2 >= nSums) {
-    let j = startIndex;
-    let k = nums.length - 1;
-    while (j < k) {
-      const sum = getSum(selectedIndex, nums) + nums[j] + nums[k];
+function helper(nums, target, k = 2, start = 0, selected = [], output = []) {
+  if (selected.length >= k) {
+    let left = start;
+    let right = nums.length - 1;
+    while (left < right) {
+      const sum = selected.reduce((a, b) => a + b, 0) + nums[left] + nums[right];
       if (sum === target) {
-        output.push([...toArr(selectedIndex, nums), nums[j], nums[k]]);
-        j += 1;
-        k -= 1;
-        while (nums[k] === nums[k + 1]) {
-          k -= 1;
+        output.push([...selected, nums[left], nums[right]]);
+        left += 1;
+        while (nums[left] === nums[left - 1]) {
+          left += 1;
         }
-        while (nums[j] === nums[j - 1]) {
-          j += 1;
+        right -= 1;
+        while (nums[right] === nums[right + 1]) {
+          right += 1;
         }
       } else if (sum > target) {
-        k -= 1;
-      } else if (sum < target) {
-        j += 1;
+        right -= 1;
+      } else {
+        left += 1;
       }
     }
     return output;
   }
-  for (let i = startIndex; i < nums.length - 2; i++) {
-    if (nums[i] === nums[i - 1] && selectedIndex.indexOf(i - 1) <= -1) {
+  for (let i = start; i < nums.length; i++) {
+    if (i > start && nums[i] === nums[i - 1]) {
       continue;
     }
-    selectedIndex.push(i);
-    fn(nums, target, nSums, i + 1, selectedIndex, output);
-    selectedIndex.pop();
+    selected.push(nums[i]);
+    helper(nums, target, k, i + 1, selected, output);
+    selected.pop();
   }
   return output;
-};
-
-const fourSum = function(nums, target) {
-  nums.sort((a, b) => a - b);
-  return fn(nums, target);
-};
-
-export default fourSum;
+}
