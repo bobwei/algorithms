@@ -5,32 +5,35 @@
  */
 var findOrder = function(numCourses, prerequisites) {
   const graph = createGraph(numCourses, prerequisites);
-  const visited = new Set();
   const output = new Set();
   for (let i = 0; i < numCourses; i++) {
-    if (hasCycle(graph, i, visited, output)) {
+    if (hasCycle(graph, i, output)) {
       return [];
     }
   }
   return [...output];
 };
 
-function hasCycle(graph, u, visited, output) {
-  if (visited.has(u)) {
-    return !output.has(u);
+function hasCycle(graph, i, output, stack = new Set()) {
+  if (stack.has(i)) {
+    return true;
   }
-  visited.add(u);
-  for (const v of graph[u]) {
-    if (hasCycle(graph, v, visited, output)) {
+  if (output.has(i)) {
+    return false;
+  }
+  stack.add(i);
+  for (const j of graph[i]) {
+    if (hasCycle(graph, j, output, stack)) {
       return true;
     }
   }
-  output.add(u);
+  stack.delete(i);
+  output.add(i);
   return false;
 }
 
 function createGraph(numCourses, prerequisites) {
-  const graph = [...new Array(numCourses)].map(() => []);
+  const graph = new Array(numCourses).fill(null).map(() => []);
   for (const [c1, c2] of prerequisites) {
     graph[c1].push(c2);
   }
