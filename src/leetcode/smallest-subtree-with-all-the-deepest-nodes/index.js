@@ -10,36 +10,17 @@
  * @return {TreeNode}
  */
 var subtreeWithAllDeepest = function(root) {
-  const { nodes } = findDeepest(root);
-  return findCommonAncestor(root, new Set(nodes));
+  return helper(root)[1];
 };
 
-function findCommonAncestor(root, nodes) {
+function helper(root, depth = 0) {
   if (!root) {
-    return null;
+    return [depth, root];
   }
-  if (nodes.has(root)) {
-    return root;
+  const left = helper(root.left, root.left ? depth + 1 : depth);
+  const right = helper(root.right, root.right ? depth + 1 : depth);
+  if (left[0] === right[0]) {
+    return [left[0], root];
   }
-  const left = findCommonAncestor(root.left, nodes);
-  const right = findCommonAncestor(root.right, nodes);
-  if (left && right) {
-    return root;
-  }
-  return left || right;
-}
-
-function findDeepest(root, depth = 0, output = { depth: -Infinity, nodes: [] }) {
-  if (!root) {
-    return output;
-  }
-  if (depth > output.depth) {
-    output.depth = depth;
-    output.nodes = [root];
-  } else if (depth === output.depth) {
-    output.nodes.push(root);
-  }
-  findDeepest(root.left, depth + 1, output);
-  findDeepest(root.right, depth + 1, output);
-  return output;
+  return left[0] > right[0] ? left : right;
 }
