@@ -3,27 +3,21 @@
  * @return {number}
  */
 var findNumberOfLIS = function(nums) {
-  const dpLength = new Array(nums.length).fill(1);
-  const dpCount = new Array(nums.length).fill(1);
-  let maxLength = 0;
-  for (let i = 0; i < nums.length; i++) {
+  const m = nums.length;
+  const dp = new Array(m).fill(null).map(() => ({ length: 1, count: 1 }));
+  let max = 1;
+  for (let i = 0; i < m; i++) {
     for (let j = 0; j < i; j++) {
       if (nums[i] > nums[j]) {
-        if (dpLength[j] + 1 > dpLength[i]) {
-          dpLength[i] = dpLength[j] + 1;
-          dpCount[i] = dpCount[j];
-        } else if (dpLength[j] + 1 === dpLength[i]) {
-          dpCount[i] += dpCount[j];
+        if (dp[j].length + 1 > dp[i].length) {
+          dp[i].length = dp[j].length + 1;
+          dp[i].count = dp[j].count;
+        } else if (dp[j].length + 1 === dp[i].length) {
+          dp[i].count += dp[j].count;
         }
       }
     }
-    maxLength = Math.max(maxLength, dpLength[i]);
+    max = Math.max(max, dp[i].length);
   }
-  let count = 0;
-  for (let i = 0; i < nums.length; i++) {
-    if (dpLength[i] === maxLength) {
-      count += dpCount[i];
-    }
-  }
-  return count;
+  return dp.reduce((acc, cur) => acc + (cur.length === max ? cur.count : 0), 0);
 };
