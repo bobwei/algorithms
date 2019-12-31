@@ -4,14 +4,11 @@
  * @return {boolean}
  */
 var exist = function(board, word) {
-  if (!board.length || !board[0].length || !word) {
-    return false;
-  }
   const m = board.length;
   const n = board[0].length;
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
-      if (helper(board, m, n, i, j, word, 0)) {
+      if (dfs(board, m, n, i, j, word, 0)) {
         return true;
       }
     }
@@ -19,22 +16,27 @@ var exist = function(board, word) {
   return false;
 };
 
-const visited = 'O';
-const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+const dirs = [
+  [-1, 0],
+  [0, 1],
+  [1, 0],
+  [0, -1],
+];
+const visited = '';
 
-function helper(board, m, n, x, y, word, start) {
-  if (!isValid(x, y, m, n) || board[x][y] !== word[start]) {
-    return false;
-  }
-  if (start + 1 >= word.length) {
+function dfs(board, m, n, x, y, word, index) {
+  if (index >= word.length) {
     return true;
+  }
+  if (!isValid(m, n, x, y) || board[x][y] === visited || board[x][y] !== word[index]) {
+    return false;
   }
   const tmp = board[x][y];
   board[x][y] = visited;
   for (const [di, dj] of dirs) {
     const i = x + di;
     const j = y + dj;
-    if (helper(board, m, n, i, j, word, start + 1)) {
+    if (dfs(board, m, n, i, j, word, index + 1)) {
       return true;
     }
   }
@@ -42,7 +44,7 @@ function helper(board, m, n, x, y, word, start) {
   return false;
 }
 
-function isValid(i, j, m, n) {
+function isValid(m, n, i, j) {
   if (i < 0 || i >= m || j < 0 || j >= n) {
     return false;
   }
