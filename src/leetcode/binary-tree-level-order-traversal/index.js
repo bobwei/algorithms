@@ -16,18 +16,18 @@ var levelOrder = function(root) {
   const output = [];
   let queue = [root];
   while (queue.length) {
-    output.push(queue.map((el) => el.val));
-    let q = [];
+    output.push(queue.map((node) => node.val));
+    const next = [];
     while (queue.length) {
       const node = queue.shift();
       if (node.left) {
-        q.push(node.left);
+        next.push(node.left);
       }
       if (node.right) {
-        q.push(node.right);
+        next.push(node.right);
       }
     }
-    queue = q;
+    queue = next;
   }
   return output;
 };
