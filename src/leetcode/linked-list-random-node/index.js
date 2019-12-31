@@ -1,24 +1,3 @@
-const createSampler = ({ k }) => {
-  const arr = [];
-  let i = 0;
-  return {
-    sample: (element) => {
-      if (i < k) {
-        arr.push(element);
-      } else {
-        const r = Math.floor(Math.random() * (i + 1));
-        if (r < k) {
-          arr[r] = element;
-        }
-      }
-      i += 1;
-    },
-    getData: () => {
-      return arr;
-    },
-  };
-};
-
 /**
  * Definition for singly-linked list.
  * function ListNode(val) {
@@ -40,17 +19,37 @@ var Solution = function(head) {
  * @return {number}
  */
 Solution.prototype.getRandom = function() {
-  const { sample, getData } = createSampler({ k: 1 });
+  const sampler = new Sampler({ k: 1 });
   let ptr = this.head;
   while (ptr) {
-    sample(ptr);
+    sampler.sample(ptr);
     ptr = ptr.next;
   }
-  return getData()[0].val;
+  return sampler.arr[0].val;
 };
 
 /**
  * Your Solution object will be instantiated and called as such:
- * var obj = Object.create(Solution).createNew(head)
+ * var obj = new Solution(head)
  * var param_1 = obj.getRandom()
  */
+
+class Sampler {
+  constructor({ k }) {
+    this.k = k;
+    this.arr = [];
+    this.i = 0;
+  }
+
+  sample(val) {
+    if (this.i < this.k) {
+      this.arr.push(val);
+    } else {
+      const r = Math.floor(Math.random() * (this.i + 1));
+      if (r < this.arr.length) {
+        this.arr[r] = val;
+      }
+    }
+    this.i += 1;
+  }
+}
