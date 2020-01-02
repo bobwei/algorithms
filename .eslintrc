@@ -15,6 +15,7 @@
     "TreeNode": true
   },
   "rules": {
+    "max-classes-per-file": 0,
     "no-cond-assign": 0,
     "no-useless-constructor": 0,
     "no-empty-function": 0,
