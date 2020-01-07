@@ -12,20 +12,15 @@
  */
 var delNodes = function(root, to_delete) {
   const set = new Set(to_delete);
-  const output = [];
-  if (root && !set.has(root.val)) {
-    output.push(root);
-  }
+  const output = root && !set.has(root.val) ? [root] : [];
   helper(root, set, output);
   return output;
 };
 
 function helper(root, set, output) {
   if (!root) {
-    return root;
+    return null;
   }
-  root.left = helper(root.left, set, output);
-  root.right = helper(root.right, set, output);
   if (set.has(root.val)) {
     if (root.left && !set.has(root.left.val)) {
       output.push(root.left);
@@ -33,7 +28,8 @@ function helper(root, set, output) {
     if (root.right && !set.has(root.right.val)) {
       output.push(root.right);
     }
-    return null;
   }
-  return root;
+  root.left = helper(root.left, set, output);
+  root.right = helper(root.right, set, output);
+  return !set.has(root.val) ? root : null;
 }
