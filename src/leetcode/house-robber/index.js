@@ -4,16 +4,15 @@
  */
 var rob = function(nums) {
   if (nums.length <= 2) {
-    if (!nums.length) return 0;
-    return Math.max(...nums.slice(0, 2));
+    return Math.max(...nums, 0);
   }
   let x = nums[0];
-  let y = Math.max(nums[0], nums[1]);
-  let output = y;
+  let y = Math.max(x, nums[1]);
+  let dp = y;
   for (let i = 2; i < nums.length; i++) {
-    output = Math.max(output, x + nums[i], y);
+    dp = Math.max(y, x + nums[i]);
     x = y;
-    y = output;
+    y = dp;
   }
-  return output;
+  return dp;
 };
