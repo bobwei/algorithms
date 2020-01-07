@@ -2,40 +2,21 @@
  * @param {number[]} nums
  * @return {number}
  */
-// f(i) = Math.max(arr[i] + f(i - 2), f(i - 1))
-// f(0) = arr[0]
-// f(1) = Math.max(arr[0], arr[1])
+var rob = function(nums) {
+  if (nums.length <= 2) {
+    return Math.max(...nums, 0);
+  }
+  return Math.max(helper(nums, 1, nums.length), helper(nums, 0, nums.length - 1));
+};
 
-const fn = (arr) => {
-  if (arr.length <= 0) {
-    return 0;
-  }
-  if (arr.length <= 1) {
-    return arr[0];
-  }
-  let x = arr[0];
-  let y = Math.max(arr[0], arr[1]);
-  let output = y;
-  for (let i = 2; i < arr.length; i++) {
-    output = Math.max(arr[i] + x, y);
+function helper(arr, start, end) {
+  let x = arr[start];
+  let y = Math.max(x, arr[start + 1]);
+  let dp = y;
+  for (let i = start + 2; i < end; i++) {
+    dp = Math.max(y, x + arr[i]);
     x = y;
-    y = output;
+    y = dp;
   }
-  return output;
-};
-
-const rob = function(arr) {
-  if (arr.length <= 0) {
-    return 0;
-  }
-  if (arr.length <= 1) {
-    return arr[0];
-  }
-  return Math.max(
-    fn(arr.slice(1, -1)),
-    fn(arr.slice(0, -1)),
-    fn(arr.slice(1, arr.length)),
-  );
-};
-
-export default rob;
+  return dp;
+}
