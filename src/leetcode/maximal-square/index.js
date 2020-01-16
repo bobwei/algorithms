@@ -8,14 +8,11 @@ var maximalSquare = function(matrix) {
   }
   const m = matrix.length;
   const n = matrix[0].length;
-  let dp = new Array(n).fill(0);
-  for (let j = 0; j < n; j++) {
-    dp[j] = matrix[0][j] === '1' ? 1 : 0;
-  }
+  let dp = matrix[0].slice().map((c) => parseInt(c));
   let max = Math.max(...dp);
   for (let i = 1; i < m; i++) {
     const next = new Array(n).fill(0);
-    next[0] = matrix[i][0] === '1' ? 1 : 0;
+    next[0] = parseInt(matrix[i][0]);
     for (let j = 1; j < n; j++) {
       next[j] = matrix[i][j] === '1' ? Math.min(next[j - 1], dp[j], dp[j - 1]) + 1 : 0;
     }
