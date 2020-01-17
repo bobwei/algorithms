@@ -6,32 +6,45 @@
 var assignBikes = function(workers, bikes) {
   const n = workers.length;
   const m = bikes.length;
-  const queue = [];
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < m; j++) {
-      queue.push([i, j, dist(workers[i], bikes[j])]);
-    }
-  }
-  queue.sort((a, b) => {
-    if (a[2] !== b[2]) {
-      return a[2] - b[2];
-    }
-    if (a[0] !== b[0]) {
-      return a[0] - b[0];
-    }
-    return a[1] - b[1];
-  });
-  const output = new Array(workers.length).fill(-1);
+  const pairs = createPairs(workers, bikes, n, m);
+  const bucket = createBucket(pairs, workers, bikes);
   const visited = new Set();
-  for (const [worker, bike] of queue) {
-    if (!visited.has(bike) && output[worker] === -1) {
-      output[worker] = bike;
-      visited.add(bike);
+  const output = new Array(n).fill(null);
+  for (const d in bucket) {
+    for (const [i, j] of bucket[d]) {
+      if (output[i] === null && !visited.has(j)) {
+        output[i] = j;
+        visited.add(j);
+      }
+      if (visited.size >= n) {
+        return output;
+      }
     }
   }
   return output;
 };
 
-function dist([x1, y1], [x2, y2]) {
+function createBucket(pairs, workers, bikes) {
+  const bucket = {};
+  for (const pair of pairs) {
+    const [p, q] = pair;
+    const d = getDist(workers[p], bikes[q]);
+    if (!(d in bucket)) bucket[d] = [];
+    bucket[d].push(pair);
+  }
+  return bucket;
+}
+
+function createPairs(n, m) {
+  const pairs = [];
+  for (let i = 0; i < n; i++) {
+    for (let j = 0; j < m; j++) {
+      pairs.push([i, j]);
+    }
+  }
+  return pairs;
+}
+
+function getDist([x1, y1], [x2, y2]) {
   return Math.abs(x1 - x2) + Math.abs(y1 - y2);
 }
