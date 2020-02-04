@@ -2,7 +2,6 @@
  * @param {number} num
  * @return {string}
  */
-
 const map = {
   0: '',
   1: 'One',
@@ -33,38 +32,35 @@ const map = {
   80: 'Eighty',
   90: 'Ninety',
 };
-
-const units = ['', ' Thousand ', ' Million ', ' Billion '];
+const units = ['', 'Thousand', 'Million', 'Billion'];
 
 var numberToWords = function(num) {
-  if (!num) {
+  if (num === 0) {
     return 'Zero';
   }
-  let output = '';
   let n = num;
-  for (let i = 0; i < units.length; i++) {
-    const r = n % 1000;
-    if (r) {
-      output = helper(r).trim() + units[i] + output;
+  const output = [];
+  for (const unit of units) {
+    const result = helper(n % 1000);
+    if (result.length > 0) {
+      output.unshift(...result, unit);
     }
     n = Math.floor(n / 1000);
   }
-  return output.trim();
+  return output.join(' ').trim();
 };
 
 function helper(num) {
+  if (num === 0) {
+    return [];
+  }
   if (num < 20) {
-    return map[num];
-  } else if (num < 100) {
+    return [map[num]];
+  }
+  if (num < 100) {
     const ten = Math.floor(num / 10) * 10;
     const r = num % 10;
-    // prettier-ignore
-    return r > 0
-      ? map[ten] + ' ' + map[r]
-      : map[ten];
-  } else {
-    const hundred = Math.floor(num / 100);
-    const r = num % 100;
-    return map[hundred] + ' Hundred ' + helper(r);
+    return r === 0 ? [map[ten]] : [map[ten], map[r]];
   }
+  return [map[Math.floor(num / 100)], 'Hundred', ...helper(num % 100)];
 }
