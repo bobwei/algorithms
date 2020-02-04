@@ -14,8 +14,8 @@ var mergeKLists = function(lists) {
     return null;
   }
   while (lists.length > 1) {
-    const head = merge(lists.shift(), lists.shift());
-    lists.push(head);
+    const merged = merge(lists.shift(), lists.shift());
+    lists.push(merged);
   }
   return lists.pop();
 };
@@ -26,19 +26,18 @@ function merge(l1, l2) {
   let p1 = l1;
   let p2 = l2;
   while (p1 || p2) {
-    if (p1 && p2) {
-      if (p1.val <= p2.val) {
-        ptr.next = p1;
-        p1 = p1.next;
-      } else {
-        ptr.next = p2;
-        p2 = p2.next;
-      }
-      ptr = ptr.next;
-    } else {
+    if (!p1 || !p2) {
       ptr.next = p1 || p2;
       return dummy.next;
     }
+    if (p1.val < p2.val) {
+      ptr.next = p1;
+      p1 = p1.next;
+    } else {
+      ptr.next = p2;
+      p2 = p2.next;
+    }
+    ptr = ptr.next;
   }
-  return null;
+  return dummy.next;
 }
