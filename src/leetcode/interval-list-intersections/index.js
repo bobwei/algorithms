@@ -8,13 +8,9 @@ var intervalIntersection = function(A, B) {
   let i = 0;
   let j = 0;
   while (i < A.length && j < B.length) {
-    // prettier-ignore
-    const interval = [
-      Math.max(A[i][0], B[j][0]),
-      Math.min(A[i][1], B[j][1]),
-    ];
-    if (isValid(interval)) {
-      output.push(interval);
+    if (isOverlapped(A[i], B[j])) {
+      const merged = [Math.max(A[i][0], B[j][0]), Math.min(A[i][1], B[j][1])];
+      output.push(merged);
     }
     if (A[i][1] < B[j][1]) {
       i += 1;
@@ -25,9 +21,6 @@ var intervalIntersection = function(A, B) {
   return output;
 };
 
-function isValid([start, end]) {
-  if (end < start) {
-    return false;
-  }
-  return true;
+function isOverlapped([s1, e1], [s2, e2]) {
+  return (s2 <= e1 && e2 >= s1) || (s1 <= e2 && e1 >= s2);
 }
