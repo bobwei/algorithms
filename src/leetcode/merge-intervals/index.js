@@ -6,30 +6,21 @@ var merge = function(intervals) {
   if (intervals.length <= 1) {
     return intervals;
   }
-  intervals.sort((a, b) => {
-    if (a[0] !== b[0]) {
-      return a[0] - b[0];
-    }
-    return a[1] - b[1];
-  });
+  intervals.sort((a, b) => (a[0] !== b[0] ? a[0] - b[0] : a[1] - b[1]));
   const output = [];
-  let pre = intervals[0];
+  let ptr = intervals[0];
   for (let i = 1; i < intervals.length; i++) {
-    if (isMergeable(pre, intervals[i])) {
-      pre[0] = Math.min(pre[0], intervals[i][0]);
-      pre[1] = Math.max(pre[1], intervals[i][1]);
+    if (isOverlapped(ptr, intervals[i])) {
+      ptr = [Math.min(ptr[0], intervals[i][0]), Math.max(ptr[1], intervals[i][1])];
     } else {
-      output.push(pre);
-      pre = intervals[i];
+      output.push(ptr);
+      ptr = intervals[i];
     }
   }
-  output.push(pre);
+  output.push(ptr);
   return output;
 };
 
-function isMergeable(i1, i2) {
-  if (Math.max(i1[0], i2[0]) <= Math.min(i1[1], i2[1])) {
-    return true;
-  }
-  return false;
+function isOverlapped([s1, e1], [s2, e2]) {
+  return s2 <= e1 && e2 >= s1;
 }
