@@ -4,13 +4,13 @@
  * @return {number}
  */
 var subarraySum = function(nums, k) {
-  const prefixSum = { 0: 1 };
-  let count = 0;
+  const freq = { 0: 1 };
+  let nSubarrs = 0;
   let sum = 0;
   for (const num of nums) {
     sum += num;
-    count += prefixSum[sum - k] || 0;
-    prefixSum[sum] = (prefixSum[sum] || 0) + 1;
+    nSubarrs += freq[sum - k] || 0;
+    freq[sum] = (freq[sum] || 0) + 1;
   }
-  return count;
+  return nSubarrs;
 };
