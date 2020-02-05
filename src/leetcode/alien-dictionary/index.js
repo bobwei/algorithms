@@ -4,35 +4,22 @@
  */
 var alienOrder = function(words) {
   const graph = createGraph(words);
-  const visited = new Set();
   const output = new Set();
   for (const u in graph) {
-    if (hasCycle(graph, u, visited, output)) {
+    if (hasCycle(graph, u, output)) {
       return '';
     }
   }
   return [...output].reverse().join('');
 };
 
-function hasCycle(graph, u, visited, output) {
-  if (visited.has(u)) {
-    return !output.has(u);
-  }
-  visited.add(u);
-  for (const v of graph[u]) {
-    if (hasCycle(graph, v, visited, output)) {
-      return true;
-    }
-  }
-  output.add(u);
-  return false;
-}
-
 function createGraph(words) {
   const graph = {};
   for (const word of words) {
     for (const c of word) {
-      graph[c] = [];
+      if (!(c in graph)) {
+        graph[c] = [];
+      }
     }
   }
   for (let i = 0; i < words.length - 1; i++) {
@@ -40,10 +27,29 @@ function createGraph(words) {
     while (j < words[i].length && j < words[i + 1].length && words[i][j] === words[i + 1][j]) {
       j += 1;
     }
-    if (j < words[i].length) {
-      const c = words[i][j];
-      graph[c].push(words[i + 1][j]);
+    if (j < words[i].length && j < words[i + 1].length) {
+      const c1 = words[i][j];
+      const c2 = words[i + 1][j];
+      graph[c1].push(c2);
     }
   }
   return graph;
+}
+
+function hasCycle(graph, u, output, visited = new Set()) {
+  if (output.has(u)) {
+    return false;
+  }
+  if (visited.has(u)) {
+    return true;
+  }
+  visited.add(u);
+  while (graph[u].length) {
+    if (hasCycle(graph, graph[u].pop(), output, visited)) {
+      return true;
+    }
+  }
+  visited.delete(u);
+  output.add(u);
+  return false;
 }
