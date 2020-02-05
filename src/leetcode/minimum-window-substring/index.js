@@ -6,47 +6,44 @@
 var minWindow = function(s, t) {
   const counter = new Counter(t);
   let start = 0;
-  let output = s.repeat(2);
+  let min = s + s;
   for (let i = 0; i < s.length; i++) {
     counter.add(s[i]);
-    while (counter.nIncomplete <= 0) {
-      const substringLength = i - start + 1;
-      if (substringLength < output.length) {
-        output = s.substring(start, i + 1);
+    while (counter.isComplete()) {
+      if (i - start + 1 < min.length) {
+        min = s.substring(start, i + 1);
       }
       counter.delete(s[start]);
       start += 1;
     }
   }
-  return output.length <= s.length ? output : '';
+  return min.length <= s.length ? min : '';
 };
 
 class Counter {
-  constructor(target) {
+  constructor(str) {
     this.freq = {};
-    this.nIncomplete = target.length;
-    for (const c of target) {
+    for (const c of str) {
       this.freq[c] = (this.freq[c] || 0) + 1;
     }
+    this.nRemaining = str.length;
   }
 
   add(c) {
-    if (!(c in this.freq)) {
-      return;
-    }
-    this.freq[c] -= 1;
+    this.freq[c] = (this.freq[c] || 0) - 1;
     if (this.freq[c] >= 0) {
-      this.nIncomplete -= 1;
+      this.nRemaining -= 1;
     }
   }
 
   delete(c) {
-    if (!(c in this.freq)) {
-      return;
-    }
-    this.freq[c] += 1;
+    this.freq[c] = this.freq[c] + 1;
     if (this.freq[c] > 0) {
-      this.nIncomplete += 1;
+      this.nRemaining += 1;
     }
+  }
+
+  isComplete() {
+    return this.nRemaining === 0;
   }
 }
