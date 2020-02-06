@@ -5,7 +5,6 @@
 var findNumberOfLIS = function(nums) {
   const m = nums.length;
   const dp = new Array(m).fill(null).map(() => ({ length: 1, count: 1 }));
-  let max = 1;
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < i; j++) {
       if (nums[i] > nums[j]) {
@@ -17,7 +16,10 @@ var findNumberOfLIS = function(nums) {
         }
       }
     }
-    max = Math.max(max, dp[i].length);
   }
-  return dp.reduce((acc, cur) => acc + (cur.length === max ? cur.count : 0), 0);
+  const max = Math.max(...dp.map(({ length }) => length));
+  return dp
+    .filter(({ length }) => length === max)
+    .map(({ count }) => count)
+    .reduce((acc, cur) => acc + cur, 0);
 };
