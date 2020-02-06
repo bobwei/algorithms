@@ -8,12 +8,12 @@ var permuteUnique = function(nums) {
 };
 
 function helper(nums, selected = new Set(), output = []) {
-  if (selected.size >= nums.length) {
+  if (selected.size === nums.length) {
     output.push([...selected].map((i) => nums[i]));
     return output;
   }
   for (let i = 0; i < nums.length; i++) {
-    if (selected.has(i) || (nums[i - 1] === nums[i] && !selected.has(i - 1))) {
+    if (selected.has(i) || (nums[i] === nums[i - 1] && !selected.has(i - 1))) {
       continue;
     }
     selected.add(i);
