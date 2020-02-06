@@ -4,75 +4,41 @@
  */
 var generatePalindromes = function(s) {
   const freq = createFreq(s);
-  if (!validateOddChars(freq)) {
-    return [];
+  let oddChar = '';
+  for (const c in freq) {
+    if (freq[c] % 2 === 1) {
+      if (!oddChar) {
+        oddChar = c;
+        freq[c] -= 1;
+        if (freq[c] <= 0) {
+          delete freq[c];
+        }
+      } else {
+        return [];
+      }
+    }
   }
-  const odd = findOddChar(freq);
-  freq[odd] -= 1;
-  const arr = createArr(freq);
-  const combinations = createCombinations(arr);
-  return combinations.map((str) => {
-    return str + odd + reverse(str);
-  });
+  const arr = [];
+  for (const c in freq) {
+    arr.push(...c.repeat(freq[c] / 2).split(''));
+  }
+  return permute(arr).map((result) => result.join('') + oddChar + result.reverse().join(''));
 };
 
-function reverse(str) {
-  let output = '';
-  for (const c of str) {
-    output = c + output;
-  }
-  return output;
-}
-
-function createCombinations(arr, selected = '', visited = new Set(), output = []) {
-  if (selected.length >= arr.length) {
-    output.push(selected);
+function permute(arr, selected = new Set(), output = []) {
+  if (selected.size === arr.length) {
+    output.push([...selected].map((i) => arr[i]));
     return output;
   }
   for (let i = 0; i < arr.length; i++) {
-    if (arr[i - 1] === arr[i] && !visited.has(i - 1)) {
+    if (selected.has(i) || (arr[i] === arr[i - 1] && !selected.has(i - 1))) {
       continue;
     }
-    if (!visited.has(i)) {
-      visited.add(i);
-      createCombinations(arr, selected + arr[i], visited, output);
-      visited.delete(i);
-    }
+    selected.add(i);
+    permute(arr, selected, output);
+    selected.delete(i);
   }
   return output;
-}
-
-function createArr(freq) {
-  const arr = [];
-  for (const c in freq) {
-    if (freq[c] % 2 === 1 || freq[c] === 0) continue;
-    for (let i = 0; i < freq[c] / 2; i++) {
-      arr.push(c);
-    }
-  }
-  return arr;
-}
-
-function findOddChar(freq) {
-  for (const c in freq) {
-    if (freq[c] % 2 === 1) {
-      return c;
-    }
-  }
-  return '';
-}
-
-function validateOddChars(freq) {
-  let count = 0;
-  for (const c in freq) {
-    if (freq[c] % 2 === 1) {
-      count += 1;
-    }
-    if (count > 1) {
-      return false;
-    }
-  }
-  return true;
 }
 
 function createFreq(s) {
