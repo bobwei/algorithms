@@ -6,29 +6,26 @@
 var leastInterval = function(tasks, n) {
   const freq = createFreq(tasks);
   const pq = new PriorityQueue({
-    comparator: (a, b) => freq[a] > freq[b],
+    comparator: (a, b) => freq[a] >= freq[b],
   });
-  for (const t in freq) {
-    pq.enqueue(t);
+  for (const task in freq) {
+    pq.enqueue(task);
   }
   let nIntervals = 0;
-  while (nIntervals < tasks.length || pq.length) {
+  while (pq.length) {
     const next = [];
-    let i = 0;
-    while (pq.length && i < n + 1) {
-      const t = pq.dequeue();
-      nIntervals += 1;
-      freq[t] -= 1;
-      if (freq[t] > 0) {
-        next.push(t);
+    let j = 0;
+    while (j <= n && pq.length) {
+      const task = pq.dequeue();
+      freq[task] -= 1;
+      if (freq[task] > 0) {
+        next.push(task);
       }
-      i += 1;
+      j += 1;
     }
-    if (next.length) {
-      nIntervals += n + 1 - i;
-    }
-    for (const t of next) {
-      pq.enqueue(t);
+    nIntervals += next.length > 0 ? n + 1 : j;
+    for (const task of next) {
+      pq.enqueue(task);
     }
   }
   return nIntervals;
@@ -36,16 +33,16 @@ var leastInterval = function(tasks, n) {
 
 function createFreq(tasks) {
   const freq = {};
-  for (const t of tasks) {
-    freq[t] = (freq[t] || 0) + 1;
+  for (const task of tasks) {
+    freq[task] = (freq[task] || 0) + 1;
   }
   return freq;
 }
 
 class PriorityQueue {
   constructor({ comparator }) {
-    this.arr = [];
     this.comparator = comparator;
+    this.arr = [];
   }
 
   enqueue(element) {
