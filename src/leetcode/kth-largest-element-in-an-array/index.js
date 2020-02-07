@@ -3,27 +3,25 @@
  * @param {number} k
  * @return {number}
  */
+var findKthLargest = function(nums, k, start = 0, end = nums.length) {
+  const i = partition(nums, start, end);
+  if (k === i + 1) {
+    return nums[i];
+  } else if (k > i + 1) {
+    return findKthLargest(nums, k, i + 1, end);
+  }
+  return findKthLargest(nums, k, start, i);
+};
 
-const partition = (arr, start, end) => {
-  const p = end;
+function partition(nums, start, end) {
+  const p = end - 1;
   let j = start;
   for (let i = start; i < end; i++) {
-    if (arr[i] >= arr[p]) {
-      [arr[i], arr[j]] = [arr[j], arr[i]];
+    if (nums[i] > nums[p]) {
+      [nums[i], nums[j]] = [nums[j], nums[i]];
       j += 1;
     }
   }
-  [arr[p], arr[j]] = [arr[j], arr[p]];
+  [nums[j], nums[p]] = [nums[p], nums[j]];
   return j;
-};
-
-var findKthLargest = function(nums, k, i = 0, j = nums.length - 1) {
-  const p = partition(nums, i, j);
-  if (p === k - 1) {
-    return nums[p];
-  }
-  if (p < k - 1) {
-    return findKthLargest(nums, k, p + 1, j);
-  }
-  return findKthLargest(nums, k, i, p - 1);
-};
+}
