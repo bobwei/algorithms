@@ -13,9 +13,10 @@ var rightSideView = function(root) {
   if (!root) {
     return [];
   }
+  const output = [];
   let queue = [root];
-  const output = [root.val];
   while (queue.length) {
+    output.push(queue[queue.length - 1].val);
     const next = [];
     while (queue.length) {
       const node = queue.shift();
@@ -25,9 +26,6 @@ var rightSideView = function(root) {
       if (node.right) {
         next.push(node.right);
       }
-    }
-    if (next.length) {
-      output.push(next[next.length - 1].val);
     }
     queue = next;
   }
