@@ -9,17 +9,17 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var maxPathSum = function(r) {
-  let max = -Infinity;
-  (function helper(root) {
-    if (!root) {
-      return 0;
-    }
-    const left = helper(root.left);
-    const right = helper(root.right);
-    const localMax = root.val + Math.max(left, right, 0);
-    max = Math.max(max, localMax, root.val + left + right);
-    return localMax;
-  })(r);
-  return max > -Infinity ? max : 0;
+var maxPathSum = function(root) {
+  return helper(root)[1];
 };
+
+function helper(root) {
+  if (!root) {
+    return [-Infinity, -Infinity];
+  }
+  const left = helper(root.left);
+  const right = helper(root.right);
+  const localMax = root.val + Math.max(left[0], right[0], 0);
+  const globalMax = Math.max(root.val + left[0] + right[0], localMax, left[1], right[1]);
+  return [localMax, globalMax];
+}
