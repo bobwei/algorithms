@@ -3,39 +3,32 @@
  * @param {string[]} wordDict
  * @return {string[]}
  */
-
-/*
-  dp(i) = dp(i) ||
-          dp(i - wordDict[j].length) if wordDict[j] is a postfix of s.slice(0, i)
-*/
-
-const isPostFix = (s, i, w) => {
-  return s.slice(i - w.length, i) === w;
-};
-
-const dfs = (dp, i, selected = '', output = []) => {
-  if (i <= 0) {
-    output.push(selected.trim());
-    return output;
-  }
-  for (let j = 0; j < dp[i].length; j++) {
-    dfs(dp, i - dp[i][j].length, dp[i][j] + ' ' + selected, output);
-  }
-  return output;
-};
-
 var wordBreak = function(s, wordDict) {
-  const dp = [...new Array(s.length + 1)].map(() => []);
-  for (let i = 1; i <= s.length; i++) {
+  const m = s.length;
+  const dp = new Array(m + 1).fill(null).map(() => []);
+  for (let i = 1; i <= m; i++) {
     for (let j = 0; j < wordDict.length; j++) {
-      const w = wordDict[j];
-      if (isPostFix(s, i, w)) {
-        const index = i - wordDict[j].length;
-        if (index <= 0 || dp[index].length > 0) {
-          dp[i].push(w);
-        }
+      const word = wordDict[j];
+      const isBreakable = s.substring(i - word.length, i) === word;
+      const pre = i - word.length <= 0 || dp[i - word.length].length > 0;
+      if (isBreakable && pre) {
+        dp[i].push([i - word.length, j]);
       }
     }
   }
-  return dfs(dp, s.length);
+  return dfs(dp, s, wordDict);
 };
+
+function dfs(dp, s, wordDict, index = dp.length - 1, selected = [], output = [], length = 0) {
+  if (length >= s.length) {
+    // prettier-ignore
+    output.push([...selected].reverse().map(j => wordDict[j]).join(' '));
+    return output;
+  }
+  for (const [i, j] of dp[index]) {
+    selected.push(j);
+    dfs(dp, s, wordDict, i, selected, output, length + wordDict[j].length);
+    selected.pop();
+  }
+  return output;
+}
