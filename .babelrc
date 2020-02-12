@@ -1,19 +1,4 @@
 {
   "presets": ["@babel/preset-env"],
-  "plugins": [
-    [
-      "module-resolver",
-      {
-        "root": ["src"],
-        "alias": {}
-      }
-    ],
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        "regenerator": true
-      }
-    ],
-    "transform-object-rest-spread"
-  ]
+  "plugins": ["@babel/plugin-proposal-object-rest-spread"]
 }
