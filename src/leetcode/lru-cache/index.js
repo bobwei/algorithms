@@ -19,10 +19,9 @@ LRUCache.prototype.get = function(key) {
   if (!(key in this.map)) {
     return -1;
   }
-  const node = this.map[key];
-  disconnect(node);
-  insertAfter(this.head, node);
-  return node.val;
+  disconnect(this.map[key]);
+  insertAfter(this.map[key], this.head);
+  return this.map[key].val;
 };
 
 /**
@@ -31,24 +30,32 @@ LRUCache.prototype.get = function(key) {
  * @return {void}
  */
 LRUCache.prototype.put = function(key, value) {
-  const node = (() => {
-    if (key in this.map) {
-      this.map[key].val = value;
-      disconnect(this.map[key]);
-      return this.map[key];
-    }
+  if (!(key in this.map)) {
     this.map[key] = new Node(key, value);
     this.length += 1;
-    return this.map[key];
-  })();
-  insertAfter(this.head, node);
+  } else {
+    this.map[key].val = value;
+    disconnect(this.map[key]);
+  }
+  insertAfter(this.map[key], this.head);
   if (this.length > this.capacity) {
-    const last = this.tail.prev;
-    disconnect(last);
-    delete this.map[last.key];
+    delete this.map[this.tail.prev.key];
     this.length -= 1;
+    disconnect(this.tail.prev);
   }
 };
+
+function insertAfter(a, b) {
+  a.next = b.next;
+  a.next.prev = a;
+  b.next = a;
+  a.prev = b;
+}
+
+function disconnect(node) {
+  node.prev.next = node.next;
+  node.next.prev = node.prev;
+}
 
 class Node {
   constructor(key, val) {
@@ -56,22 +63,6 @@ class Node {
     this.val = val;
     this.prev = null;
     this.next = null;
-  }
-}
-
-function insertAfter(n1, n2) {
-  n1.next.prev = n2;
-  n2.next = n1.next;
-  n2.prev = n1;
-  n1.next = n2;
-}
-
-function disconnect(node) {
-  if (node.prev) {
-    node.prev.next = node.next;
-  }
-  if (node.next) {
-    node.next.prev = node.prev;
   }
 }
 
