@@ -8,12 +8,12 @@ var isValid = function(s) {
     if (c === '(' || c === '[' || c === '{') {
       stack.push(c);
     } else {
-      const left = stack.pop();
-      if (
-        (c === ')' && left !== '(') ||
-        (c === ']' && left !== '[') ||
-        (c === '}' && left !== '{')
-      ) {
+      const top = stack.pop();
+      // prettier-ignore
+      const isMismatched = top !== '(' && c === ')'
+        || top !== '[' && c === ']'
+        || top !== '{' && c === '}';
+      if (isMismatched) {
         return false;
       }
     }
