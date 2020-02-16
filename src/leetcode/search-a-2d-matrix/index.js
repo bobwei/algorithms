@@ -9,36 +9,24 @@ var searchMatrix = function(matrix, target) {
   }
   const m = matrix.length;
   const n = matrix[0].length;
-  const i = lowerBound(matrix.map((row) => row[n - 1]), target);
-  return binarySearch(matrix[i], target);
-};
-
-function lowerBound(arr, target) {
   let left = 0;
-  let right = arr.length;
+  let right = m * n;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (target > arr[mid]) {
-      left = mid + 1;
-    } else {
-      right = mid;
-    }
-  }
-  return left < arr.length ? left : arr.length - 1;
-}
-
-function binarySearch(arr, target) {
-  let left = 0;
-  let right = arr.length;
-  while (left < right) {
-    const mid = Math.floor((left + right) / 2);
-    if (target === arr[mid]) {
+    const [i, j] = helper(m, n, mid);
+    if (target === matrix[i][j]) {
       return true;
-    } else if (target > arr[mid]) {
+    } else if (target > matrix[i][j]) {
       left = mid + 1;
     } else {
       right = mid;
     }
   }
   return false;
+};
+
+function helper(m, n, p) {
+  const i = Math.floor(p / n);
+  const j = p % n;
+  return [i, j];
 }
