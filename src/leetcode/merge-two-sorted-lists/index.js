@@ -18,16 +18,15 @@ var mergeTwoLists = function(l1, l2) {
   while (p1 || p2) {
     if (!p1 || !p2) {
       ptr.next = p1 || p2;
-      return dummy.next;
-    } else if (p1.val <= p2.val) {
+      break;
+    } else if (p1.val < p2.val) {
       ptr.next = p1;
-      ptr = ptr.next;
       p1 = p1.next;
     } else {
       ptr.next = p2;
-      ptr = ptr.next;
       p2 = p2.next;
     }
+    ptr = ptr.next;
   }
   return dummy.next;
 };
