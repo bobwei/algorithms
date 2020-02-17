@@ -2,8 +2,8 @@
  * Initialize your data structure here.
  */
 var RandomizedSet = function() {
-  this.positions = {};
-  this.nums = [];
+  this.arr = [];
+  this.map = {};
 };
 
 /**
@@ -12,11 +12,11 @@ var RandomizedSet = function() {
  * @return {boolean}
  */
 RandomizedSet.prototype.insert = function(val) {
-  if (val in this.positions) {
+  if (val in this.map) {
     return false;
   }
-  this.nums.push(val);
-  this.positions[val] = this.nums.length - 1;
+  this.arr.push(val);
+  this.map[val] = this.arr.length - 1;
   return true;
 };
 
@@ -26,16 +26,15 @@ RandomizedSet.prototype.insert = function(val) {
  * @return {boolean}
  */
 RandomizedSet.prototype.remove = function(val) {
-  if (!(val in this.positions)) {
+  if (!(val in this.map)) {
     return false;
   }
-  const last = this.nums[this.nums.length - 1];
-  const p1 = this.positions[val];
-  const p2 = this.positions[last];
-  [this.nums[p1], this.nums[p2]] = [this.nums[p2], this.nums[p1]];
-  this.nums.pop();
-  this.positions[last] = p1;
-  delete this.positions[val];
+  const i = this.map[val];
+  const j = this.arr.length - 1;
+  this.arr[i] = this.arr[j];
+  this.map[this.arr[i]] = i;
+  this.arr.pop();
+  delete this.map[val];
   return true;
 };
 
@@ -44,13 +43,13 @@ RandomizedSet.prototype.remove = function(val) {
  * @return {number}
  */
 RandomizedSet.prototype.getRandom = function() {
-  const r = Math.floor(Math.random() * this.nums.length);
-  return this.nums[r];
+  const index = Math.floor(Math.random() * this.arr.length);
+  return this.arr[index];
 };
 
 /**
  * Your RandomizedSet object will be instantiated and called as such:
- * var obj = Object.create(RandomizedSet).createNew()
+ * var obj = new RandomizedSet()
  * var param_1 = obj.insert(val)
  * var param_2 = obj.remove(val)
  * var param_3 = obj.getRandom()
