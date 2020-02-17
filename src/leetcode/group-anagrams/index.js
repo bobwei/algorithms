@@ -3,18 +3,12 @@
  * @return {string[][]}
  */
 var groupAnagrams = function(strs) {
-  const group = {};
+  const map = {};
   for (const str of strs) {
-    const key = encode(str);
-    if (!(key in group)) group[key] = [];
-    group[key].push(str);
+    // prettier-ignore
+    const key = str.split('').sort().join('');
+    if (!(key in map)) map[key] = [];
+    map[key].push(str);
   }
-  return Object.values(group);
+  return Object.values(map);
 };
-
-function encode(str) {
-  return str
-    .split('')
-    .sort()
-    .join('');
-}
