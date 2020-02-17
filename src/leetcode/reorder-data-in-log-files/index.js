@@ -3,24 +3,18 @@
  * @return {string[]}
  */
 var reorderLogFiles = function(logs) {
-  const digitLogs = logs.filter((log) => {
-    const [, word] = split(log);
-    return isDigit(word);
-  });
-  const letterLogs = logs
-    .filter((log) => {
-      const [, word] = split(log);
-      return !isDigit(word);
-    })
+  const letters = logs
+    .filter((log) => !isDigit(split(log)[1]))
     .sort((a, b) => {
-      const [idA, wordA] = split(a);
-      const [idB, wordB] = split(b);
-      if (wordA !== wordB) {
-        return wordA < wordB ? -1 : 1;
+      const [id1, log1] = split(a);
+      const [id2, log2] = split(b);
+      if (log1 !== log2) {
+        return log1 < log2 ? -1 : 1;
       }
-      return idA < idB ? -1 : 1;
+      return id1 < id2 ? -1 : 1;
     });
-  return [...letterLogs, ...digitLogs];
+  const digits = logs.filter((log) => isDigit(split(log)[1]));
+  return [...letters, ...digits];
 };
 
 function split(str) {
@@ -32,5 +26,5 @@ function split(str) {
 }
 
 function isDigit(str) {
-  return /[0-9]/.test(str[0]);
+  return /[0-9]+/.test(str[0]);
 }
