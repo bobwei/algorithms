@@ -1,24 +1,25 @@
-/* global Node */
 /**
  * // Definition for a Node.
- * function Node(val,neighbors) {
- *    this.val = val;
- *    this.neighbors = neighbors;
+ * function Node(val, neighbors) {
+ *    this.val = val === undefined ? 0 : val;
+ *    this.neighbors = neighbors === undefined ? [] : neighbors;
  * };
  */
 /**
  * @param {Node} node
  * @return {Node}
  */
-var cloneGraph = function(node, visited = new Map()) {
-  if (!node) return node;
-  if (visited.get(node)) {
-    return visited.get(node);
+var cloneGraph = function(node, memo = new Map()) {
+  if (!node) {
+    return null;
   }
-  const cloned = new Node(node.val, []);
-  visited.set(node, cloned);
+  if (memo.has(node)) {
+    return memo.get(node);
+  }
+  const copied = new Node(node.val, []);
+  memo.set(node, copied);
   for (const neighbor of node.neighbors) {
-    cloned.neighbors.push(cloneGraph(neighbor, visited));
+    copied.neighbors.push(cloneGraph(neighbor, memo));
   }
-  return cloned;
+  return copied;
 };
