@@ -3,25 +3,24 @@
  * @return {number}
  */
 var orangesRotting = function(grid) {
-  if (!grid.length || !grid[0].length) {
-    return -1;
-  }
   const m = grid.length;
   const n = grid[0].length;
-  let queue = getRotten(grid, m, n);
-  const nFruits = count(grid, m, n);
+  let queue = [];
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 2) {
+        queue.push([i, j]);
+      }
+    }
+  }
   const dirs = [
     [-1, 0],
     [0, 1],
     [1, 0],
     [0, -1],
   ];
-  let nRotten = queue.length;
-  let nHours = 0;
+  let nMinutes = 0;
   while (queue.length) {
-    if (nRotten === nFruits) {
-      return nHours;
-    }
     const next = [];
     while (queue.length) {
       const [x, y] = queue.shift();
@@ -30,18 +29,23 @@ var orangesRotting = function(grid) {
         const j = y + dj;
         if (isValid(m, n, i, j) && grid[i][j] === 1) {
           grid[i][j] = 2;
-          nRotten += 1;
           next.push([i, j]);
         }
       }
     }
-    nHours += 1;
     queue = next;
+    if (next.length) {
+      nMinutes += 1;
+    }
   }
-  if (nRotten === nFruits) {
-    return nHours;
+  for (let i = 0; i < m; i++) {
+    for (let j = 0; j < n; j++) {
+      if (grid[i][j] === 1) {
+        return -1;
+      }
+    }
   }
-  return -1;
+  return nMinutes;
 };
 
 function isValid(m, n, i, j) {
@@ -49,28 +53,4 @@ function isValid(m, n, i, j) {
     return false;
   }
   return true;
-}
-
-function count(grid, m, n) {
-  let nEmpty = 0;
-  for (let i = 0; i < m; i++) {
-    for (let j = 0; j < n; j++) {
-      if (grid[i][j] === 0) {
-        nEmpty += 1;
-      }
-    }
-  }
-  return m * n - nEmpty;
-}
-
-function getRotten(grid, m, n) {
-  const queue = [];
-  for (let i = 0; i < m; i++) {
-    for (let j = 0; j < n; j++) {
-      if (grid[i][j] === 2) {
-        queue.push([i, j]);
-      }
-    }
-  }
-  return queue;
 }
