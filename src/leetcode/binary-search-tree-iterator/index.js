@@ -10,8 +10,11 @@
  */
 var BSTIterator = function(root) {
   this.stack = [];
-  this.ptr = root;
-  this.hasNext();
+  let ptr = root;
+  while (ptr) {
+    this.stack.push(ptr);
+    ptr = ptr.left;
+  }
 };
 
 /**
@@ -19,9 +22,13 @@ var BSTIterator = function(root) {
  * @return {number}
  */
 BSTIterator.prototype.next = function() {
-  const element = this.stack.pop();
-  this.ptr = element.right;
-  return element.val;
+  const top = this.stack.pop();
+  let ptr = top.right;
+  while (ptr) {
+    this.stack.push(ptr);
+    ptr = ptr.left;
+  }
+  return top.val;
 };
 
 /**
@@ -29,16 +36,12 @@ BSTIterator.prototype.next = function() {
  * @return {boolean}
  */
 BSTIterator.prototype.hasNext = function() {
-  while (this.ptr) {
-    this.stack.push(this.ptr);
-    this.ptr = this.ptr.left;
-  }
   return this.stack.length > 0;
 };
 
 /**
  * Your BSTIterator object will be instantiated and called as such:
- * var obj = Object.create(BSTIterator).createNew(root)
+ * var obj = new BSTIterator(root)
  * var param_1 = obj.next()
  * var param_2 = obj.hasNext()
  */
