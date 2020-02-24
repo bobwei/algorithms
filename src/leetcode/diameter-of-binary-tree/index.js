@@ -10,18 +10,14 @@
  * @return {number}
  */
 var diameterOfBinaryTree = function(root) {
-  let max = 0;
-  const getHeight = (r) => {
-    if (!r) {
-      return -1;
-    }
-    const left = getHeight(r.left);
-    const right = getHeight(r.right);
-
-    max = Math.max(max, left + 1 + right + 1);
-
-    return Math.max(left, right) + 1;
-  };
-  getHeight(root);
-  return max;
+  return helper(root)[1];
 };
+
+function helper(root) {
+  if (!root) {
+    return [-1, 0];
+  }
+  const left = helper(root.left);
+  const right = helper(root.right);
+  return [Math.max(left[0], right[0]) + 1, Math.max(left[1], right[1], left[0] + right[0] + 2)];
+}
