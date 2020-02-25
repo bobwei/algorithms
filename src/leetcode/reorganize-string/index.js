@@ -3,36 +3,41 @@
  * @return {string}
  */
 var reorganizeString = function(S) {
-  const freq = S.split('').reduce((acc, cur) => {
-    acc[cur] = (acc[cur] || 0) + 1;
-    return acc;
-  }, {});
+  const freq = createFreq(S);
   const pq = new PriorityQueue({
-    comparator: (a, b) => {
-      return freq[a] >= freq[b];
-    },
+    comparator: (a, b) => freq[a] >= freq[b],
   });
-  Object.keys(freq).forEach((key) => pq.enqueue(key));
-  const n = 2;
+  for (const c in freq) {
+    pq.enqueue(c);
+  }
   let output = '';
-  for (let i = 0; i < S.length; ) {
+  while (pq.length) {
     const next = [];
-    for (let j = 0; j < n && i < S.length; j++) {
-      if (!pq.length) {
+    for (let i = 0; i < 2 && pq.length; i++) {
+      const c = pq.dequeue();
+      if (c === output[output.length - 1]) {
         return '';
       }
-      const key = pq.dequeue();
-      freq[key] -= 1;
-      if (freq[key]) {
-        next.push(key);
+      output += c;
+      freq[c] -= 1;
+      if (freq[c] > 0) {
+        next.push(c);
       }
-      output += key;
-      i += 1;
     }
-    next.forEach((key) => pq.enqueue(key));
+    for (const c of next) {
+      pq.enqueue(c);
+    }
   }
   return output;
 };
+
+function createFreq(s) {
+  const freq = {};
+  for (const c of s) {
+    freq[c] = (freq[c] || 0) + 1;
+  }
+  return freq;
+}
 
 class PriorityQueue {
   constructor({ comparator }) {
@@ -40,8 +45,8 @@ class PriorityQueue {
     this.comparator = comparator;
   }
 
-  enqueue(element) {
-    this.arr.push(element);
+  enqueue(val) {
+    this.arr.push(val);
     moveUp(this.arr, this.arr.length - 1, this.comparator);
   }
 
