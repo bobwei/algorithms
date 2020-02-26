@@ -11,6 +11,7 @@
   - [React vs Vue](#react-vs-vue)
     - [Composition of components](#composition-of-components)
   - [Notes about HTTP methods](#notes-about-http-methods)
+  - [Web Performance](#web-performance)
 
 ## Event Propagation, Event Delegation
 
@@ -131,3 +132,7 @@ Different between put and patch ?
 
 - PUT is used for replacement or whole update.
 - PATCH is used for partial update.
+
+## Web Performance
+
+![](assets/speed-metrics.png)
