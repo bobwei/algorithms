@@ -10,6 +10,7 @@
   - [Javascript Prototype](#javascript-prototype)
   - [React vs Vue](#react-vs-vue)
     - [Composition of components](#composition-of-components)
+  - [Notes about HTTP methods](#notes-about-http-methods)
 
 ## Event Propagation, Event Delegation
 
@@ -123,3 +124,10 @@ https://codepen.io/bobwei/pen/ympoWw
 - Render Props
 
 All of above help easier to separate concerns and having abstraction.
+
+## Notes about HTTP methods
+
+Different between put and patch ?
+
+- PUT is used for replacement or whole update.
+- PATCH is used for partial update.
