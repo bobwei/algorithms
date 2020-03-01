@@ -1,9 +1,9 @@
-function curry(fn, arr = []) {
-  return (...args) => {
-    if (arr.length + args.length >= fn.length) {
-      return fn(...arr, ...args);
+function curry(fn) {
+  return function(...args) {
+    if (args.length >= fn.length) {
+      return fn(...args);
     }
-    return curry(fn, [...arr, ...args]);
+    return curry(fn.bind(this, ...args));
   };
 }
 
