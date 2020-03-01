@@ -4,6 +4,8 @@
   - [Closure](#closure)
   - [This](#this)
   - [Javascript new operator](#javascript-new-operator)
+  - [Implement `bind`](#implement-bind)
+  - [Implement `curry`](#implement-curry)
   - [Javascript Prototype](#javascript-prototype)
   - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
   - [CSS vertical align](#css-vertical-align)
@@ -36,6 +38,14 @@ For exmaple,
 - Assign the object to `this`
 - Execute function body
 - return `this`
+
+## Implement `bind`
+
+[../utilities/bind/index.js](../utilities/bind/index.js)
+
+## Implement `curry`
+
+[../utilities/curry/index.js](../utilities/curry/index.js)
 
 ## Javascript Prototype
 
