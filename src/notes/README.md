@@ -2,6 +2,7 @@
 
 - [README](#readme)
   - [Closure](#closure)
+  - [This](#this)
   - [Javascript new operator](#javascript-new-operator)
   - [Javascript Prototype](#javascript-prototype)
   - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
@@ -18,6 +19,15 @@
 A closure is an inner function that has access to variables outside of its scope.
 
 A closure is a function that can remember environments when it was created.
+
+## This
+
+In javascript, `this` refers to the object it belongs to.
+
+For exmaple,
+
+- In a method of an object, `this` refers to the owner object. That is, `this` refers to the object invloking the function.
+- In a function, `this` refers to the global object.
 
 ## Javascript new operator
 
