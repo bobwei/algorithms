@@ -1,21 +1,17 @@
 # README
 
 - [README](#readme)
-  - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
   - [Closure](#closure)
   - [Javascript new operator](#javascript-new-operator)
+  - [Javascript Prototype](#javascript-prototype)
+  - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
   - [CSS vertical align](#css-vertical-align)
     - [vertical align with pseudo elements](#vertical-align-with-pseudo-elements)
-  - [Javascript Prototype](#javascript-prototype)
   - [React vs Vue](#react-vs-vue)
     - [Composition of components](#composition-of-components)
   - [Notes about HTTP methods](#notes-about-http-methods)
   - [Web Performance](#web-performance)
   - [TCP & UDP](#tcp--udp)
-
-## Event Propagation, Event Delegation
-
-<img height="600" src="assets/event-propagation.svg">
 
 ## Closure
 
@@ -30,6 +26,16 @@ A closure is a function that can remember environments when it was created.
 - Assign the object to `this`
 - Execute function body
 - return `this`
+
+## Javascript Prototype
+
+- http://dmitrysoshnikov.com/ecmascript/javascript-the-core/
+
+<img height="600" src="assets/constructor-proto-chain.png">
+
+## Event Propagation, Event Delegation
+
+<img height="600" src="assets/event-propagation.svg">
 
 ## CSS vertical align
 
@@ -74,12 +80,6 @@ https://codepen.io/bobwei/pen/ympoWw
   display: inline-block;
 }
 ```
-
-## Javascript Prototype
-
-- http://dmitrysoshnikov.com/ecmascript/javascript-the-core/
-
-<img height="600" src="assets/constructor-proto-chain.png">
 
 ## React vs Vue
 
