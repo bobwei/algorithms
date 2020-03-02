@@ -4,6 +4,7 @@
   - [Closure](#closure)
   - [This](#this)
   - [Javascript new operator](#javascript-new-operator)
+  - [Scope](#scope)
   - [Common Utilities](#common-utilities)
   - [Javascript Prototype](#javascript-prototype)
   - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
@@ -37,6 +38,11 @@ For exmaple,
 - Assign the object to `this`
 - Execute function body
 - return `this`
+
+## Scope
+
+`var` function level
+`let`, `const` block level
 
 ## Common Utilities
 
