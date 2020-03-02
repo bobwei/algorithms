@@ -6,6 +6,7 @@
   - [Javascript new operator](#javascript-new-operator)
   - [Scope](#scope)
   - [CSS Box Model](#css-box-model)
+  - [Display property](#display-property)
   - [Common Utilities](#common-utilities)
   - [Javascript Prototype](#javascript-prototype)
   - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
@@ -52,6 +53,13 @@ All html elements can be considered as boxes. A box consists of margin, border, 
 ![](assets/boxmodel.gif)
 
 `box-sizing` is a property deciding how we messure dimensions of a box. The default value is `content-box` which includes only content. `border-box` is a value to include border and padding.
+
+## Display property
+
+`inline`, `inline-block` and `block`
+
+`inline` display elements in the same row. Any width, height properties are ignored.
+`inline-block` display elements in the same row. Width, height can be applied. Margin, padding are respected.
 
 ## Common Utilities
 
