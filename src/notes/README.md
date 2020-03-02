@@ -5,6 +5,7 @@
   - [This](#this)
   - [Javascript new operator](#javascript-new-operator)
   - [Scope](#scope)
+  - [CSS Box Model](#css-box-model)
   - [Common Utilities](#common-utilities)
   - [Javascript Prototype](#javascript-prototype)
   - [Event Propagation, Event Delegation](#event-propagation-event-delegation)
@@ -43,6 +44,14 @@ For exmaple,
 
 `var` function level
 `let`, `const` block level
+
+## CSS Box Model
+
+All html elements can be considered as boxes. A box consists of margin, border, padding and content.
+
+![](assets/boxmodel.gif)
+
+`box-sizing` is a property deciding how we messure dimensions of a box. The default value is `content-box` which includes only content. `border-box` is a value to include border and padding.
 
 ## Common Utilities
 
