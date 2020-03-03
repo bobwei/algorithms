@@ -1,6 +1,7 @@
 # README
 
 - [README](#readme)
+  - [Binary Search](#binary-search)
   - [Closure](#closure)
   - [This](#this)
   - [Javascript new operator](#javascript-new-operator)
@@ -17,6 +18,10 @@
   - [Notes about HTTP methods](#notes-about-http-methods)
   - [Web Performance](#web-performance)
   - [TCP & UDP](#tcp--udp)
+
+## Binary Search
+
+![](assets/lower-bound-upper-bound.png)
 
 ## Closure
 
