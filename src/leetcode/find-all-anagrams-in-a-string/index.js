@@ -9,12 +9,12 @@ var findAnagrams = function(s, p) {
   let start = 0;
   for (let i = 0; i < s.length; i++) {
     counter.add(s[i]);
-    while (counter.nRemaining === 0) {
-      if (i - start + 1 === p.length) {
-        output.push(start);
-      }
+    while (counter.nRedundant > 0) {
       counter.delete(s[start]);
       start += 1;
+    }
+    if (i - start + 1 === p.length) {
+      output.push(start);
     }
   }
   return output;
@@ -26,20 +26,20 @@ class Counter {
     for (const c of target) {
       this.freq[c] = (this.freq[c] || 0) + 1;
     }
-    this.nRemaining = target.length;
+    this.nRedundant = 0;
   }
 
   add(c) {
     this.freq[c] = (this.freq[c] || 0) - 1;
-    if (this.freq[c] >= 0) {
-      this.nRemaining -= 1;
+    if (this.freq[c] < 0) {
+      this.nRedundant += 1;
     }
   }
 
   delete(c) {
-    this.freq[c] = (this.freq[c] || 0) + 1;
-    if (this.freq[c] > 0) {
-      this.nRemaining += 1;
+    this.freq[c] += 1;
+    if (this.freq[c] <= 0) {
+      this.nRedundant -= 1;
     }
   }
 }
