@@ -6,7 +6,7 @@ export default class PriorityQueue {
   }
 
   enqueue(val) {
-    const index = lowerBound(this.arr, (mid) => this.comparator(val, mid));
+    const index = binarySearch(this.arr, val);
     this.arr.splice(index, 0, val);
   }
 
@@ -15,8 +15,8 @@ export default class PriorityQueue {
   }
 
   delete(val) {
-    const index = lowerBound(this.arr, (mid) => this.comparator(val, mid));
-    if (this.isEqual(this.arr[index], val)) {
+    const index = binarySearch(this.arr, val);
+    if (index < this.arr.length && this.isEqual(this.arr[index], val)) {
       this.arr.splice(index, 1);
     }
   }
@@ -26,12 +26,12 @@ export default class PriorityQueue {
   }
 }
 
-function lowerBound(arr, comparator) {
+function binarySearch(arr, target, comparator = (a, b) => a <= b) {
   let left = 0;
   let right = arr.length;
   while (left < right) {
     const mid = Math.floor((left + right) / 2);
-    if (comparator(arr[mid])) {
+    if (comparator(target, arr[mid])) {
       right = mid;
     } else {
       left = mid + 1;
