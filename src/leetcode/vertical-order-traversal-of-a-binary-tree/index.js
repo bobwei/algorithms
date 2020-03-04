@@ -10,27 +10,29 @@
  * @return {number[][]}
  */
 var verticalTraversal = function(root) {
+  if (!root) {
+    return [];
+  }
   const queue = [[root, 0, 0]];
-  const map = {};
+  const cols = {};
   while (queue.length) {
-    const [node, i, j] = queue.shift();
-    if (!(j in map)) map[j] = [];
-    map[j].push([node.val, i]);
+    const [node, x, y] = queue.shift();
+    if (!(x in cols)) cols[x] = [];
+    cols[x].push([node.val, y]);
     if (node.left) {
-      queue.push([node.left, i + 1, j - 1]);
+      queue.push([node.left, x - 1, y + 1]);
     }
     if (node.right) {
-      queue.push([node.right, i + 1, j + 1]);
+      queue.push([node.right, x + 1, y + 1]);
     }
   }
-  return Object.keys(map)
-    .sort((a, b) => parseInt(a) - parseInt(b))
-    .map((key) => map[key].sort(sort).map(([val]) => val));
-};
-
-function sort([val1, i1], [val2, i2]) {
-  if (i1 !== i2) {
-    return i1 - i2;
+  const keys = Object.keys(cols)
+    .map((c) => parseInt(c))
+    .sort((a, b) => a - b);
+  const output = [];
+  for (const x of keys) {
+    cols[x].sort((a, b) => (a[1] !== b[1] ? a[1] - b[1] : a[0] - b[0]));
+    output.push(cols[x].map(([val]) => val));
   }
-  return val1 - val2;
-}
+  return output;
+};
