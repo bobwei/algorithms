@@ -1,8 +1,3 @@
-const Node = function() {
-  this.words = {};
-  this.isEnd = false;
-};
-
 /**
  * Initialize your data structure here.
  */
@@ -18,10 +13,10 @@ var WordDictionary = function() {
 WordDictionary.prototype.addWord = function(word) {
   let ptr = this.root;
   for (const c of word) {
-    if (!(c in ptr.words)) {
-      ptr.words[c] = new Node();
+    if (!(c in ptr.chars)) {
+      ptr.chars[c] = new Node();
     }
-    ptr = ptr.words[c];
+    ptr = ptr.chars[c];
   }
   ptr.isEnd = true;
 };
@@ -31,26 +26,36 @@ WordDictionary.prototype.addWord = function(word) {
  * @param {string} word
  * @return {boolean}
  */
-WordDictionary.prototype.search = function(word, ptr = this.root, i = 0) {
-  if (i >= word.length) {
+WordDictionary.prototype.search = function(word, index = 0, ptr = this.root) {
+  if (index >= word.length) {
     return ptr.isEnd;
   }
-  if (word[i] in ptr.words) {
-    return this.search(word, ptr.words[word[i]], i + 1);
-  }
-  if (word[i] === '.') {
-    for (const w in ptr.words) {
-      if (this.search(word, ptr.words[w], i + 1)) {
+  if (word[index] === '.') {
+    for (let i = 0; i < 26; i++) {
+      const c = String.fromCharCode('a'.charCodeAt(0) + i);
+      if (c in ptr.chars && this.search(word, index + 1, ptr.chars[c])) {
         return true;
       }
     }
+    return false;
+  }
+  const c = word[index];
+  if (c in ptr.chars && this.search(word, index + 1, ptr.chars[c])) {
+    return true;
   }
   return false;
 };
 
+class Node {
+  constructor() {
+    this.chars = {};
+    this.isEnd = false;
+  }
+}
+
 /**
  * Your WordDictionary object will be instantiated and called as such:
- * var obj = Object.create(WordDictionary).createNew()
+ * var obj = new WordDictionary()
  * obj.addWord(word)
  * var param_2 = obj.search(word)
  */
