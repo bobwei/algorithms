@@ -37,6 +37,7 @@ class DisjointSet {
     }
     let ptr = r;
     while (this.roots[ptr] !== ptr) {
+      this.roots[ptr] = this.roots[this.roots[ptr]];
       ptr = this.roots[ptr];
     }
     return ptr;
