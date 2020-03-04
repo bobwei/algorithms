@@ -3,41 +3,40 @@
  * @return {string[][]}
  */
 var accountsMerge = function(accounts) {
-  const names = {};
-  const set = new DisjointSet({ accounts });
-  for (const account of accounts) {
-    const [, ...emails] = account;
+  const set = new DisjointSet();
+  const map = {};
+  for (const [name, ...emails] of accounts) {
     for (const email of emails) {
-      set.roots[email] = email;
+      map[email] = name;
     }
-  }
-  for (const account of accounts) {
-    const [name, ...emails] = account;
-    for (let i = 0; i <= emails.length - 2; i++) {
+    for (let i = 0; i < emails.length - 1; i++) {
       set.union(emails[i], emails[i + 1]);
     }
-    for (const email of emails) {
-      names[email] = name;
-    }
+  }
+  const group = {};
+  for (const email in map) {
+    const key = set.find(email);
+    if (!(key in group)) group[key] = [];
+    group[key].push(email);
   }
   const output = [];
-  const group = set.toGroup();
   for (const key in group) {
-    output.push([names[key], ...group[key].sort()]);
+    output.push([map[key], ...group[key].sort()]);
   }
   return output;
 };
 
 class DisjointSet {
-  constructor({ accounts }) {
+  constructor() {
     this.roots = {};
   }
 
-  find(root) {
-    if (!(root in this.roots)) this.roots[root] = root;
-    let ptr = root;
+  find(r) {
+    if (!(r in this.roots)) {
+      this.roots[r] = r;
+    }
+    let ptr = r;
     while (this.roots[ptr] !== ptr) {
-      this.roots[ptr] = this.roots[this.roots[ptr]];
       ptr = this.roots[ptr];
     }
     return ptr;
@@ -46,16 +45,8 @@ class DisjointSet {
   union(p1, p2) {
     const r1 = this.find(p1);
     const r2 = this.find(p2);
-    this.roots[r2] = r1;
-  }
-
-  toGroup() {
-    const group = {};
-    for (const key in this.roots) {
-      const root = this.find(key);
-      if (!(root in group)) group[root] = [];
-      group[root].push(key);
+    if (r1 !== r2) {
+      this.roots[r2] = r1;
     }
-    return group;
   }
 }
