@@ -4,17 +4,17 @@
  * @return {number}
  */
 var missingElement = function(nums, k) {
-  let target = k;
   let left = 0;
   let right = nums.length;
-  while (right - left >= 2) {
+  let target = k;
+  while (right - left > 1) {
     const mid = Math.floor((left + right) / 2);
-    const nLeftMissing = nums[mid] - nums[left] + 1 - (mid - left + 1);
-    if (target > nLeftMissing) {
-      left = mid;
-      target -= nLeftMissing;
-    } else {
+    const nMissings = nums[mid] - nums[left] - (mid - left);
+    if (target <= nMissings) {
       right = mid;
+    } else {
+      left = mid;
+      target -= nMissings;
     }
   }
   return nums[left] + target;
