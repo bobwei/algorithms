@@ -4,32 +4,25 @@
  * @return {number[]}
  */
 var exclusiveTime = function(n, logs) {
-  const output = new Array(n).fill(0);
-  const callStack = [];
-  let updatedTime;
-  for (const log of logs) {
-    const [fn, event, t] = parse(log);
-    if (callStack.length) {
-      const delta = t - updatedTime;
-      const peekFn = callStack[callStack.length - 1];
-      output[peekFn] += delta;
+  const times = new Array(n).fill(0);
+  const parsedLogs = logs.map(mapper);
+  const stack = [];
+  for (let i = 0; i < logs.length; i++) {
+    if (stack.length) {
+      const deltaT = parsedLogs[i][2] - parsedLogs[i - 1][2];
+      const id = stack[stack.length - 1][0];
+      times[id] += deltaT;
     }
-    updatedTime = t;
-    if (event === 'start') {
-      callStack.push(fn);
-    } else if (event === 'end') {
-      callStack.pop();
+    if (parsedLogs[i][1] === 'start') {
+      stack.push(parsedLogs[i]);
+    } else if (parsedLogs[i][1] === 'end') {
+      stack.pop();
     }
   }
-  return output;
+  return times;
 };
 
-function parse(log) {
-  const output = log.split(':');
-  output[0] = parseInt(output[0]);
-  output[2] = parseInt(output[2]);
-  if (output[1] === 'end') {
-    output[2] += 1;
-  }
-  return output;
+function mapper(log) {
+  const [id, type, t] = log.split(':');
+  return type === 'start' ? [id, type, parseInt(t)] : [id, type, parseInt(t) + 1];
 }
