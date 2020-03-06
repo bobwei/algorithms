@@ -10,32 +10,33 @@ var Solution = function(nums) {
  * @return {number}
  */
 Solution.prototype.pick = function(target) {
-  const { arr, sample } = createSampler({ k: 1 });
+  const sampler = new Sampler();
   for (let i = 0; i < this.nums.length; i++) {
     if (this.nums[i] === target) {
-      sample(i);
+      sampler.sample(i);
     }
   }
-  return arr.pop();
+  return sampler.arr[0];
 };
 
-function createSampler({ k }) {
-  const arr = [];
-  let i = 0;
-  return {
-    sample(element) {
-      if (i < k) {
-        arr.push(element);
-      } else {
-        const r = Math.floor(Math.random() * (i + 1));
-        if (r < k) {
-          arr[r] = element;
-        }
+class Sampler {
+  constructor(k = 1) {
+    this.arr = [];
+    this.i = 0;
+    this.k = k;
+  }
+
+  sample(element) {
+    if (this.i < this.k) {
+      this.arr.push(element);
+    } else {
+      const r = Math.floor(Math.random() * (this.i + 1));
+      if (r < this.k) {
+        this.arr[r] = element;
       }
-      i += 1;
-    },
-    arr,
-  };
+    }
+    this.i += 1;
+  }
 }
 
 /**
