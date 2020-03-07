@@ -3,18 +3,18 @@
  * @return {number}
  */
 var minAddToMakeValid = function(S) {
-  let left = 0;
-  let right = 0;
-  for (const c of S) {
-    if (c === '(') {
-      left += 1;
-    } else if (c === ')') {
-      if (left > 0) {
-        left -= 1;
+  let stack = 0;
+  let nSteps = 0;
+  for (let i = 0; i < S.length; i++) {
+    if (S[i] === '(') {
+      stack += 1;
+    } else if (S[i] === ')') {
+      if (!stack) {
+        nSteps += 1;
       } else {
-        right += 1;
+        stack -= 1;
       }
     }
   }
-  return left + right;
+  return nSteps + stack;
 };
