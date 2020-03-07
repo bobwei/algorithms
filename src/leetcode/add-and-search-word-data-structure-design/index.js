@@ -26,24 +26,19 @@ WordDictionary.prototype.addWord = function(word) {
  * @param {string} word
  * @return {boolean}
  */
-WordDictionary.prototype.search = function(word, index = 0, ptr = this.root) {
-  if (index >= word.length) {
+WordDictionary.prototype.search = function(word, i = 0, ptr = this.root) {
+  if (i >= word.length) {
     return ptr.isEnd;
   }
-  if (word[index] === '.') {
-    for (let i = 0; i < 26; i++) {
-      const c = String.fromCharCode('a'.charCodeAt(0) + i);
-      if (c in ptr.chars && this.search(word, index + 1, ptr.chars[c])) {
+  if (word[i] === '.') {
+    for (const c in ptr.chars) {
+      if (this.search(word, i + 1, ptr.chars[c])) {
         return true;
       }
     }
     return false;
   }
-  const c = word[index];
-  if (c in ptr.chars && this.search(word, index + 1, ptr.chars[c])) {
-    return true;
-  }
-  return false;
+  return word[i] in ptr.chars && this.search(word, i + 1, ptr.chars[word[i]]);
 };
 
 class Node {
