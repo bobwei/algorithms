@@ -4,17 +4,20 @@
  * @return {number}
  */
 var findTargetSumWays = function(nums, S) {
-  const m = nums.length;
-  let dp = new Map();
-  dp.set(nums[0], (dp.get(nums[0]) || 0) + 1);
-  dp.set(-nums[0], (dp.get(-nums[0]) || 0) + 1);
-  for (let i = 1; i < m; i++) {
-    const next = new Map();
-    for (const [value, freq] of dp) {
-      next.set(value + nums[i], (next.get(value + nums[i]) || 0) + freq);
-      next.set(value - nums[i], (next.get(value - nums[i]) || 0) + freq);
+  let dp = {};
+  dp[nums[0]] = (dp[nums[0]] || 0) + 1;
+  dp[-nums[0]] = (dp[-nums[0]] || 0) + 1;
+  for (let i = 1; i < nums.length; i++) {
+    const next = {};
+    for (const key in dp) {
+      const preSum = parseInt(key);
+      const freq = dp[preSum];
+      const sum0 = preSum + nums[i];
+      next[sum0] = (next[sum0] || 0) + freq;
+      const sum1 = preSum - nums[i];
+      next[sum1] = (next[sum1] || 0) + freq;
     }
     dp = next;
   }
-  return dp.get(S) || 0;
+  return dp[S] || 0;
 };
