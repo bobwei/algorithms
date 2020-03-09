@@ -3,28 +3,33 @@
  * @return {boolean}
  */
 var canPartition = function(nums) {
-  const total = nums.reduce((acc, cur) => acc + cur, 0);
-  if (total % 2 === 1) {
+  const totalSum = nums.reduce((acc, cur) => acc + cur, 0);
+  if (totalSum % 2 > 0) {
     return false;
   }
-  nums.sort((a, b) => a - b);
-  return helper(nums, total / 2, total);
+  nums.sort((a, b) => b - a);
+  return helper(nums, 0, 0, totalSum);
 };
 
-function helper(nums, target, remaining, start = 0) {
-  if (target <= 0) {
-    return target === 0;
+function helper(nums, index, sum, totalSum, memo = {}) {
+  const key = index + ':' + sum;
+  if (key in memo) {
+    return memo[key];
   }
-  if (remaining < target) {
-    return false;
+  if (!(sum <= totalSum / 2)) {
+    memo[key] = false;
+    return memo[key];
   }
-  for (let i = start; i < nums.length; i++) {
-    if (i > start && nums[i] === nums[i - 1]) {
-      continue;
+  if (index >= nums.length || sum === totalSum / 2) {
+    memo[key] = sum === totalSum / 2;
+    return memo[key];
+  }
+  for (let i = index; i < nums.length; i++) {
+    if (helper(nums, i + 1, sum + nums[i], totalSum, memo)) {
+      memo[key] = true;
+      return memo[key];
     }
-    if (helper(nums, target - nums[i], remaining - nums[i], i + 1)) {
-      return true;
-    }
   }
-  return false;
+  memo[key] = false;
+  return memo[key];
 }
