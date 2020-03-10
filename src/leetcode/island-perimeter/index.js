@@ -8,33 +8,24 @@ var islandPerimeter = function(grid) {
   }
   const m = grid.length;
   const n = grid[0].length;
+  // prettier-ignore
+  const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
+  let length = 0;
   for (let i = 0; i < m; i++) {
     for (let j = 0; j < n; j++) {
       if (grid[i][j] === 1) {
-        return dfs(grid, m, n, [i, j]);
+        for (const [di, dj] of dirs) {
+          const x = i + di;
+          const y = j + dj;
+          length += !isValid(m, n, x, y) || grid[x][y] === 0 ? 1 : 0;
+        }
       }
     }
   }
+  return length;
 };
 
-const dirs = [[-1, 0], [0, 1], [1, 0], [0, -1]];
-
-function dfs(grid, m, n, p, sum = 0) {
-  grid[p[0]][p[1]] = -1;
-  for (const [di, dj] of dirs) {
-    const i = p[0] + di;
-    const j = p[1] + dj;
-    if ((isValid(i, j, m, n) && grid[i][j] === 0) || !isValid(i, j, m, n)) {
-      sum += 1;
-    }
-    if (isValid(i, j, m, n) && grid[i][j] === 1) {
-      sum = dfs(grid, m, n, [i, j], sum);
-    }
-  }
-  return sum;
-}
-
-function isValid(i, j, m, n) {
+function isValid(m, n, i, j) {
   if (i < 0 || i >= m || j < 0 || j >= n) {
     return false;
   }
