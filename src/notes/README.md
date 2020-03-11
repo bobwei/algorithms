@@ -17,6 +17,7 @@
     - [Composition of components](#composition-of-components)
   - [Notes about HTTP methods](#notes-about-http-methods)
   - [Web Performance](#web-performance)
+  - [SSH](#ssh)
   - [TCP & UDP](#tcp--udp)
 
 ## Binary Search
@@ -150,6 +151,26 @@ Different between put and patch ?
 ## Web Performance
 
 ![](assets/speed-metrics.png)
+
+## SSH
+
+- Symmetric Encryption
+  - There is only one shared key between client and server.
+  - More efficient.
+  - Hard to provide key to client securely in the beginning.
+- Asymmetric Encryption
+  - Public key and private key.
+    - Public key can decrept content encrypted by private key and verify it.
+  - Less efficient.
+  - Public key can be shared securely to client.
+- Applications
+  - Github
+    - Upload public key to Github and use git client with private key. Github can verify your account since the only private key can produce the encryption.
+  - SSH
+    - Server provides public key to ssh client. Client use public key to encrypt user name and password. Only server with private key can decrypt.
+- References
+  - https://kknews.cc/zh-tw/code/34mlvqg.html
+  - https://ithelp.ithome.com.tw/articles/10205988
 
 ## TCP & UDP
 
