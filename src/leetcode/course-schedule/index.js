@@ -4,33 +4,38 @@
  * @return {boolean}
  */
 var canFinish = function(numCourses, prerequisites) {
-  const graph = createGraph(prerequisites, numCourses);
-  for (const u in graph) {
-    if (hasCycle(graph, u)) {
+  const graph = createGraph(numCourses, prerequisites);
+  const completed = new Set();
+  for (let i = 0; i < numCourses; i++) {
+    if (!completed.has(i) && hasCycle(graph, i, completed)) {
       return false;
     }
   }
   return true;
 };
 
-function createGraph(edges, m) {
-  const graph = [...new Array(m)].map(() => []);
-  for (const [u, v] of edges) {
-    graph[u].push(v);
+function hasCycle(graph, u, completed, visited = new Set()) {
+  if (completed.has(u)) {
+    return false;
   }
-  return graph;
-}
-
-function hasCycle(graph, u, visited = new Set()) {
   if (visited.has(u)) {
     return true;
   }
   visited.add(u);
   for (const v of graph[u]) {
-    if (hasCycle(graph, v, visited)) {
+    if (hasCycle(graph, v, completed, visited)) {
       return true;
     }
   }
   visited.delete(u);
+  completed.add(u);
   return false;
+}
+
+function createGraph(numCourses, prerequisites) {
+  const graph = new Array(numCourses).fill(null).map(() => []);
+  for (const [u, v] of prerequisites) {
+    graph[u].push(v);
+  }
+  return graph;
 }
