@@ -7,6 +7,9 @@
 
 ## Cycle detection
 
+Detecting a cycle in a graph efficiently requires two stacks. One for current path. The other for completed path.
+
+- [course schedule](course-schedule)
 - https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/
 - https://segmentfault.com/a/1190000003817671
 - https://blog.csdn.net/monkeyduck/article/details/50439840
