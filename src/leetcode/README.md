@@ -1,6 +1,7 @@
 # README
 
 - [README](#readme)
+  - [Tree](#tree)
   - [Cycle detection](#cycle-detection)
   - [Sliding window](#sliding-window)
   - [Recover Binary Search Tree](#recover-binary-search-tree)
@@ -8,11 +9,15 @@
   - [TopK problem](#topk-problem)
   - [References](#references)
 
+## Tree
+
+A tree is a acyclic, connected graph. [graph-valid-tree](graph-valid-tree)
+
 ## Cycle detection
 
 Detecting a cycle in a graph efficiently requires two stacks. One for current path. The other for completed path.
 
-- [course schedule](course-schedule)
+- [course-schedule](course-schedule)
 - https://www.geeksforgeeks.org/detect-and-remove-loop-in-a-linked-list/
 - https://segmentfault.com/a/1190000003817671
 - https://blog.csdn.net/monkeyduck/article/details/50439840
