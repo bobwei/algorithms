@@ -4,24 +4,24 @@
  */
 var findItinerary = function(tickets) {
   const graph = createGraph(tickets);
-  const output = helper(graph, 'JFK');
-  return output.reverse();
+  return helper(graph, 'JFK').reverse();
 };
 
-function helper(graph, start, output = []) {
-  while (graph[start].length) {
-    helper(graph, graph[start].shift(), output);
+function helper(graph, u, output = []) {
+  while (graph[u].length) {
+    const v = graph[u].shift();
+    helper(graph, v, output);
   }
-  output.push(start);
+  output.push(u);
   return output;
 }
 
 function createGraph(tickets) {
   const graph = {};
-  for (const [from, to] of tickets) {
-    if (!(from in graph)) graph[from] = [];
-    if (!(to in graph)) graph[to] = [];
-    graph[from].push(to);
+  for (const [t1, t2] of tickets) {
+    if (!(t1 in graph)) graph[t1] = [];
+    if (!(t2 in graph)) graph[t2] = [];
+    graph[t1].push(t2);
   }
   for (const key in graph) {
     graph[key].sort();
