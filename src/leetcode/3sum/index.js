@@ -5,28 +5,27 @@
 var threeSum = function(nums) {
   nums.sort((a, b) => a - b);
   const output = [];
-  const n = nums.length;
   const target = 0;
-  for (let i = 0; i < n; i++) {
+  for (let i = 0; i < nums.length; i++) {
     if (nums[i] === nums[i - 1]) continue;
-    let left = i + 1;
-    let right = n - 1;
-    while (left < right) {
-      const sum = nums[i] + nums[left] + nums[right];
+    let j = i + 1;
+    let k = nums.length - 1;
+    while (j < k) {
+      const sum = nums[i] + nums[j] + nums[k];
       if (sum === target) {
-        output.push([nums[i], nums[left], nums[right]]);
-        left += 1;
-        right -= 1;
-        while (nums[left] === nums[left - 1]) {
-          left += 1;
+        output.push([nums[i], nums[j], nums[k]]);
+        while (nums[j] === nums[j + 1]) {
+          j += 1;
         }
-        while (nums[right] === nums[right + 1]) {
-          right -= 1;
+        j += 1;
+        while (nums[k] === nums[k - 1]) {
+          k -= 1;
         }
-      } else if (sum < target) {
-        left += 1;
+        k -= 1;
+      } else if (sum > target) {
+        k -= 1;
       } else {
-        right -= 1;
+        j += 1;
       }
     }
   }
