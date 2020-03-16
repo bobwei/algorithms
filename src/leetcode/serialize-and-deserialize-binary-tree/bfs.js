@@ -13,16 +13,14 @@
  * @return {string}
  */
 var serialize = function(root) {
-  const output = [];
   const queue = [root];
+  let output = '';
   while (queue.length) {
     const node = queue.shift();
+    output += (output.length ? ',' : '') + (node ? node.val : '');
     if (node) {
-      output.push(node.val);
       queue.push(node.left);
       queue.push(node.right);
-    } else {
-      output.push(node);
     }
   }
   return output;
@@ -35,13 +33,14 @@ var serialize = function(root) {
  * @return {TreeNode}
  */
 var deserialize = function(data) {
-  const root = createNode(data.shift());
+  const arr = data.split(',');
+  const root = createNode(arr.shift());
   const queue = [root];
   while (queue.length) {
     const node = queue.shift();
     if (node) {
-      node.left = createNode(data.shift());
-      node.right = createNode(data.shift());
+      node.left = createNode(arr.shift());
+      node.right = createNode(arr.shift());
       queue.push(node.left);
       queue.push(node.right);
     }
@@ -50,10 +49,10 @@ var deserialize = function(data) {
 };
 
 function createNode(val) {
-  if (val === null || val === undefined) {
+  if (val === '') {
     return null;
   }
-  return new TreeNode(val);
+  return new TreeNode(parseInt(val));
 }
 
 /**
