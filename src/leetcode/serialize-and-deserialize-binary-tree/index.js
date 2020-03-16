@@ -14,7 +14,7 @@
  */
 var serialize = function(root) {
   if (!root) {
-    return 'null';
+    return '';
   }
   return root.val + ',' + serialize(root.left) + ',' + serialize(root.right);
 };
@@ -26,9 +26,6 @@ var serialize = function(root) {
  * @return {TreeNode}
  */
 var deserialize = function(data, arr = data.split(',')) {
-  if (!arr.length) {
-    return null;
-  }
   const root = createNode(arr.shift());
   if (root) {
     root.left = deserialize(data, arr);
@@ -38,7 +35,7 @@ var deserialize = function(data, arr = data.split(',')) {
 };
 
 function createNode(val) {
-  if (val === 'null') {
+  if (val === '') {
     return null;
   }
   return new TreeNode(parseInt(val));
