@@ -22,11 +22,8 @@ var isMatch = function(s, p) {
 };
 
 function helper(s, p, i, j, dp, next) {
-  if (s[i - 1] === p[j - 1] || p[j - 1] === '.') {
-    return dp[j - 1];
-  }
   if (p[j - 1] === '*') {
     return ((s[i - 1] === p[j - 2] || p[j - 2] === '.') && dp[j]) || next[j - 2];
   }
-  return false;
+  return (s[i - 1] === p[j - 1] || p[j - 1] === '.') && dp[j - 1];
 }
