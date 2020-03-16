@@ -4,16 +4,13 @@
  * @return {number}
  */
 var numSubarraysWithSum = function(A, S) {
-  // number of occurrences of a certain sum
-  const counts = {
-    0: 1,
-  };
-  let count = 0;
+  const freq = { 0: 1 };
   let sum = 0;
-  for (let i = 0; i < A.length; i++) {
-    sum += A[i];
-    count += counts[sum - S] || 0;
-    counts[sum] = (counts[sum] || 0) + 1;
+  let nSubarrs = 0;
+  for (const num of A) {
+    sum += num;
+    nSubarrs += freq[sum - S] || 0;
+    freq[sum] = (freq[sum] || 0) + 1;
   }
-  return count;
+  return nSubarrs;
 };
