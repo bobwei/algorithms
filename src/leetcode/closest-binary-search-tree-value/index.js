@@ -11,13 +11,15 @@
  * @return {number}
  */
 var closestValue = function(root, target) {
-  let output = root.val;
+  let output = Infinity;
   let ptr = root;
   while (ptr) {
-    if (Math.abs(ptr.val - target) < Math.abs(output - target)) {
-      output = ptr.val;
+    output = Math.abs(ptr.val - target) < Math.abs(output - target) ? ptr.val : output;
+    if (target < ptr.val) {
+      ptr = ptr.left;
+    } else {
+      ptr = ptr.right;
     }
-    ptr = target > ptr.val ? ptr.right : ptr.left;
   }
   return output;
 };
