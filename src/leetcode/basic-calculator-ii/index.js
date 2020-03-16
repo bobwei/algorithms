@@ -5,12 +5,11 @@
 var calculate = function(s) {
   const stack = [];
   let op;
-  let num;
-  for (const token of split(removeSpaces(s))) {
-    if (isOperator(token)) {
+  for (const token of split(s)) {
+    if (isOp(token)) {
       op = token;
     } else {
-      num = token;
+      const num = token;
       if (op === '+') {
         stack.push(num);
       } else if (op === '-') {
@@ -28,40 +27,26 @@ var calculate = function(s) {
 };
 
 function split(s) {
-  let i = 0;
-  return {
-    [Symbol.iterator]() {
-      return this;
-    },
-    next() {
-      if (i >= s.length) {
-        return {
-          done: true,
-        };
+  const output = [];
+  for (let i = 0; i < s.length; ) {
+    if (s[i] === ' ') {
+      i++;
+      continue;
+    } else if (isOp(s[i])) {
+      output.push(s[i]);
+      i++;
+    } else {
+      let j = i;
+      while (/[0-9]/.test(s[j])) {
+        j += 1;
       }
-      if (isOperator(s[i])) {
-        return {
-          value: s[i++],
-          done: false,
-        };
-      }
-      let num = 0;
-      while (/[0-9]/.test(s[i])) {
-        num = num * 10 + parseInt(s[i]);
-        i += 1;
-      }
-      return {
-        value: num,
-        done: false,
-      };
-    },
-  };
+      output.push(parseInt(s.substring(i, j)));
+      i = j;
+    }
+  }
+  return output;
 }
 
-function removeSpaces(s) {
-  return s.replace(/ /g, '');
-}
-
-function isOperator(c) {
+function isOp(c) {
   return c === '+' || c === '-' || c === '*' || c === '/';
 }
