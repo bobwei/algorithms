@@ -6,17 +6,15 @@ Main idea:
 
 - **_An edge is a critical connection, if and only if it is not in a cycle._**
 
-So we use dfs starting from any node to traverse the graph. If an edge is critical connection, discard it. Else, add it to output.
+Need to maintain two variables during traversal.
 
-Define rank of a node: maximum depth starting from a source. Rank of source is 0.
+`visited`: Keep tracking the rank value when visiting certain node.
+`low`: Keep tracking the lowest rank value a certain node can reach.
 
-If no cycle exists during traversal, rank value should be increasing.
+Given two node `u` and `v`.
 
-If cycle exists, `rank[j]` should be less than `rank[i]`. ( Traversing from `i` to `j` )
-
-For now, we are able to know cycle exists at current node. But ancestors of current node do not aware of that.
-
-To let ancestors be aware of cycle exists, we return min rank value seen at current node.
+If they are in the same circle, `low[v] === visited[u]`.
+If they are not in the same circle, `low[v] > visited[u]`.
 
 Time Complexity: O(|V| + |E|)
 Space Complexity: O(|V|)

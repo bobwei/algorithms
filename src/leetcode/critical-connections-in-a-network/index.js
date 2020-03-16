@@ -5,19 +5,20 @@
  */
 var criticalConnections = function(n, connections) {
   const graph = createGraph(n, connections);
-  return helper(graph, 0);
+  const visited = {};
+  const low = {};
+  return helper(graph, 0, null, 0, visited, low);
 };
 
-function helper(graph, u, from = null, depth = 0, visited = {}, low = {}, output = []) {
-  visited[u] = depth;
-  low[u] = depth;
+function helper(graph, u, pre, rank, visited, low, output = []) {
+  if (u in visited) {
+    return output;
+  }
+  visited[u] = rank;
+  low[u] = rank;
   for (const v of graph[u]) {
-    if (v === from) {
-      continue;
-    }
-    if (!(v in visited)) {
-      helper(graph, v, u, depth + 1, visited, low, output);
-    }
+    if (v === pre) continue;
+    helper(graph, v, u, rank + 1, visited, low, output);
     low[u] = Math.min(low[u], low[v]);
     if (low[v] > visited[u]) {
       output.push([u, v]);
