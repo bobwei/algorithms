@@ -2,11 +2,11 @@
  * initialize your data structure here.
  */
 var MedianFinder = function() {
-  this.minHeap = new PriorityQueue({
-    comparator: (a, b) => a <= b,
-  });
-  this.maxHeap = new PriorityQueue({
+  this.maxQueue = new PriorityQueue({
     comparator: (a, b) => a >= b,
+  });
+  this.minQueue = new PriorityQueue({
+    comparator: (a, b) => a <= b,
   });
 };
 
@@ -15,16 +15,18 @@ var MedianFinder = function() {
  * @return {void}
  */
 MedianFinder.prototype.addNum = function(num) {
-  const m = this.minHeap.length && this.maxHeap.length ? this.findMedian() : -Infinity;
-  if (num >= m) {
-    this.minHeap.enqueue(num);
+  const shouldGoMaxQueue =
+    num <= this.maxQueue.peekOr(-Infinity) ||
+    (num >= this.maxQueue.peekOr(-Infinity) && num < this.minQueue.peekOr(Infinity));
+  if (shouldGoMaxQueue) {
+    this.maxQueue.enqueue(num);
   } else {
-    this.maxHeap.enqueue(num);
+    this.minQueue.enqueue(num);
   }
-  if (this.minHeap.length - this.maxHeap.length > 1) {
-    this.maxHeap.enqueue(this.minHeap.dequeue());
-  } else if (this.maxHeap.length - this.minHeap.length > 1) {
-    this.minHeap.enqueue(this.maxHeap.dequeue());
+  if (!(this.maxQueue.length - this.minQueue.length >= 0)) {
+    this.maxQueue.enqueue(this.minQueue.dequeue());
+  } else if (this.maxQueue.length - this.minQueue.length >= 2) {
+    this.minQueue.enqueue(this.maxQueue.dequeue());
   }
 };
 
@@ -32,27 +34,21 @@ MedianFinder.prototype.addNum = function(num) {
  * @return {number}
  */
 MedianFinder.prototype.findMedian = function() {
-  if ((this.minHeap.length + this.maxHeap.length) % 2 === 1) {
-    return this.minHeap.length > this.maxHeap.length ? this.minHeap.peek() : this.maxHeap.peek();
+  const isOdd = (this.maxQueue.length + this.minQueue.length) % 2 === 1;
+  if (isOdd) {
+    return this.maxQueue.peekOr();
   }
-  return (this.minHeap.peek() + this.maxHeap.peek()) / 2;
+  return (this.maxQueue.peekOr() + this.minQueue.peekOr()) / 2;
 };
-
-/**
- * Your MedianFinder object will be instantiated and called as such:
- * var obj = new MedianFinder()
- * obj.addNum(num)
- * var param_2 = obj.findMedian()
- */
 
 class PriorityQueue {
   constructor({ comparator }) {
-    this.comparator = comparator;
     this.arr = [];
+    this.comparator = comparator;
   }
 
-  enqueue(element) {
-    this.arr.push(element);
+  enqueue(val) {
+    this.arr.push(val);
     moveUp(this.arr, this.arr.length - 1, this.comparator);
   }
 
@@ -64,8 +60,8 @@ class PriorityQueue {
     return output;
   }
 
-  peek() {
-    return this.arr[0];
+  peekOr(defaultValue) {
+    return this.arr.length ? this.arr[0] : defaultValue;
   }
 
   get length() {
@@ -94,3 +90,10 @@ function moveDown(arr, i, comparator) {
     moveDown(arr, next, comparator);
   }
 }
+
+/**
+ * Your MedianFinder object will be instantiated and called as such:
+ * var obj = new MedianFinder()
+ * obj.addNum(num)
+ * var param_2 = obj.findMedian()
+ */
