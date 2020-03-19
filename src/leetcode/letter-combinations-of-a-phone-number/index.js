@@ -2,7 +2,6 @@
  * @param {string} digits
  * @return {string[]}
  */
-
 const map = {
   2: 'abc',
   3: 'def',
@@ -15,7 +14,7 @@ const map = {
 };
 
 var letterCombinations = function(digits, index = 0, selected = '', output = []) {
-  if (selected.length >= digits.length) {
+  if (index >= digits.length) {
     if (selected) {
       output.push(selected);
     }
