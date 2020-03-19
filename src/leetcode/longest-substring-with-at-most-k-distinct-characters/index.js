@@ -9,7 +9,7 @@ var lengthOfLongestSubstringKDistinct = function(s, k) {
   let max = 0;
   for (let i = 0; i < s.length; i++) {
     counter.add(s[i]);
-    while (counter.nDistinct > k) {
+    while (counter.nDistincts > k) {
       counter.delete(s[start]);
       start += 1;
     }
@@ -21,20 +21,20 @@ var lengthOfLongestSubstringKDistinct = function(s, k) {
 class Counter {
   constructor() {
     this.freq = {};
-    this.nDistinct = 0;
+    this.nDistincts = 0;
   }
 
   add(c) {
     this.freq[c] = (this.freq[c] || 0) + 1;
     if (this.freq[c] === 1) {
-      this.nDistinct += 1;
+      this.nDistincts += 1;
     }
   }
 
   delete(c) {
     this.freq[c] -= 1;
     if (this.freq[c] === 0) {
-      this.nDistinct -= 1;
+      this.nDistincts -= 1;
     }
   }
 }
