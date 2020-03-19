@@ -8,17 +8,17 @@ var combinationSum = function(candidates, target) {
   return helper(candidates, target);
 };
 
-function helper(candidates, target, start = 0, sum = 0, selected = [], output = []) {
+function helper(candidates, target, sum = 0, index = 0, selected = [], output = []) {
   if (sum >= target) {
     if (sum === target) {
       output.push([...selected]);
     }
     return output;
   }
-  for (let i = start; i < candidates.length; i++) {
+  for (let i = index; i < candidates.length; i++) {
     if (sum + candidates[i] > target) break;
     selected.push(candidates[i]);
-    helper(candidates, target, i, sum + candidates[i], selected, output);
+    helper(candidates, target, sum + candidates[i], i, selected, output);
     selected.pop();
   }
   return output;
