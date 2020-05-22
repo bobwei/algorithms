@@ -3,28 +3,32 @@
  * @return {string}
  */
 var frequencySort = function(s) {
-  // prettier-ignore
-  const freq = s
-    .split('')
-    .reduce((acc, cur) => {
-      acc[cur] = (acc[cur] || 0) + 1;
-      return acc;
-    }, {});
-  // prettier-ignore
-  const bucket = Object
-    .entries(freq)
-    .reduce((acc, [char, count]) => {
-      if (!(count in acc)) acc[count] = [];
-      acc[count].push(char);
-      return acc;
-    }, {});
+  const map = createReverseFreq(createFreq(s));
   let output = '';
-  for (let i = s.length; i >= 0; i--) {
-    if (i in bucket) {
-      for (const c of bucket[i]) {
-        output += c.repeat(i);
-      }
+  for (const key in map) {
+    const f = parseInt(key);
+    for (const c of map[key]) {
+      output = c.repeat(f) + output;
     }
   }
   return output;
 };
+
+function createFreq(s) {
+  const freq = {};
+  for (const c of s) {
+    freq[c] = (freq[c] || 0) + 1;
+  }
+  return freq;
+}
+
+function createReverseFreq(freq) {
+  const map = {};
+  for (const c in freq) {
+    if (!(freq[c] in map)) {
+      map[freq[c]] = [];
+    }
+    map[freq[c]].push(c);
+  }
+  return map;
+}
