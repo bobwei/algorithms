@@ -9,7 +9,7 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isSymmetric = function(root) {
+var isSymmetric = function (root) {
   let queue = [root];
   while (queue.length) {
     const next = [];
@@ -28,7 +28,10 @@ var isSymmetric = function(root) {
 };
 
 const defaultGetter = (key, obj) => {
-  return (obj[key] && obj[key].val) || null;
+  if (!obj[key]) {
+    return null;
+  }
+  return obj[key].val;
 };
 
 function isRepeat(arr, get = defaultGetter) {
