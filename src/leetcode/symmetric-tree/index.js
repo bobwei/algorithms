@@ -1,45 +1,43 @@
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
  * }
  */
 /**
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isSymmetric = function (root) {
+var isSymmetric = function(root) {
   let queue = [root];
   while (queue.length) {
-    const next = [];
-    if (!isRepeat(queue)) {
+    if (!isRepeated(queue)) {
       return false;
     }
+    const next = [];
     while (queue.length) {
       const node = queue.shift();
-      if (!node) continue;
-      next.push(node.left);
-      next.push(node.right);
+      if (node) {
+        next.push(node.left);
+        next.push(node.right);
+      }
     }
     queue = next;
   }
   return true;
 };
 
-const defaultGetter = (key, obj) => {
-  if (!obj[key]) {
-    return null;
-  }
-  return obj[key].val;
-};
-
-function isRepeat(arr, get = defaultGetter) {
+function isRepeated(arr) {
   let left = 0;
   let right = arr.length - 1;
   while (left < right) {
-    const isEqual = get(left, arr) === get(right, arr);
-    if (!isEqual) {
+    const isInvalid =
+      (!arr[left] && arr[right]) ||
+      (arr[left] && !arr[right]) ||
+      (arr[left] && arr[right] && arr[left].val !== arr[right].val);
+    if (isInvalid) {
       return false;
     }
     left += 1;
