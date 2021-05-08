@@ -16,8 +16,8 @@ var minRemoveToMakeValid = function(s) {
       }
     }
   }
-  for (const c of stack) {
-    invalid.add(c);
+  for (const i of stack) {
+    invalid.add(i);
   }
   let output = '';
   for (let i = 0; i < s.length; i++) {
