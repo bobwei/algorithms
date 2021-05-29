@@ -2,39 +2,41 @@
  * @param {number[]} w
  */
 var Solution = function(w) {
-  this.sum = new Array(w.length).fill(0);
-  this.sum[0] = w[0];
-  for (let i = 1; i < w.length; i++) {
-    this.sum[i] = this.sum[i - 1] + w[i];
+  this.arr = new Array(w.length).fill(null);
+  this.arr[0] = w[0];
+  for (let i = 1; i < this.arr.length; i++) {
+    this.arr[i] = this.arr[i - 1] + w[i];
   }
-};
-
-const createRandomNumber = (min, max) => {
-  return Math.floor(min + Math.random() * (max - min + 1));
 };
 
 /**
  * @return {number}
  */
 Solution.prototype.pickIndex = function() {
+  const r = createRandomInt(1, this.arr[this.arr.length - 1]);
+  return lowerBound(this.arr, r);
+};
+
+function lowerBound(arr, target) {
   let left = 0;
-  let right = this.sum.length - 1;
-  const target = createRandomNumber(1, this.sum[this.sum.length - 1]);
+  let right = arr.length;
   while (left < right) {
-    const mid = Math.floor((left + right) / 2);
-    if (this.sum[mid] === target) {
-      return mid;
-    } else if (this.sum[mid] < target) {
-      left = mid + 1;
-    } else if (this.sum[mid] > target) {
-      right = mid;
+    const m = Math.floor((left + right) / 2);
+    if (target <= arr[m]) {
+      right = m;
+    } else {
+      left = m + 1;
     }
   }
   return left;
-};
+}
+
+function createRandomInt(min, max) {
+  return min + Math.floor(Math.random() * (max - min + 1));
+}
 
 /**
  * Your Solution object will be instantiated and called as such:
- * var obj = Object.create(Solution).createNew(w)
+ * var obj = new Solution(w)
  * var param_1 = obj.pickIndex()
  */
