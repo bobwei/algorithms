@@ -21,7 +21,7 @@ Return first element that is greater or equal to the target in a non-decreasing 
 ## Upper Bound
 
 ```js
-function lowerBound(arr, target) {}
+function upperBound(arr, target) {}
 ```
 
 Return first element that is greater than the target in a non-decreasing array.
