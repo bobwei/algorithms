@@ -4,26 +4,24 @@
  * @return {boolean}
  */
 var isAlienSorted = function(words, order) {
-  const indices = createIndices(order);
+  const seq = createSeq(order);
   for (let i = 0; i < words.length - 1; i++) {
-    let j = 0;
-    while (j < words[i].length && j < words[i + 1].length && words[i][j] === words[i + 1][j]) {
-      j += 1;
-    }
-    if (j < words[i].length && j >= words[i + 1].length) {
-      return false;
-    }
-    if (indices[words[i][j]] > indices[words[i + 1][j]]) {
-      return false;
+    for (let j = 0; j < words[i].length; j++) {
+      if (words[i][j] !== words[i + 1][j]) {
+        if (j >= words[i + 1].length || seq[words[i][j]] > seq[words[i + 1][j]]) {
+          return false;
+        }
+        break;
+      }
     }
   }
   return true;
 };
 
-function createIndices(str) {
-  const indices = {};
-  for (let i = 0; i < str.length; i++) {
-    indices[str[i]] = i;
+function createSeq(order) {
+  const seq = {};
+  for (let i = 0; i < order.length; i++) {
+    seq[order[i]] = i;
   }
-  return indices;
+  return seq;
 }
