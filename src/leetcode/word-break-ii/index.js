@@ -4,31 +4,30 @@
  * @return {string[]}
  */
 var wordBreak = function(s, wordDict) {
-  const m = s.length;
-  const dp = new Array(m + 1).fill(null).map(() => []);
-  for (let i = 1; i <= m; i++) {
+  const dp = new Array(s.length + 1).fill(null).map(() => []);
+  dp[0].push('');
+  for (let i = 1; i <= s.length; i++) {
     for (let j = 0; j < wordDict.length; j++) {
       const word = wordDict[j];
-      const isBreakable = s.substring(i - word.length, i) === word;
-      const pre = i - word.length <= 0 || dp[i - word.length].length > 0;
-      if (isBreakable && pre) {
-        dp[i].push([i - word.length, j]);
+      if (s.substring(i - word.length, i) === word && dp[i - word.length].length > 0) {
+        dp[i].push(j);
       }
     }
   }
-  return dfs(dp, s, wordDict);
+  return helper(dp, wordDict, s.length);
 };
 
-function dfs(dp, s, wordDict, index = dp.length - 1, selected = [], output = [], length = 0) {
-  if (length >= s.length) {
+function helper(dp, wordDict, length, stack = [], output = []) {
+  if (length <= 0) {
     // prettier-ignore
-    output.push([...selected].reverse().map(j => wordDict[j]).join(' '));
+    output.push(stack.slice().reverse().join(' '));
     return output;
   }
-  for (const [i, j] of dp[index]) {
-    selected.push(j);
-    dfs(dp, s, wordDict, i, selected, output, length + wordDict[j].length);
-    selected.pop();
+  for (const i of dp[length]) {
+    const w = wordDict[i];
+    stack.push(w);
+    helper(dp, wordDict, length - w.length, stack, output);
+    stack.pop();
   }
   return output;
 }
