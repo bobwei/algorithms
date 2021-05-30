@@ -2,21 +2,18 @@
  * @param {string} s
  * @return {boolean}
  */
-var validPalindrome = function(s, start = 0, end = s.length - 1, nDeletions = 1) {
-  if (nDeletions < 0) {
-    return false;
-  }
-  let left = start;
-  let right = end;
-  while (left < right) {
-    if (s[left] !== s[right]) {
+var validPalindrome = function(s, start = 0, end = s.length - 1, nDeletes = 1) {
+  let i = start;
+  let j = end;
+  while (i < j) {
+    if (s[i] !== s[j]) {
       return (
-        validPalindrome(s, left + 1, right, nDeletions - 1) ||
-        validPalindrome(s, left, right - 1, nDeletions - 1)
+        nDeletes > 0 &&
+        (validPalindrome(s, i + 1, j, nDeletes - 1) || validPalindrome(s, i, j - 1, nDeletes - 1))
       );
     }
-    left += 1;
-    right -= 1;
+    i += 1;
+    j -= 1;
   }
   return true;
 };
