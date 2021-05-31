@@ -26,19 +26,20 @@ var serialize = function(root) {
  * @return {TreeNode}
  */
 var deserialize = function(data, arr = data.split(',')) {
-  const root = createNode(arr.shift());
-  if (root) {
-    root.left = deserialize(data, arr);
-    root.right = deserialize(data, arr);
+  const node = createRoot(arr.shift());
+  if (!node) {
+    return node;
   }
-  return root;
+  node.left = deserialize(data, arr);
+  node.right = deserialize(data, arr);
+  return node;
 };
 
-function createNode(val) {
-  if (val === '') {
+function createRoot(val) {
+  if (!val) {
     return null;
   }
-  return new TreeNode(parseInt(val));
+  return new TreeNode(val);
 }
 
 /**
