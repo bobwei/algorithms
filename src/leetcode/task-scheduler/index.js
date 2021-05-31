@@ -6,7 +6,7 @@
 var leastInterval = function(tasks, n) {
   const freq = createFreq(tasks);
   const pq = new PriorityQueue({
-    comparator: (a, b) => freq[a] >= freq[b],
+    comparator: (t1, t2) => freq[t1] >= freq[t2],
   });
   for (const task in freq) {
     pq.enqueue(task);
@@ -14,18 +14,18 @@ var leastInterval = function(tasks, n) {
   let nIntervals = 0;
   while (pq.length) {
     const next = [];
-    let j = 0;
-    while (j <= n && pq.length) {
-      const task = pq.dequeue();
-      freq[task] -= 1;
-      if (freq[task] > 0) {
-        next.push(task);
+    for (let i = 0; i <= n && (pq.length || next.length); i++) {
+      if (pq.length) {
+        const t = pq.dequeue();
+        freq[t] -= 1;
+        if (freq[t] > 0) {
+          next.push(t);
+        }
       }
-      j += 1;
+      nIntervals += 1;
     }
-    nIntervals += next.length > 0 ? n + 1 : j;
-    for (const task of next) {
-      pq.enqueue(task);
+    for (const t of next) {
+      pq.enqueue(t);
     }
   }
   return nIntervals;
