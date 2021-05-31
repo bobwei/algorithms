@@ -5,36 +5,36 @@
  */
 var canFinish = function(numCourses, prerequisites) {
   const graph = createGraph(numCourses, prerequisites);
-  const completed = new Set();
-  for (let i = 0; i < numCourses; i++) {
-    if (!completed.has(i) && hasCycle(graph, i, completed)) {
+  const visited = new Set();
+  for (let i = 0; i < graph.length; i++) {
+    if (hasCycle(graph, i, visited)) {
       return false;
     }
   }
   return true;
 };
 
-function hasCycle(graph, u, completed, visited = new Set()) {
-  if (completed.has(u)) {
+function hasCycle(graph, u, visited, stack = new Set()) {
+  if (visited.has(u)) {
     return false;
   }
-  if (visited.has(u)) {
+  if (stack.has(u)) {
     return true;
   }
-  visited.add(u);
+  stack.add(u);
   for (const v of graph[u]) {
-    if (hasCycle(graph, v, completed, visited)) {
+    if (hasCycle(graph, v, visited, stack)) {
       return true;
     }
   }
-  visited.delete(u);
-  completed.add(u);
+  stack.delete(u);
+  visited.add(u);
   return false;
 }
 
 function createGraph(numCourses, prerequisites) {
   const graph = new Array(numCourses).fill(null).map(() => []);
-  for (const [u, v] of prerequisites) {
+  for (const [v, u] of prerequisites) {
     graph[u].push(v);
   }
   return graph;
