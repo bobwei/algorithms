@@ -1,8 +1,9 @@
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
  * }
  */
 /**
@@ -10,7 +11,7 @@
  * @return {number}
  */
 var maxPathSum = function(root) {
-  return helper(root)[1];
+  return helper(root)[0];
 };
 
 function helper(root) {
@@ -19,7 +20,13 @@ function helper(root) {
   }
   const left = helper(root.left);
   const right = helper(root.right);
-  const localMax = root.val + Math.max(left[0], right[0], 0);
-  const globalMax = Math.max(root.val + left[0] + right[0], localMax, left[1], right[1]);
-  return [localMax, globalMax];
+  const localMax = root.val + Math.max(left[1], right[1], 0);
+  // prettier-ignore
+  const globalMax = Math.max(
+    root.val + left[1] + right[1],
+    localMax,
+    left[0],
+    right[0],
+  );
+  return [globalMax, localMax];
 }
