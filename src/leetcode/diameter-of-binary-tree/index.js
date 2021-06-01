@@ -1,8 +1,9 @@
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
  * }
  */
 /**
@@ -10,14 +11,16 @@
  * @return {number}
  */
 var diameterOfBinaryTree = function(root) {
-  return helper(root)[1];
+  return helper(root)[0];
 };
 
 function helper(root) {
   if (!root) {
-    return [-1, 0];
+    return [0, -1];
   }
   const left = helper(root.left);
   const right = helper(root.right);
-  return [Math.max(left[0], right[0]) + 1, Math.max(left[1], right[1], left[0] + right[0] + 2)];
+  const globalMax = Math.max(left[0], right[0], 2 + left[1] + right[1]);
+  const localMax = 1 + Math.max(left[1], right[1]);
+  return [globalMax, localMax];
 }
