@@ -3,40 +3,46 @@
  * @return {string[]}
  */
 var removeInvalidParentheses = function(s) {
-  const output = [];
-  const queue = [s];
   const visited = new Set();
+  const output = [];
+  let queue = [s];
   while (queue.length) {
-    const str = queue.shift();
-    if (isValid(str)) {
-      output.push(str);
-    }
-    if (!output.length) {
-      for (let i = 0; i < str.length; i++) {
-        if (str[i] === '(' || str[i] === ')') {
-          const next = str.substring(0, i) + str.substring(i + 1);
-          if (!visited.has(next)) {
-            visited.add(next);
-            queue.push(next);
+    const next = [];
+    while (queue.length) {
+      const str = queue.shift();
+      if (isValid(str)) {
+        output.push(str);
+      } else {
+        for (let i = 0; i < str.length; i++) {
+          if (!(str[i] === '(' || str[i] === ')')) {
+            continue;
+          }
+          const candidate = str.substring(0, i) + str.substring(i + 1);
+          if (!visited.has(candidate)) {
+            visited.add(candidate);
+            next.push(candidate);
           }
         }
       }
+    }
+    if (!output.length) {
+      queue = next;
     }
   }
   return output;
 };
 
-function isValid(str) {
-  let count = 0;
-  for (const c of str) {
+function isValid(s) {
+  let n = 0;
+  for (const c of s) {
     if (c === '(') {
-      count += 1;
+      n += 1;
     } else if (c === ')') {
-      count -= 1;
+      n -= 1;
     }
-    if (count < 0) {
+    if (n < 0) {
       return false;
     }
   }
-  return count === 0;
+  return n === 0;
 }
