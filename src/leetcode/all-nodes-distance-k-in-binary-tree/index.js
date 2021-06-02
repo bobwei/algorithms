@@ -8,57 +8,47 @@
 /**
  * @param {TreeNode} root
  * @param {TreeNode} target
- * @param {number} K
+ * @param {number} k
  * @return {number[]}
  */
-var distanceK = function(root, target, K) {
-  const graph = createGraph(root);
-  return bfs(graph, target.val, K);
+var distanceK = function(root, target, k) {
+  const path = new Set();
+  findPath(root, target, path);
+  return dfs(root, path, path.size - 1, k);
 };
 
-function createGraph(root, graph = {}) {
+function dfs(root, path, dist, k, output = []) {
   if (!root) {
-    return graph;
+    return output;
   }
-  if (!(root.val in graph)) graph[root.val] = [];
+  if (dist === k) {
+    output.push(root.val);
+  }
   if (root.left) {
-    graph[root.val].push(root.left.val);
-    if (!(root.left.val in graph)) graph[root.left.val] = [];
-    graph[root.left.val].push(root.val);
-    createGraph(root.left, graph);
+    const d = path.has(root.left.val) ? dist - 1 : dist + 1;
+    dfs(root.left, path, d, k, output);
   }
   if (root.right) {
-    graph[root.val].push(root.right.val);
-    if (!(root.right.val in graph)) graph[root.right.val] = [];
-    graph[root.right.val].push(root.val);
-    createGraph(root.right, graph);
+    const d = path.has(root.right.val) ? dist - 1 : dist + 1;
+    dfs(root.right, path, d, k, output);
   }
-  return graph;
+  return output;
 }
 
-function bfs(graph, target, k) {
-  if (!k) {
-    return [target];
+function findPath(root, target, path) {
+  if (!root) {
+    return false;
   }
-  const visited = new Set([target]);
-  let queue = [target];
-  let level = 0;
-  while (queue.length) {
-    const next = [];
-    while (queue.length) {
-      const u = queue.shift();
-      for (const v of graph[u]) {
-        if (!visited.has(v)) {
-          visited.add(v);
-          next.push(v);
-        }
-      }
-    }
-    level += 1;
-    if (level === k) {
-      return next;
-    }
-    queue = next;
+  path.add(root.val);
+  if (root.val === target.val) {
+    return true;
   }
-  return [];
+  if (findPath(root.left, target, path)) {
+    return true;
+  }
+  if (findPath(root.right, target, path)) {
+    return true;
+  }
+  path.delete(root.val);
+  return false;
 }
