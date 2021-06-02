@@ -3,7 +3,7 @@
  *
  * @param {character[]} buf Destination buffer
  * @return {number} The number of characters read
- * read4 = function(buf) {
+ * read4 = function(buf4) {
  *     ...
  * };
  */
@@ -20,11 +20,11 @@ var solution = function(read4) {
    */
   const arr = [];
   return function(buf, n) {
-    let isEnd = false;
-    while (arr.length < n && !isEnd) {
+    while (arr.length < n) {
       const tmp = [];
-      isEnd = read4(tmp) < 4;
+      read4(tmp);
       arr.push(...tmp);
+      if (tmp.length < 4) break;
     }
     buf.push(...arr.splice(0, n));
     return buf.length;
