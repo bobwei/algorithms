@@ -6,6 +6,7 @@
  *      this.right = right;
  *  };
  */
+
 /**
  * @param {Node} root
  * @return {Node}
@@ -24,13 +25,16 @@ var treeToDoublyList = function(root) {
       ptr = ptr.left;
     } else {
       const node = stack.pop();
-      node.left = pre;
-      pre.right = node;
+      connect(pre, node);
       pre = node;
       ptr = node.right;
     }
   }
-  dummy.right.left = pre;
-  pre.right = dummy.right;
+  connect(pre, dummy.right);
   return dummy.right;
 };
+
+function connect(p1, p2) {
+  p1.right = p2;
+  p2.left = p1;
+}
