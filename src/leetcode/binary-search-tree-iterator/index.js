@@ -1,8 +1,9 @@
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
  * }
  */
 /**
@@ -10,33 +11,28 @@
  */
 var BSTIterator = function(root) {
   this.stack = [];
-  let ptr = root;
-  while (ptr) {
-    this.stack.push(ptr);
-    ptr = ptr.left;
-  }
+  this.ptr = root;
+  this.hasNext();
 };
 
 /**
- * @return the next smallest number
  * @return {number}
  */
 BSTIterator.prototype.next = function() {
-  const top = this.stack.pop();
-  let ptr = top.right;
-  while (ptr) {
-    this.stack.push(ptr);
-    ptr = ptr.left;
-  }
-  return top.val;
+  const node = this.stack.pop();
+  this.ptr = node.right;
+  return node.val;
 };
 
 /**
- * @return whether we have a next smallest number
  * @return {boolean}
  */
 BSTIterator.prototype.hasNext = function() {
-  return this.stack.length > 0;
+  while (this.ptr) {
+    this.stack.push(this.ptr);
+    this.ptr = this.ptr.left;
+  }
+  return this.stack.length;
 };
 
 /**
