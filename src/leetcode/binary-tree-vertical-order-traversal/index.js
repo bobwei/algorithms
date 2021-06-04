@@ -1,8 +1,9 @@
 /**
  * Definition for a binary tree node.
- * function TreeNode(val) {
- *     this.val = val;
- *     this.left = this.right = null;
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
  * }
  */
 /**
@@ -13,26 +14,28 @@ var verticalOrder = function(root) {
   if (!root) {
     return [];
   }
-  const cols = {};
+  const map = {};
   const queue = [[root, 0]];
   let min = Infinity;
   let max = -Infinity;
   while (queue.length) {
     const [node, j] = queue.shift();
-    if (!(j in cols)) cols[j] = [];
-    cols[j].push(node.val);
+    min = Math.min(min, j);
+    max = Math.max(max, j);
+    if (!(j in map)) {
+      map[j] = [];
+    }
+    map[j].push(node.val);
     if (node.left) {
       queue.push([node.left, j - 1]);
     }
     if (node.right) {
       queue.push([node.right, j + 1]);
     }
-    min = Math.min(min, j);
-    max = Math.max(max, j);
   }
   const output = [];
-  for (let j = min; j <= max; j++) {
-    output.push(cols[j]);
+  for (let i = min; i <= max; i++) {
+    output.push(map[i]);
   }
   return output;
 };
